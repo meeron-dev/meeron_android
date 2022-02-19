@@ -11,13 +11,17 @@ sealed interface Navigate {
     fun routeWith(path: Any) = route() + "/{$path}"
     fun route(argument: Any) = route() + "/$argument"
 
+    object Login : Navigate
     object Main : Navigate
 }
 
 @Composable
 fun MeeronNavigator() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Navigate.Main.route()) {
+    NavHost(navController = navController, startDestination = Navigate.Login.route()) {
+        composable(Navigate.Login.route()) {
+            LoginScreen()
+        }
         composable(Navigate.Main.route()) {
             MainScreen()
         }

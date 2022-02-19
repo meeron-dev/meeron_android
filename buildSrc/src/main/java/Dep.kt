@@ -56,8 +56,10 @@ object Dep {
         const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0"
         const val serializationPlugin = "org.jetbrains.kotlin:kotlin-serialization:$version"
 
-        const val coroutineCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1"
-        const val coroutineAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1"
+        private const val coroutineVersion = "1.5.2"
+        const val coroutineCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion"
+        const val coroutineAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion"
+        const val coroutineRx2 = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutineVersion"
 
     }
 
@@ -82,6 +84,10 @@ object Dep {
         const val roomKtx = "androidx.room:room-ktx:2.4.1"
         const val roomCompiler = "androidx.room:room-compiler:2.4.1"
         const val paging = "androidx.room:room-paging:2.4.1"
+    }
+
+    object Kakao {
+        const val login_rx = "com.kakao.sdk:v2-user-rx:2.8.6"
     }
 
     const val inject = "javax.inject:javax.inject:1"

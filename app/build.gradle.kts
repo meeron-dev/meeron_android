@@ -9,7 +9,7 @@ android {
     compileSdk = Versions.compileSdk
 
     defaultConfig {
-        applicationId = "zero.daangn"
+        applicationId = "fourtune.meeron"
         targetSdk = Versions.targetSdk
         versionCode = Versions.versionCode
         versionName = Versions.versionName
@@ -21,7 +21,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "APP_KEY", "\"fea2a94a3972c99a1d994e9970729ffe\"")
+            isDebuggable = true
+        }
         release {
+            buildConfigField("String", "APP_KEY", "\"fea2a94a3972c99a1d994e9970729ffe\"")
+            isDebuggable = false
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile(
@@ -62,6 +68,7 @@ dependencies {
     implementation(Dep.AndroidX.Lifecycle.viewModel)
 
     implementation(Dep.Kotlin.coroutineAndroid)
+    implementation(Dep.Kotlin.coroutineRx2)
 
     implementation(Dep.Square.retrofit)
     implementation(Dep.Square.okhttp3_logging)
@@ -70,6 +77,8 @@ dependencies {
     implementation(Dep.Dagger.hiltLifeCycleViewModel)
     implementation(Dep.Dagger.navigationCompose)
     kapt(Dep.Dagger.hiltCompiler)
+
+    implementation(Dep.Kakao.login_rx)
 
     implementation(Dep.Square.timber)
 }

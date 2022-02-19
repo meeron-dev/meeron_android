@@ -3,6 +3,8 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven { setUrl("https://devrepo.kakao.com/nexus/content/groups/public/") }
+
     }
     dependencies {
         classpath(Dep.androidGradlePlugin)

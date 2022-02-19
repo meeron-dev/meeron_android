@@ -24,4 +24,4 @@ jobs:
         cache : 'gradle'
           
     - name: build APK
-      run: ./gradlew build
+      run: ./gradlew assemble

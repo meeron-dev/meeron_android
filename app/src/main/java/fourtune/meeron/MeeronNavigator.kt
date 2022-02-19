@@ -8,6 +8,8 @@ import fourtune.meeron.main.MainScreen
 
 sealed interface Navigate {
     fun route() = requireNotNull(this::class.qualifiedName)
+    fun routeWith(path: Any) = route() + "/{$path}"
+    fun route(argument: Any) = route() + "/$argument"
 
     object Main : Navigate
 }

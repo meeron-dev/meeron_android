@@ -5,6 +5,7 @@
       <module name="Meeron.app" target="11" />
       <module name="Meeron.buildSrc" target="11" />
       <module name="Meeron.data" target="11" />
+      <module name="Meeron.presentation" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

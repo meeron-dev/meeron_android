@@ -1,10 +1,10 @@
-package fourtune.meeron
+package fourtune.meeron.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import fourtune.meeron.main.MainScreen
+import fourtune.meeron.presentation.ui.login.LoginScreen
 
 sealed interface Navigate {
     fun route() = requireNotNull(this::class.qualifiedName)
@@ -23,7 +23,6 @@ fun MeeronNavigator() {
             LoginScreen()
         }
         composable(Navigate.Main.route()) {
-            MainScreen()
         }
     }
 }

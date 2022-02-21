@@ -1,4 +1,4 @@
-package fourtune.meeron.ui.theme
+package fourtune.meeron.presentation.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

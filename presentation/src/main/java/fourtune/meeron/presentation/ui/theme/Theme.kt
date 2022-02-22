@@ -13,7 +13,7 @@ private val DarkColorPalette = darkColors(
 )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500,
+    primary = PrimaryColor,
     primaryVariant = Purple700,
     secondary = Teal200
 
@@ -36,7 +36,7 @@ fun MeeronTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable
     }
 
     MaterialTheme(
-        colors = colors,
+        colors = LightColorPalette,//우선은 항상 라이트 테마로...
         typography = Typography,
         shapes = Shapes,
         content = content

@@ -23,6 +23,8 @@ dependencies {
     implementation(Dep.Compose.material)
     implementation(Dep.Compose.coil)
 
+    implementation(Dep.Accompanist.pager)
+
     implementation(Dep.AndroidX.Lifecycle.composeViewModel)
     implementation(Dep.AndroidX.Lifecycle.viewModel)
 

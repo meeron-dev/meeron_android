@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import fourtune.meeron.presentation.ui.calendar.CalendarScreen
 import fourtune.meeron.presentation.ui.login.LoginScreen
 import fourtune.meeron.presentation.ui.main.MainScreen
 
@@ -14,17 +15,29 @@ sealed interface Navigate {
 
     object Login : Navigate
     object Main : Navigate
+    object Calendar : Navigate
 }
 
 @Composable
-fun MeeronNavigator() {
+fun MeeronNavigator(openCalendar:()->Unit) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Navigate.Main.route()) {
+    NavHost(
+        navController = navController,
+        startDestination = Navigate.Main.route()
+    ) {
         composable(Navigate.Login.route()) {
             LoginScreen()
         }
         composable(Navigate.Main.route()) {
-            MainScreen()
+            MainScreen(
+                openCalendar = openCalendar
+//                {
+//                    navController.navigate(Navigate.Calendar.route())
+//                }
+            )
+        }
+        composable(Navigate.Calendar.route()) {
+            CalendarScreen()
         }
     }
 }

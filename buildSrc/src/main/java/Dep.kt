@@ -2,7 +2,7 @@ object Versions {
     const val compileSdk = 31
     const val buildTools = "30.0.3"
 
-    const val minSdk = 24
+    const val minSdk = 23
     const val targetSdk = 32
     const val versionCode = 1
     const val versionName = "1.0.0"
@@ -85,6 +85,10 @@ object Dep {
         const val roomKtx = "androidx.room:room-ktx:2.4.1"
         const val roomCompiler = "androidx.room:room-compiler:2.4.1"
         const val paging = "androidx.room:room-paging:2.4.1"
+    }
+
+    object Calendar {
+        const val calendar = "com.android.tools:desugar_jdk_libs:1.0.4"
     }
 
     object Kakao {

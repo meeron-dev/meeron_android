@@ -7,6 +7,12 @@ plugins {
 
 android {
     compileSdk = Versions.compileSdk
+
+    defaultConfig {
+        targetSdk = Versions.targetSdk
+        minSdk = Versions.minSdk
+    }
+
     composeOptions {
         kotlinCompilerExtensionVersion = Dep.Compose.version
     }
@@ -14,11 +20,17 @@ android {
     buildFeatures {
         compose = true
     }
+
+    viewBinding {
+        isEnabled = true
+    }
+
 }
 
 dependencies {
     implementation(project(":domain"))
-
+    implementation(Dep.Calendar.calendar)
+    
     implementation(Dep.Compose.ui)
     implementation(Dep.Compose.tooling)
     implementation(Dep.Compose.material)
@@ -26,6 +38,7 @@ dependencies {
 
     implementation(Dep.Accompanist.pager)
 
+    implementation(Dep.AndroidX.material)
     implementation(Dep.AndroidX.Lifecycle.composeViewModel)
     implementation(Dep.AndroidX.Lifecycle.viewModel)
 

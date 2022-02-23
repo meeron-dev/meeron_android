@@ -8,9 +8,20 @@
         <entry key="../../../layout/compose-model-1645456728478.xml" value="0.335" />
         <entry key="../../../layout/compose-model-1645457429983.xml" value="0.25" />
         <entry key="../../../layout/compose-model-1645497046748.xml" value="0.335" />
+        <entry key="../../../layout/compose-model-1645543999431.xml" value="0.4638888888888889" />
+        <entry key="../../../layout/compose-model-1645545081674.xml" value="0.18518518518518517" />
+        <entry key="../../../layout/compose-model-1645545166805.xml" value="0.1" />
+        <entry key="../../../layout/compose-model-1645586661394.xml" value="0.165" />
+        <entry key="../../../layout/compose-model-1645609186545.xml" value="0.1702045542261675" />
+        <entry key="../../../layout/compose-model-1645609313472.xml" value="0.23641304347826086" />
+        <entry key="../../../layout/custom_preview.xml" value="0.21458333333333332" />
+        <entry key="../.gradle/caches/transforms-3/aceb3018d41642123e724e6363bee857/transformed/jetified-material-calendarview-2.0.1/res/drawable/mcv_action_previous.xml" value="0.2115" />
+        <entry key="../.gradle/caches/transforms-3/aceb3018d41642123e724e6363bee857/transformed/jetified-material-calendarview-2.0.1/res/layout/calendar_view.xml" value="0.20416666666666666" />
         <entry key="presentation/src/main/res/drawable/ic_group_476.xml" value="0.309" />
         <entry key="presentation/src/main/res/drawable/ic_home_menu.xml" value="0.1485" />
         <entry key="presentation/src/main/res/drawable/ic_navi_door.xml" value="0.271" />
+        <entry key="presentation/src/main/res/layout/activity_calendar.xml" value="0.264569091796875" />
+        <entry key="presentation/src/main/res/layout/calendar.xml" value="0.20416666666666666" />
       </map>
     </option>
   </component>

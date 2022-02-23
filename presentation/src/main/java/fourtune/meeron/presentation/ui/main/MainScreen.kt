@@ -43,20 +43,22 @@ enum class TabItems(@StringRes val text: Int) {
     TODO(R.string.coming_soon), COMPLETE(R.string.complete)
 }
 
+sealed interface MainEvent {
+}
+
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MainScreen() {
-    val pagerState = rememberPagerState()
+fun MainScreen(openCalendar: () -> Unit = {}) {
+    val pagerState = rememberPagerState(0)
     val bottomBarSize = 90.dp
     var tabPos by rememberSaveable {
         mutableStateOf(TabItems.TODO.ordinal)
     }
-
     Scaffold(
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { /*TODO OPEN SIDE DRAWER*/ }) {
                         Image(painter = painterResource(id = R.drawable.ic_home_menu), contentDescription = "title")
                     }
                 },
@@ -79,7 +81,7 @@ fun MainScreen() {
                 .fillMaxHeight()
                 .padding(bottom = bottomBarSize + 16.dp)
         ) {
-            CalendarTitle(modifier = Modifier.padding(vertical = 28.dp, horizontal = 4.dp))
+            CalendarTitle(modifier = Modifier.padding(vertical = 28.dp, horizontal = 4.dp), openCalendar = openCalendar)
             MainTab(selectedTabIndex = tabPos, onClick = { selectedPosition -> tabPos = selectedPosition })
             Spacer(modifier = Modifier.padding(6.dp))
             HorizontalPager(
@@ -254,9 +256,9 @@ private fun BottomNaviItem(naviItem: BottomNavi, selected: Int, onClick: (select
 }
 
 @Composable
-private fun CalendarTitle(modifier: Modifier) {
+private fun CalendarTitle(modifier: Modifier, openCalendar: () -> Unit = {}) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = openCalendar) {
             Image(imageVector = Icons.Default.DateRange, contentDescription = null)
         }
         Text(text = "현재 날짜 들어가면 됨", fontSize = 22.sp, color = colorResource(id = R.color.dark_gray))

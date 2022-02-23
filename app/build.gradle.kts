@@ -28,13 +28,6 @@ android {
         release {
             buildConfigField("String", "APP_KEY", "\"fea2a94a3972c99a1d994e9970729ffe\"")
             isDebuggable = false
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile(
-                    "proguard-android-optimize.txt"
-                ),
-                "proguard-rules.pro"
-            )
         }
     }
 

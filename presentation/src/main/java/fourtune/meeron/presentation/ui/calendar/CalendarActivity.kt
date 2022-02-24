@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Spanned
 import android.text.style.UnderlineSpan
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -71,4 +72,13 @@ class CalendarActivity : AppCompatActivity() {
         fun getIntent(context: Context) = Intent(context, CalendarActivity::class.java)
     }
 
+    object Contract : ActivityResultContract<String, Boolean>() {
+        override fun createIntent(context: Context, input: String?): Intent {
+            return getIntent(context)
+        }
+
+        override fun parseResult(resultCode: Int, intent: Intent?): Boolean {
+            return true
+        }
+    }
 }

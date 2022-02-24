@@ -9,12 +9,16 @@ import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val calendarContract = registerForActivityResult(CalendarActivity.Contract) {
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MeeronTheme {
                 MeeronNavigator {
-                    startActivity(CalendarActivity.getIntent(this))
+                    calendarContract.launch("param")
                 }
             }
         }

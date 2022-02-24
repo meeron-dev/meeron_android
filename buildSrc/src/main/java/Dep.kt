@@ -12,7 +12,6 @@ object Dep {
     const val androidGradlePlugin = "com.android.tools.build:gradle:7.1.0"
 
     object AndroidX {
-        const val core = "androidx.core:core-ktx:1.7.0"
         const val startUp = "androidx.startup:startup-runtime:1.1.0"
         const val material = "com.google.android.material:material:1.6.0-alpha02"
 
@@ -88,7 +87,7 @@ object Dep {
     }
 
     object Calendar {
-        const val calendar = "com.android.tools:desugar_jdk_libs:1.0.4"
+        const val calendar = "com.github.prolificinteractive:material-calendarview:2.0.1"
     }
 
     object Kakao {

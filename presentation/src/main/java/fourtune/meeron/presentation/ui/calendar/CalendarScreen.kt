@@ -15,10 +15,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.pager.ExperimentalPagerApi
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CircleBackgroundText
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun CalendarScreen() {
 //    Body()

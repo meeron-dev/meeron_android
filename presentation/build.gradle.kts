@@ -30,7 +30,6 @@ android {
 dependencies {
     implementation(project(":domain"))
     implementation(Dep.Calendar.calendar)
-    
     implementation(Dep.Compose.ui)
     implementation(Dep.Compose.tooling)
     implementation(Dep.Compose.material)

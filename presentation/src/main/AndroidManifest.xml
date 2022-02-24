@@ -25,7 +25,7 @@
         </activity>
         <activity
             android:name=".ui.calendar.CalendarActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.Meeron" />
     </application>
 
 </manifest>

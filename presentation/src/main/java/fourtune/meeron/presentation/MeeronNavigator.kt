@@ -29,12 +29,7 @@ fun MeeronNavigator(openCalendar:()->Unit) {
             LoginScreen()
         }
         composable(Navigate.Main.route()) {
-            MainScreen(
-                openCalendar = openCalendar
-//                {
-//                    navController.navigate(Navigate.Calendar.route())
-//                }
-            )
+            MainScreen(openCalendar = openCalendar)
         }
         composable(Navigate.Calendar.route()) {
             CalendarScreen()

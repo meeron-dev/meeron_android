@@ -9,9 +9,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 
 @Composable
- fun Dot(color: Color, size: Dp) {
+fun Dot(modifier: Modifier = Modifier, color: Color, size: Dp) {
     Canvas(
-        modifier = Modifier
+        modifier = modifier
             .size(size)
             .wrapContentWidth(),
         onDraw = { drawCircle(color = color, radius = size.toPx() / 2f) }

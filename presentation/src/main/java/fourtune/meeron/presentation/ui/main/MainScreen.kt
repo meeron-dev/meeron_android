@@ -295,7 +295,7 @@ private fun MainTab(modifier: Modifier = Modifier, selectedTabIndex: Int, onClic
                     fontSize = 15.sp,
                     fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Medium
                 )
-                Dot(colorResource(id = R.color.dark_primary), 4.dp)
+                Dot(color = colorResource(id = R.color.dark_primary), size = 4.dp)
             }
         }
     }

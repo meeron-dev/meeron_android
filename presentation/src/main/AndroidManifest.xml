@@ -23,9 +23,6 @@
             </intent-filter>
 
         </activity>
-        <activity
-            android:name=".ui.calendar.CalendarActivity"
-            android:theme="@style/Theme.Meeron" />
     </application>
 
 </manifest>

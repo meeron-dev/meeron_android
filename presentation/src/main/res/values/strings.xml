@@ -10,4 +10,5 @@
     <string name="complete">완료</string>
     <string name="calendar_title">%d월 %d일</string>
     <string name="calendar_month">%d 월</string>
+    <string name="show_all">전체보기</string>
 </resources>

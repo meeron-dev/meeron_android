@@ -64,7 +64,7 @@ class CalendarActivity : AppCompatActivity() {
     }
 
     private fun setCurrentTitle(year: Int, month: Int) {
-        binding.month.text = String.format("%d 월", month)
+        binding.month.text = String.format(getString(R.string.calendar_month), month)
         binding.year.text = year.toString()
     }
 

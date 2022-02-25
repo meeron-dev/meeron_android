@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -25,9 +24,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.prolificinteractive.materialcalendarview.CalendarDay
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.Dot
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
@@ -48,7 +49,8 @@ sealed interface MainEvent {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MainScreen(openCalendar: () -> Unit = {}) {
+fun MainScreen(openCalendar: () -> Unit = {}, mainViewModel: MainViewModel = hiltViewModel()) {
+    val currentDay by mainViewModel.currentDay().collectAsState()
     val pagerState = rememberPagerState(0)
     val bottomBarSize = 90.dp
     var tabPos by rememberSaveable {
@@ -81,7 +83,11 @@ fun MainScreen(openCalendar: () -> Unit = {}) {
                 .fillMaxHeight()
                 .padding(bottom = bottomBarSize + 16.dp)
         ) {
-            CalendarTitle(modifier = Modifier.padding(vertical = 28.dp, horizontal = 4.dp), openCalendar = openCalendar)
+            CalendarTitle(
+                modifier = Modifier.padding(vertical = 28.dp, horizontal = 4.dp),
+                date = currentDay,
+                openCalendar = openCalendar
+            )
             MainTab(selectedTabIndex = tabPos, onClick = { selectedPosition -> tabPos = selectedPosition })
             Spacer(modifier = Modifier.padding(6.dp))
             HorizontalPager(
@@ -201,19 +207,23 @@ private fun PagerItem() {
                 }
                 Column {
                     Row {
-                        Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                        Image(painter = painterResource(id = R.drawable.ic_circle), contentDescription = null)
+                        Spacer(modifier = Modifier.padding(5.dp))
                         Text(text = "5", color = colorResource(id = R.color.gray), fontSize = 12.sp)
                     }
                     Row {
-                        Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                        Image(painter = painterResource(id = R.drawable.ic_triangle), contentDescription = null)
+                        Spacer(modifier = Modifier.padding(5.dp))
                         Text(text = "5", color = colorResource(id = R.color.gray), fontSize = 12.sp)
                     }
                     Row {
-                        Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                        Image(painter = painterResource(id = R.drawable.ic_x), contentDescription = null)
+                        Spacer(modifier = Modifier.padding(5.dp))
                         Text(text = "5", color = colorResource(id = R.color.gray), fontSize = 12.sp)
                     }
                     Row {
-                        Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                        Image(painter = painterResource(id = R.drawable.ic_qeustion_mark), contentDescription = null)
+                        Spacer(modifier = Modifier.padding(5.dp))
                         Text(text = "5", color = colorResource(id = R.color.gray), fontSize = 12.sp)
                     }
                     //o x ?
@@ -256,12 +266,16 @@ private fun BottomNaviItem(naviItem: BottomNavi, selected: Int, onClick: (select
 }
 
 @Composable
-private fun CalendarTitle(modifier: Modifier, openCalendar: () -> Unit = {}) {
+private fun CalendarTitle(modifier: Modifier, date: CalendarDay, openCalendar: () -> Unit = {}) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         IconButton(onClick = openCalendar) {
             Image(imageVector = Icons.Default.DateRange, contentDescription = null)
         }
-        Text(text = "현재 날짜 들어가면 됨", fontSize = 22.sp, color = colorResource(id = R.color.dark_gray))
+        Text(
+            text = String.format(stringResource(R.string.calendar_title), date.month, date.day),
+            fontSize = 22.sp,
+            color = colorResource(id = R.color.dark_gray)
+        )
     }
 }
 

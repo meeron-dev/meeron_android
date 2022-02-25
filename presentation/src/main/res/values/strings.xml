@@ -8,4 +8,6 @@
     <string name="fourtune">4Tune</string>
     <string name="coming_soon">진행 예정 %d</string>
     <string name="complete">완료</string>
+    <string name="calendar_title">%d월 %d일</string>
+    <string name="calendar_month">%d 월</string>
 </resources>

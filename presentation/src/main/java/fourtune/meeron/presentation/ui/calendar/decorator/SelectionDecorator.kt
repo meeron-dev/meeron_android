@@ -17,8 +17,8 @@ class SelectionDecorator(private val context: Context) :
     override fun shouldDecorate(day: CalendarDay?): Boolean = day == decorDay
 
     override fun decorate(view: DayViewFacade?) {
-        view?.setSelectionDrawable(ContextCompat.getDrawable(context, R.drawable.inset)!!)
-        view?.addSpan(ForegroundColorSpan(context.getColor(R.color.white)))
+        view?.setSelectionDrawable(ContextCompat.getDrawable(context, android.R.color.transparent)!!)
+        view?.addSpan(ForegroundColorSpan(context.getColor(R.color.primary)))
         view?.addSpan(StyleSpan(Typeface.BOLD))
     }
 

@@ -17,12 +17,14 @@
         <entry key="../../../layout/compose-model-1645622201727.xml" value="0.23641304347826086" />
         <entry key="../../../layout/compose-model-1645622210480.xml" value="0.23641304347826086" />
         <entry key="../../../layout/compose-model-1645692715709.xml" value="0.2972222222222222" />
+        <entry key="../../../layout/compose-model-1645695304143.xml" value="0.335" />
         <entry key="../../../layout/compose-model-1645695304144.xml" value="0.12520903010033446" />
         <entry key="../../../layout/custom_preview.xml" value="0.21458333333333332" />
         <entry key="../.gradle/caches/transforms-3/16b482ac3051eaa4acfa37ce9587a1e1/transformed/jetified-material-calendarview-2.0.1/res/layout/calendar_view.xml" value="0.5645833333333333" />
         <entry key="../.gradle/caches/transforms-3/aceb3018d41642123e724e6363bee857/transformed/jetified-material-calendarview-2.0.1/res/drawable/mcv_action_previous.xml" value="0.2115" />
         <entry key="../.gradle/caches/transforms-3/aceb3018d41642123e724e6363bee857/transformed/jetified-material-calendarview-2.0.1/res/layout/calendar_view.xml" value="0.20416666666666666" />
         <entry key="presentation/src/main/res/drawable/calendar_circle.xml" value="0.1605" />
+        <entry key="presentation/src/main/res/drawable/ic_circle.xml" value="0.2065" />
         <entry key="presentation/src/main/res/drawable/ic_group_476.xml" value="0.309" />
         <entry key="presentation/src/main/res/drawable/ic_home_menu.xml" value="0.1485" />
         <entry key="presentation/src/main/res/drawable/ic_navi_door.xml" value="0.271" />

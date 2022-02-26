@@ -25,10 +25,12 @@ fun MeeronNavigator() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Navigate.Main.route()
+        startDestination = Navigate.Login.route()
     ) {
         composable(Navigate.Login.route()) {
-            LoginScreen()
+            LoginScreen(isLoginSuccess = {
+                navController.navigate(Navigate.Main.route())
+            })
         }
         composable(Navigate.Main.route()) {
             MainScreen(

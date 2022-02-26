@@ -4,42 +4,63 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kakao.sdk.user.UserApiClient
+import com.kakao.sdk.user.model.User
 import com.kakao.sdk.user.rx
 import dagger.hilt.android.lifecycle.HiltViewModel
+import forutune.meeron.domain.LoginUser
+import forutune.meeron.domain.di.IoDispatcher
+import forutune.meeron.domain.usecase.LoginUseCase
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx2.await
 import timber.log.Timber
 import javax.inject.Inject
 
+private fun User.toLoginUser(): LoginUser {
+    return LoginUser(
+        kakaoAccount?.email.orEmpty(),
+        kakaoAccount?.profile?.nickname.orEmpty(),
+        kakaoAccount?.profile?.profileImageUrl.orEmpty(),
+        "kakao"
+    )
+}
+
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
+    private val loginUseCase: LoginUseCase
 ) : ViewModel() {
+    private val _loginSuccess = MutableSharedFlow<Boolean>()
+    fun loginSuccess() = _loginSuccess.asSharedFlow()
 
-    private val loginExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+    private val loginContext = CoroutineExceptionHandler { _, throwable ->
         Timber.tag("🔥zero:").e("$throwable")
-    }
+    } + dispatcher
 
     init {
-        viewModelScope.launch(loginExceptionHandler) {
+        viewModelScope.launch(loginContext) {
+            val isLoginSuccess = loginUseCase(getMe = { UserApiClient.rx.me().await().toLoginUser() })
+            _loginSuccess.emit(isLoginSuccess)
         }
     }
 
     fun launchKakaoLogin(context: Context) {
-        viewModelScope.launch(loginExceptionHandler) {
-            if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
-                val token = UserApiClient.rx.loginWithKakaoTalk(context = context).await()
-                Timber.tag("🔥zero:launchKakaoLogin").d("$token")
-            } else {
-                val token = UserApiClient.rx.loginWithKakaoAccount(context).await()
-                Timber.tag("🔥zero:launchKakaoLogin").d("$token")
-            }
+        viewModelScope.launch(loginContext) {
+            val isLoginSuccess = loginUseCase(
+                kakaoLogin = { UserApiClient.rx.loginWithKakaoTalk(context = context).await() },
+                isKakaoLoginAvailable = { UserApiClient.instance.isKakaoTalkLoginAvailable(context) },
+                kakaoLoginWithAccount = { UserApiClient.rx.loginWithKakaoAccount(context).await() },
+                getMe = { UserApiClient.rx.me().await().toLoginUser() }
+            )
+            _loginSuccess.emit(isLoginSuccess)
         }
     }
 
     fun logout() {
-        viewModelScope.launch(loginExceptionHandler) {
+        viewModelScope.launch(loginContext + dispatcher) {
             UserApiClient.rx.unlink().await()
         }
     }

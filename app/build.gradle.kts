@@ -48,6 +48,7 @@ dependencies {
     implementation(Dep.Dagger.hiltAndroid)
     kapt(Dep.Dagger.hiltCompiler)
 
+    implementation(Dep.Kotlin.coroutineCore)
     implementation(Dep.Kakao.login_rx)
     implementation(Dep.Square.timber)
 }

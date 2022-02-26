@@ -20,6 +20,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -90,15 +91,32 @@ fun MainScreen(openCalendar: () -> Unit = {}, mainViewModel: MainViewModel = hil
             )
             MainTab(selectedTabIndex = tabPos, onClick = { selectedPosition -> tabPos = selectedPosition })
             Spacer(modifier = Modifier.padding(6.dp))
-            HorizontalPager(
-                modifier = Modifier.fillMaxHeight(),
-                count = 20,
-                state = pagerState,
-                contentPadding = PaddingValues(horizontal = 50.dp),
-                itemSpacing = 14.dp
-            ) {
-                PagerItem()
+            when (tabPos) {
+                TabItems.COMPLETE.ordinal -> {
+                    HorizontalPager(
+                        modifier = Modifier.fillMaxHeight(),
+                        count = 20,
+                        state = pagerState,
+                        contentPadding = PaddingValues(horizontal = 50.dp),
+                        itemSpacing = 14.dp
+                    ) {
+                        PagerItem()
+                    }
+                }
+                TabItems.TODO.ordinal -> {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Text(
+                            modifier = Modifier.align(Alignment.Center),
+                            text = "예정된 회의가 없습니다.",
+                            fontSize = 16.sp,
+                            textAlign = TextAlign.Center,
+                            color = colorResource(id = R.color.gray)
+                        )
+                    }
+                }
             }
+
+
         }
     }
 }

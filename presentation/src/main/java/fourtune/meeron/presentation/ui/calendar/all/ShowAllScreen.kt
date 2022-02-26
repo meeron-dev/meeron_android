@@ -58,6 +58,7 @@ private fun YearItem() {
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold
         )
+        Spacer(modifier = Modifier.padding(3.dp))
         Text(
             text = "50개의 회의",
             color = colorResource(id = R.color.dark_gray),
@@ -85,9 +86,17 @@ private fun MonthItem() {
 
 @Preview
 @Composable
-private fun DetailItemPrv() {
+private fun MonthItemPrev() {
     MeeronTheme {
         MonthItem()
+    }
+}
+
+@Preview
+@Composable
+private fun YearItemPrev() {
+    MeeronTheme {
+        YearItem()
     }
 }
 

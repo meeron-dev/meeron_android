@@ -17,13 +17,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import fourtune.meeron.presentation.R
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun LoginScreen(viewModel: LoginViewModel = hiltViewModel(), isLoginSuccess: () -> Unit) {
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
-        viewModel.loginSuccess().collect { isLoginSuccess ->
+        viewModel.loginSuccess().collectLatest { isLoginSuccess ->
             if (isLoginSuccess) isLoginSuccess()
         }
     }

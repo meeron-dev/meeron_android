@@ -10,4 +10,7 @@ interface LoginApi {
     @Headers("content-type: application/json")
     @POST("/api/login")
     suspend fun login(@Body loginUser: LoginUserDto): Token
+
+    @POST("/api/logout")
+    suspend fun logout()
 }

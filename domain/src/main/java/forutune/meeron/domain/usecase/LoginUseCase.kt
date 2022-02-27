@@ -1,16 +1,22 @@
 package forutune.meeron.domain.usecase
 
 import forutune.meeron.domain.LoginUser
+import forutune.meeron.domain.di.IoDispatcher
 import forutune.meeron.domain.repository.LoginRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class LoginUseCase @Inject constructor(
+    @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val loginRepository: LoginRepository
 ) {
 
     suspend operator fun invoke(
         getMe: suspend () -> LoginUser
-    ): Boolean = runCatching { loginRepository.login(getMe()) }.isSuccess
+    ) = withContext(dispatcher) {
+        loginRepository.login(getMe())
+    }
 
 
     suspend operator fun invoke(
@@ -18,12 +24,12 @@ class LoginUseCase @Inject constructor(
         kakaoLogin: suspend () -> Unit,
         kakaoLoginWithAccount: suspend () -> Unit,
         getMe: suspend () -> LoginUser
-    ): Boolean {
+    ) = withContext(dispatcher) {
         if (isKakaoLoginAvailable()) {
             kakaoLogin()
         } else {
             kakaoLoginWithAccount()
         }
-        return invoke(getMe)
+        invoke(getMe)
     }
 }

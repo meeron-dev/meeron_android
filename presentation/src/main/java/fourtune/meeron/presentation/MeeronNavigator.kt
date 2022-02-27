@@ -29,6 +29,7 @@ fun MeeronNavigator() {
     ) {
         composable(Navigate.Login.route()) {
             LoginScreen(isLoginSuccess = {
+                navController.popBackStack()
                 navController.navigate(Navigate.Main.route())
             })
         }

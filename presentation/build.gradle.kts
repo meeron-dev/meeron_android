@@ -36,6 +36,7 @@ dependencies {
     implementation(Dep.Compose.coil)
 
     implementation(Dep.Accompanist.pager)
+    implementation(Dep.Accompanist.navigationAnimation)
 
     implementation(Dep.AndroidX.material)
     implementation(Dep.AndroidX.Lifecycle.composeViewModel)

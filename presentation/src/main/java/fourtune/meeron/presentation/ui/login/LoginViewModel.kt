@@ -7,7 +7,7 @@ import com.kakao.sdk.user.UserApiClient
 import com.kakao.sdk.user.model.User
 import com.kakao.sdk.user.rx
 import dagger.hilt.android.lifecycle.HiltViewModel
-import forutune.meeron.domain.LoginUser
+import forutune.meeron.domain.model.LoginUser
 import forutune.meeron.domain.usecase.LoginUseCase
 import forutune.meeron.domain.usecase.LogoutUseCase
 import kotlinx.coroutines.CoroutineExceptionHandler

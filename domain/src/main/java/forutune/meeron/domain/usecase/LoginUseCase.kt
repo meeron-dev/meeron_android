@@ -1,7 +1,7 @@
 package forutune.meeron.domain.usecase
 
-import forutune.meeron.domain.LoginUser
 import forutune.meeron.domain.di.IoDispatcher
+import forutune.meeron.domain.model.LoginUser
 import forutune.meeron.domain.repository.LoginRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -15,7 +15,8 @@ class LoginUseCase @Inject constructor(
     suspend operator fun invoke(
         getMe: suspend () -> LoginUser
     ) = withContext(dispatcher) {
-        loginRepository.login(getMe())
+        val me = getMe()
+        loginRepository.login(me)
     }
 
 

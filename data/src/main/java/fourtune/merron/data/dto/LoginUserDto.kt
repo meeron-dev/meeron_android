@@ -1,6 +1,6 @@
 package fourtune.merron.data.dto
 
-import forutune.meeron.domain.LoginUser
+import forutune.meeron.domain.model.LoginUser
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

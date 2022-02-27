@@ -1,4 +1,4 @@
-package forutune.meeron.domain
+package forutune.meeron.domain.model
 
 data class LoginUser(
     val email: String,

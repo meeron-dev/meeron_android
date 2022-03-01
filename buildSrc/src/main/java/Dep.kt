@@ -8,6 +8,10 @@ object Versions {
     const val versionName = "1.0.0"
 }
 
+object App {
+    const val appKey = "fea2a94a3972c99a1d994e9970729ffe"
+}
+
 object Dep {
     const val androidGradlePlugin = "com.android.tools.build:gradle:7.1.0"
 

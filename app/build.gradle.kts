@@ -14,6 +14,7 @@ android {
         versionCode = Versions.versionCode
         versionName = Versions.versionName
         minSdk = Versions.minSdk
+        manifestPlaceholders["APP_KEY"] = App.appKey
     }
 
     kotlinOptions {
@@ -22,11 +23,11 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "APP_KEY", "\"fea2a94a3972c99a1d994e9970729ffe\"")
+            buildConfigField("String", "APP_KEY", "\"${App.appKey}\"")
             isDebuggable = true
         }
         release {
-            buildConfigField("String", "APP_KEY", "\"fea2a94a3972c99a1d994e9970729ffe\"")
+            buildConfigField("String", "APP_KEY", "\"${App.appKey}\"")
             isDebuggable = false
         }
     }

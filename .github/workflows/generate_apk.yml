@@ -1,0 +1,28 @@
+name: generate_apk
+
+on:
+
+  push:
+    branches: [ develop ]
+
+jobs:
+  build:
+   name : extract_apk
+   runs-on: ubuntu-latest
+   steps:
+    - name : checkout
+      uses: actions/checkout@v1
+      
+    - name : set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+          
+    - name: build APK
+      run: ./gradlew assembleDebug --stacktrace
+        
+#     - name : Upload APK
+#       uses : actions/upload-artifact@v1
+#       with :
+#         name: app
+#         path: app/build/outputs/apk/debug

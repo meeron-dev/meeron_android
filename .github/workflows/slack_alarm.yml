@@ -1,4 +1,4 @@
-name: build_apk
+name: slack_alarm
 
 on:
   push:

@@ -2,9 +2,9 @@
     <string name="app_name">presentation</string>
     <string name="home">홈</string>
     <string name="team">팀</string>
-    <string name="create_conference">회의 생성</string>
+    <string name="create_meeting">회의 생성</string>
     <string name="my_merron">나의 미론</string>
-    <string name="conference_plan">회의 플랜</string>
+    <string name="meeting_plan">회의 플랜</string>
     <string name="fourtune">4Tune</string>
     <string name="coming_soon">진행 예정 %d</string>
     <string name="complete">완료</string>
@@ -17,5 +17,5 @@
     <string name="next">다음</string>
     <string name="create_time_title">회의 시간을\n입력해주세요.</string>
     <string name="create_data_title">회의 날짜를\n입력해주세요.</string>
-    <string name="not_found_conference">예정된 회의가 없습니다.</string>
+    <string name="not_found_meeting">예정된 회의가 없습니다.</string>
 </resources>

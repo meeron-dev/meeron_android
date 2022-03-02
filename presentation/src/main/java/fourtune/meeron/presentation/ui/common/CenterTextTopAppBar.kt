@@ -36,7 +36,7 @@ fun CenterTextTopAppBar(onAction: () -> Unit, text: @Composable BoxScope.() -> U
 private fun CenterTextTopAppBarPrev() {
     CenterTextTopAppBar(onAction = { /*TODO*/ }) {
         Text(
-            text = stringResource(id = R.string.create_conference),
+            text = stringResource(id = R.string.create_meeting),
             fontSize = 18.sp,
             color = colorResource(id = R.color.black)
         )

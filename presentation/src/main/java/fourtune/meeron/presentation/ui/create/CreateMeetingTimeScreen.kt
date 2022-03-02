@@ -25,53 +25,53 @@ import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MerronButton
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
-private sealed interface CreateConferenceTimeEvent {
-    class ChangeTime(val key: Int, val hour: Int, val minute: Int) : CreateConferenceTimeEvent
-    object Previous : CreateConferenceTimeEvent
-    object Next : CreateConferenceTimeEvent
-    object Exit : CreateConferenceTimeEvent
+private sealed interface CreateMeetingTimeEvent {
+    class ChangeTime(val key: Int, val hour: Int, val minute: Int) : CreateMeetingTimeEvent
+    object Previous : CreateMeetingTimeEvent
+    object Next : CreateMeetingTimeEvent
+    object Exit : CreateMeetingTimeEvent
 }
 
 @Composable
-fun CreateConferenceTimeScreen(
-    timeViewModel: CreateConferenceTimeViewModel = hiltViewModel(),
+fun CreateMeetingTimeScreen(
+    timeViewModel: CreateMeetingTimeViewModel = hiltViewModel(),
     onAction: () -> Unit = {},
     onPrevious: () -> Unit = {}
 ) {
     val uiState by timeViewModel.uiState().collectAsState()
-    CreateConferenceTimeScreen(
+    CreateMeetingTimeScreen(
         uiState,
         event = { event ->
             when (event) {
-                is CreateConferenceTimeEvent.ChangeTime -> timeViewModel.changeTime(
+                is CreateMeetingTimeEvent.ChangeTime -> timeViewModel.changeTime(
                     event.key,
                     event.hour,
                     event.minute
                 )
-                CreateConferenceTimeEvent.Exit -> onAction()
-                CreateConferenceTimeEvent.Next -> TODO()
-                CreateConferenceTimeEvent.Previous -> onPrevious()
+                CreateMeetingTimeEvent.Exit -> onAction()
+                CreateMeetingTimeEvent.Next -> TODO()
+                CreateMeetingTimeEvent.Previous -> onPrevious()
             }
         }
     )
 }
 
 @Composable
-private fun CreateConferenceTimeScreen(
+private fun CreateMeetingTimeScreen(
     uiState: UiState,
-    event: (CreateConferenceTimeEvent) -> Unit
+    event: (CreateMeetingTimeEvent) -> Unit
 ) {
     Scaffold(
         topBar = {
             CenterTextTopAppBar(
                 text = {
                     Text(
-                        text = stringResource(id = R.string.create_conference),
+                        text = stringResource(id = R.string.create_meeting),
                         fontSize = 18.sp,
                         color = colorResource(id = R.color.black)
                     )
                 },
-                onAction = { event(CreateConferenceTimeEvent.Exit) }
+                onAction = { event(CreateMeetingTimeEvent.Exit) }
             )
         }
     ) {
@@ -83,8 +83,8 @@ private fun CreateConferenceTimeScreen(
         ) {
             TimeScreen(uiState, event)
             MerronButton(
-                leftClick = { event(CreateConferenceTimeEvent.Previous) },
-                rightClick = { event(CreateConferenceTimeEvent.Next) }
+                leftClick = { event(CreateMeetingTimeEvent.Previous) },
+                rightClick = { event(CreateMeetingTimeEvent.Next) }
             )
         }
 
@@ -111,7 +111,7 @@ private fun showTimePickerDialog(
 @Composable
 private fun TimeScreen(
     uiState: UiState,
-    createConferenceTimeEvent: (CreateConferenceTimeEvent) -> Unit
+    createMeetingTimeEvent: (CreateMeetingTimeEvent) -> Unit
 ) {
     Column {
         Text(
@@ -132,8 +132,8 @@ private fun TimeScreen(
                     showTimePickerDialog(
                         context = context,
                         onChangeTime = { hour: Int, minute: Int ->
-                            createConferenceTimeEvent(
-                                CreateConferenceTimeEvent.ChangeTime(it.key, hour, minute)
+                            createMeetingTimeEvent(
+                                CreateMeetingTimeEvent.ChangeTime(it.key, hour, minute)
                             )
                         }
                     )
@@ -174,8 +174,8 @@ private fun TimeField(
 
 @Preview
 @Composable
-private fun CreateConferenceTimePrev() {
+private fun Preview() {
     MeeronTheme {
-        CreateConferenceTimeScreen()
+        CreateMeetingTimeScreen()
     }
 }

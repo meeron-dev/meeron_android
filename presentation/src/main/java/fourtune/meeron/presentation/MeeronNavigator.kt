@@ -11,8 +11,8 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import fourtune.meeron.presentation.ui.calendar.CalendarScreen
 import fourtune.meeron.presentation.ui.calendar.all.ShowAllScreen
-import fourtune.meeron.presentation.ui.create.CreateConferenceScreen
-import fourtune.meeron.presentation.ui.create.CreateConferenceTimeScreen
+import fourtune.meeron.presentation.ui.create.CreateMeetingDateScreen
+import fourtune.meeron.presentation.ui.create.CreateMeetingTimeScreen
 import fourtune.meeron.presentation.ui.login.LoginScreen
 import fourtune.meeron.presentation.ui.main.MainScreen
 
@@ -28,14 +28,14 @@ sealed interface Navigate {
     sealed class BottomNavi(@DrawableRes val image: Int, @StringRes val text: Int) : Navigate {
         object Home : BottomNavi(R.drawable.ic_navi_home, R.string.home)
         object Team : BottomNavi(R.drawable.ic_navi_team, R.string.team)
-        object Plus : BottomNavi(R.drawable.ic_navi_plus, R.string.create_conference)
+        object Plus : BottomNavi(R.drawable.ic_navi_plus, R.string.create_meeting)
         object My : BottomNavi(R.drawable.ic_navi_door, R.string.my_merron)
     }
 
-    sealed interface CreateConference : Navigate {
-        object Create : CreateConference
-        object Time : CreateConference
-        object Information : CreateConference
+    sealed interface CreateMeeting : Navigate {
+        object Date : CreateMeeting
+        object Time : CreateMeeting
+        object Information : CreateMeeting
     }
 }
 
@@ -63,7 +63,7 @@ fun MeeronNavigator() {
                     when (bottomNavi) {
                         Navigate.BottomNavi.Home -> navController.navigate(Navigate.BottomNavi.Home.route())
                         Navigate.BottomNavi.Team -> navController.navigate(Navigate.BottomNavi.Team.route())
-                        Navigate.BottomNavi.Plus -> navController.navigate(Navigate.CreateConference.Create.route())
+                        Navigate.BottomNavi.Plus -> navController.navigate(Navigate.CreateMeeting.Date.route())
                         Navigate.BottomNavi.My -> navController.navigate(Navigate.BottomNavi.My.route())
                     }
                 }
@@ -96,15 +96,15 @@ fun MeeronNavigator() {
 
         }
 
-        composable(Navigate.CreateConference.Create.route()) {
-            CreateConferenceScreen(
+        composable(Navigate.CreateMeeting.Date.route()) {
+            CreateMeetingDateScreen(
                 onAction = { navController.navigateUp() },
-                onNext = { navController.navigate(Navigate.CreateConference.Time.route()) }
+                onNext = { navController.navigate(Navigate.CreateMeeting.Time.route()) }
             )
         }
 
-        composable(Navigate.CreateConference.Time.route()) {
-            CreateConferenceTimeScreen(
+        composable(Navigate.CreateMeeting.Time.route()) {
+            CreateMeetingTimeScreen(
                 onAction = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
                 onPrevious = { navController.navigateUp() }
             )

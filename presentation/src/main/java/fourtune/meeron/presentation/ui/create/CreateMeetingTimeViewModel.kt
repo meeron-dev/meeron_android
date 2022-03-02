@@ -20,7 +20,7 @@ data class UiState(
 )
 
 @HiltViewModel
-class CreateConferenceTimeViewModel @Inject constructor(
+class CreateMeetingTimeViewModel @Inject constructor(
     private val getTimeUseCase: GetTimeUseCase,
     private val getCurrentDayUseCase: GetCurrentDayUseCase
 ) : ViewModel() {

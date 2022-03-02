@@ -5,7 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateConferenceViewModel @Inject constructor(
+class CreateMeetingDateViewModel @Inject constructor(
 
 ) : ViewModel() {
 

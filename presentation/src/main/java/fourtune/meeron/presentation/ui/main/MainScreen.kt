@@ -102,7 +102,7 @@ fun MainScreen(
                     Box(modifier = Modifier.fillMaxSize()) {
                         Text(
                             modifier = Modifier.align(Alignment.Center),
-                            text = stringResource(R.string.not_found_conference),
+                            text = stringResource(R.string.not_found_meeting),
                             fontSize = 16.sp,
                             textAlign = TextAlign.Center,
                             color = colorResource(id = R.color.gray)
@@ -214,7 +214,7 @@ private fun PagerItem() {
             ) {
                 Column {
                     Text(
-                        text = stringResource(R.string.conference_plan),
+                        text = stringResource(R.string.meeting_plan),
                         fontSize = 12.sp,
                         color = colorResource(id = R.color.gray)
                     )

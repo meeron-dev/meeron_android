@@ -20,38 +20,38 @@ import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
-sealed interface CreateConferenceDateEvent {
-    object OnBack : CreateConferenceDateEvent
-    object OnNext : CreateConferenceDateEvent
-    class ChangeDate() : CreateConferenceDateEvent
+sealed interface CreateMeetingDateEvent {
+    object OnBack : CreateMeetingDateEvent
+    object OnNext : CreateMeetingDateEvent
+    class ChangeDate() : CreateMeetingDateEvent
 }
 
 @Composable
-fun CreateConferenceScreen(
-    viewModel: CreateConferenceViewModel = hiltViewModel(),
+fun CreateMeetingDateScreen(
+    viewModel: CreateMeetingDateViewModel = hiltViewModel(),
     onAction: () -> Unit,
     onNext: () -> Unit
 ) {
-    CreateConferenceScreen(
+    CreateMeetingDateScreen(
         event = { event ->
             when (event) {
-                is CreateConferenceDateEvent.ChangeDate -> TODO()
-                CreateConferenceDateEvent.OnBack -> onAction()
-                CreateConferenceDateEvent.OnNext -> onNext()
+                is CreateMeetingDateEvent.ChangeDate -> TODO()
+                CreateMeetingDateEvent.OnBack -> onAction()
+                CreateMeetingDateEvent.OnNext -> onNext()
             }
         }
     )
 }
 
 @Composable
-private fun CreateConferenceScreen(event: (CreateConferenceDateEvent) -> Unit = {}) {
+private fun CreateMeetingDateScreen(event: (CreateMeetingDateEvent) -> Unit = {}) {
     Scaffold(
         topBar = {
             CenterTextTopAppBar(
-                onAction = { event(CreateConferenceDateEvent.OnBack) },
+                onAction = { event(CreateMeetingDateEvent.OnBack) },
                 text = {
                     Text(
-                        text = stringResource(id = R.string.create_conference),
+                        text = stringResource(id = R.string.create_meeting),
                         fontSize = 18.sp,
                         color = colorResource(id = R.color.black)
                     )
@@ -71,7 +71,7 @@ private fun CreateConferenceScreen(event: (CreateConferenceDateEvent) -> Unit = 
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { event(CreateConferenceDateEvent.OnNext) },
+                onClick = { event(CreateMeetingDateEvent.OnNext) },
                 contentPadding = PaddingValues(vertical = 18.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.primary))
             ) {
@@ -130,8 +130,8 @@ private fun showDatePickerDialog(context: Context) {
 
 @Preview
 @Composable
-private fun CreateConferenceScreenPrev() {
+private fun Preview() {
     MeeronTheme {
-        CreateConferenceScreen()
+        CreateMeetingDateScreen()
     }
 }

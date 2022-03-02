@@ -58,7 +58,7 @@ fun CreateMeetingTimeScreen(
 
 @Composable
 private fun CreateMeetingTimeScreen(
-    uiState: UiState,
+    uiState: MeetingTimeUiState,
     event: (CreateMeetingTimeEvent) -> Unit
 ) {
     Scaffold(
@@ -110,7 +110,7 @@ private fun showTimePickerDialog(
 
 @Composable
 private fun TimeScreen(
-    uiState: UiState,
+    uiState: MeetingTimeUiState,
     createMeetingTimeEvent: (CreateMeetingTimeEvent) -> Unit
 ) {
     Column {

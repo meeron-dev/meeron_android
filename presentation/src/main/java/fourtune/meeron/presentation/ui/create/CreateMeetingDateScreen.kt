@@ -6,6 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -16,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import forutune.meeron.domain.model.Date
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
@@ -23,28 +26,29 @@ import fourtune.meeron.presentation.ui.theme.MeeronTheme
 sealed interface CreateMeetingDateEvent {
     object OnBack : CreateMeetingDateEvent
     object OnNext : CreateMeetingDateEvent
-    class ChangeDate() : CreateMeetingDateEvent
+    class ChangeDate(val date: Date) : CreateMeetingDateEvent
 }
 
 @Composable
 fun CreateMeetingDateScreen(
     viewModel: CreateMeetingDateViewModel = hiltViewModel(),
-    onAction: () -> Unit,
-    onNext: () -> Unit
+    onAction: () -> Unit = {},
+    onNext: () -> Unit = {}
 ) {
+    val uiState by viewModel.uiState().collectAsState()
     CreateMeetingDateScreen(
-        event = { event ->
-            when (event) {
-                is CreateMeetingDateEvent.ChangeDate -> TODO()
-                CreateMeetingDateEvent.OnBack -> onAction()
-                CreateMeetingDateEvent.OnNext -> onNext()
-            }
+        uiState = uiState
+    ) { event ->
+        when (event) {
+            is CreateMeetingDateEvent.ChangeDate -> viewModel.changeDate(event.date)
+            CreateMeetingDateEvent.OnBack -> onAction()
+            CreateMeetingDateEvent.OnNext -> onNext()
         }
-    )
+    }
 }
 
 @Composable
-private fun CreateMeetingDateScreen(event: (CreateMeetingDateEvent) -> Unit = {}) {
+private fun CreateMeetingDateScreen(uiState: MeetingDateUiState, event: (CreateMeetingDateEvent) -> Unit = {}) {
     Scaffold(
         topBar = {
             CenterTextTopAppBar(
@@ -65,9 +69,12 @@ private fun CreateMeetingDateScreen(event: (CreateMeetingDateEvent) -> Unit = {}
                 .fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            DateScreen(openDatePicker = { context ->
-                showDatePickerDialog(context)
-            })
+            DateScreen(
+                initialDate = uiState.initialDate,
+                displayDate = uiState.displayDate
+            ) { context, date ->
+                showDatePickerDialog(context, date, event)
+            }
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
@@ -87,7 +94,12 @@ private fun CreateMeetingDateScreen(event: (CreateMeetingDateEvent) -> Unit = {}
 }
 
 @Composable
-private fun DateScreen(modifier: Modifier = Modifier, openDatePicker: (context: Context) -> Unit) {
+private fun DateScreen(
+    modifier: Modifier = Modifier,
+    initialDate: Date,
+    displayDate: String,
+    openDatePicker: (context: Context, date: Date) -> Unit
+) {
     val context = LocalContext.current
     Column(
         modifier = modifier
@@ -101,10 +113,10 @@ private fun DateScreen(modifier: Modifier = Modifier, openDatePicker: (context: 
         Spacer(modifier = Modifier.padding(32.dp))
         Column(
             Modifier
-                .clickable { openDatePicker(context) }
+                .clickable { openDatePicker(context, initialDate) }
         ) {
             Text(
-                text = "YY/MM/DD",
+                text = displayDate,
                 fontSize = 25.sp,
                 color = colorResource(id = R.color.black),
                 maxLines = 1,
@@ -115,16 +127,16 @@ private fun DateScreen(modifier: Modifier = Modifier, openDatePicker: (context: 
     }
 }
 
-private fun showDatePickerDialog(context: Context) {
+private fun showDatePickerDialog(context: Context, date: Date, event: (CreateMeetingDateEvent) -> Unit) {
     DatePickerDialog(
         context,
         R.style.DatePickerStyle,
         { _, year, month, dayOfMonth ->
-
+            event(CreateMeetingDateEvent.ChangeDate(Date("$year", "$month", "$dayOfMonth")))
         },
-        2,
-        2,
-        2
+        date.year.toInt(),
+        date.month.toInt(),
+        date.hourOfDay.toInt()
     ).show()
 }
 

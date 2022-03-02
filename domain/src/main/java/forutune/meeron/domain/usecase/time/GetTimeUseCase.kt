@@ -14,7 +14,7 @@ class GetTimeUseCase @Inject constructor(
             set(Calendar.HOUR_OF_DAY, hour)
             set(Calendar.MINUTE, minute)
         }.time
-        val formattedTime = SimpleDateFormat(TIME_FORMAT, Locale.US).format(time)
+        val formattedTime: String = SimpleDateFormat(TIME_FORMAT, Locale.US).format(time)
         val timeSection = formattedTime.split(" ")
         return Time(time = timeSection[TIME], hourOfDay = timeSection[HOUR_OF_DAY])
     }

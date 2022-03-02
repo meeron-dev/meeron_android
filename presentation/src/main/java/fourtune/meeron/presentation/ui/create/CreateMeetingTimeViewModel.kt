@@ -3,6 +3,7 @@ package fourtune.meeron.presentation.ui.create
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.model.Time
+import forutune.meeron.domain.usecase.time.DateFormat
 import forutune.meeron.domain.usecase.time.GetCurrentDayUseCase
 import forutune.meeron.domain.usecase.time.GetTimeUseCase
 import fourtune.meeron.presentation.R
@@ -11,7 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
-data class UiState(
+data class MeetingTimeUiState(
     val timeMap: Map<Int, Time> = mapOf(
         R.string.start to Time("12:00", "AM"),
         R.string.end to Time("12:00", "PM")
@@ -25,12 +26,12 @@ class CreateMeetingTimeViewModel @Inject constructor(
     private val getCurrentDayUseCase: GetCurrentDayUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(UiState())
+    private val _uiState = MutableStateFlow(MeetingTimeUiState())
     fun uiState() = _uiState.asStateFlow()
 
     init {
         _uiState.update {
-            it.copy(currentDay = getCurrentDayUseCase())
+            it.copy(currentDay = getCurrentDayUseCase(DateFormat.SimpleString).string)
         }
     }
 

@@ -15,6 +15,7 @@
     <string name="end">마감</string>
     <string name="previous">이전</string>
     <string name="next">다음</string>
-    <string name="create_title">회의 시간을\n입력해주세요.</string>
+    <string name="create_time_title">회의 시간을\n입력해주세요.</string>
+    <string name="create_data_title">회의 날짜를\n입력해주세요.</string>
     <string name="not_found_conference">예정된 회의가 없습니다.</string>
 </resources>

@@ -2,10 +2,11 @@ package fourtune.meeron.presentation.ui.create
 
 import android.app.TimePickerDialog
 import android.content.Context
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.Divider
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -13,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import forutune.meeron.domain.model.Time
 import fourtune.meeron.presentation.R
+import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MerronButton
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
@@ -32,7 +33,11 @@ private sealed interface CreateConferenceTimeEvent {
 }
 
 @Composable
-fun CreateConferenceTimeScreen(timeViewModel: CreateConferenceTimeViewModel = hiltViewModel(), onAction: () -> Unit = {}) {
+fun CreateConferenceTimeScreen(
+    timeViewModel: CreateConferenceTimeViewModel = hiltViewModel(),
+    onAction: () -> Unit = {},
+    onPrevious: () -> Unit = {}
+) {
     val uiState by timeViewModel.uiState().collectAsState()
     CreateConferenceTimeScreen(
         uiState,
@@ -45,7 +50,7 @@ fun CreateConferenceTimeScreen(timeViewModel: CreateConferenceTimeViewModel = hi
                 )
                 CreateConferenceTimeEvent.Exit -> onAction()
                 CreateConferenceTimeEvent.Next -> TODO()
-                CreateConferenceTimeEvent.Previous -> TODO()
+                CreateConferenceTimeEvent.Previous -> onPrevious()
             }
         }
     )
@@ -56,24 +61,20 @@ private fun CreateConferenceTimeScreen(
     uiState: UiState,
     event: (CreateConferenceTimeEvent) -> Unit
 ) {
-    Scaffold(topBar = {
-        TopAppBar(
-            actions = {
-                IconButton(onClick = { event(CreateConferenceTimeEvent.Exit) }) {
-                    Image(painter = painterResource(id = R.drawable.ic_calender_close), contentDescription = null)
-                }
-            },
-            title = {
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+    Scaffold(
+        topBar = {
+            CenterTextTopAppBar(
+                text = {
                     Text(
                         text = stringResource(id = R.string.create_conference),
                         fontSize = 18.sp,
                         color = colorResource(id = R.color.black)
                     )
-                }
-            }
-        )
-    }) {
+                },
+                onAction = { event(CreateConferenceTimeEvent.Exit) }
+            )
+        }
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -114,7 +115,7 @@ private fun TimeScreen(
 ) {
     Column {
         Text(
-            text = stringResource(id = R.string.create_title),
+            text = stringResource(id = R.string.create_time_title),
             fontSize = 25.sp,
             color = colorResource(id = R.color.black)
         )

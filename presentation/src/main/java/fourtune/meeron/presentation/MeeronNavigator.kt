@@ -11,6 +11,7 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import fourtune.meeron.presentation.ui.calendar.CalendarScreen
 import fourtune.meeron.presentation.ui.calendar.all.ShowAllScreen
+import fourtune.meeron.presentation.ui.create.CreateConferenceScreen
 import fourtune.meeron.presentation.ui.create.CreateConferenceTimeScreen
 import fourtune.meeron.presentation.ui.login.LoginScreen
 import fourtune.meeron.presentation.ui.main.MainScreen
@@ -29,6 +30,12 @@ sealed interface Navigate {
         object Team : BottomNavi(R.drawable.ic_navi_team, R.string.team)
         object Plus : BottomNavi(R.drawable.ic_navi_plus, R.string.create_conference)
         object My : BottomNavi(R.drawable.ic_navi_door, R.string.my_merron)
+    }
+
+    sealed interface CreateConference : Navigate {
+        object Create : CreateConference
+        object Time : CreateConference
+        object Information : CreateConference
     }
 }
 
@@ -56,7 +63,7 @@ fun MeeronNavigator() {
                     when (bottomNavi) {
                         Navigate.BottomNavi.Home -> navController.navigate(Navigate.BottomNavi.Home.route())
                         Navigate.BottomNavi.Team -> navController.navigate(Navigate.BottomNavi.Team.route())
-                        Navigate.BottomNavi.Plus -> navController.navigate(Navigate.BottomNavi.Plus.route())
+                        Navigate.BottomNavi.Plus -> navController.navigate(Navigate.CreateConference.Create.route())
                         Navigate.BottomNavi.My -> navController.navigate(Navigate.BottomNavi.My.route())
                     }
                 }
@@ -78,7 +85,7 @@ fun MeeronNavigator() {
         }
 
         composable(Navigate.BottomNavi.Plus.route()) {
-            CreateConferenceTimeScreen(onAction = { navController.navigateUp() })
+
         }
 
         composable(Navigate.BottomNavi.Team.route()) {
@@ -87,6 +94,20 @@ fun MeeronNavigator() {
 
         composable(Navigate.BottomNavi.My.route()) {
 
+        }
+
+        composable(Navigate.CreateConference.Create.route()) {
+            CreateConferenceScreen(
+                onAction = { navController.navigateUp() },
+                onNext = { navController.navigate(Navigate.CreateConference.Time.route()) }
+            )
+        }
+
+        composable(Navigate.CreateConference.Time.route()) {
+            CreateConferenceTimeScreen(
+                onAction = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
+                onPrevious = { navController.navigateUp() }
+            )
         }
     }
 }

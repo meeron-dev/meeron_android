@@ -1,6 +1,5 @@
 package fourtune.meeron.presentation.ui.main
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,27 +29,22 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.prolificinteractive.materialcalendarview.CalendarDay
+import fourtune.meeron.presentation.Navigate
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.Dot
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
-
-enum class BottomNavi(@DrawableRes val image: Int, @StringRes val text: Int) {
-    HOME(R.drawable.ic_navi_home, R.string.home),
-    TEAM(R.drawable.ic_navi_team, R.string.team),
-    PLUS(R.drawable.ic_navi_plus, R.string.create_conference),
-    MY(R.drawable.ic_navi_door, R.string.my_merron)
-}
 
 enum class TabItems(@StringRes val text: Int) {
     TODO(R.string.coming_soon), COMPLETE(R.string.complete)
 }
 
-sealed interface MainEvent {
-}
-
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MainScreen(openCalendar: () -> Unit = {}, mainViewModel: MainViewModel = hiltViewModel()) {
+fun MainScreen(
+    openCalendar: () -> Unit = {},
+    onBottomNaviClick: (selected: Navigate.BottomNavi) -> Unit = {},
+    mainViewModel: MainViewModel = hiltViewModel()
+) {
     val currentDay by mainViewModel.currentDay().collectAsState()
     val pagerState = rememberPagerState(0)
     val bottomBarSize = 90.dp
@@ -75,7 +69,8 @@ fun MainScreen(openCalendar: () -> Unit = {}, mainViewModel: MainViewModel = hil
                     .padding(top = 8.dp)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(topStart = 14.dp, topEnd = 14.dp))
-                    .height(bottomBarSize)
+                    .height(bottomBarSize),
+                onClick = onBottomNaviClick
             )
         }
     ) {
@@ -107,7 +102,7 @@ fun MainScreen(openCalendar: () -> Unit = {}, mainViewModel: MainViewModel = hil
                     Box(modifier = Modifier.fillMaxSize()) {
                         Text(
                             modifier = Modifier.align(Alignment.Center),
-                            text = "예정된 회의가 없습니다.",
+                            text = stringResource(R.string.not_found_conference),
                             fontSize = 16.sp,
                             textAlign = TextAlign.Center,
                             color = colorResource(id = R.color.gray)
@@ -122,9 +117,9 @@ fun MainScreen(openCalendar: () -> Unit = {}, mainViewModel: MainViewModel = hil
 }
 
 @Composable
-private fun BottomNavigation(modifier: Modifier) {
-    var naviPos by rememberSaveable {
-        mutableStateOf(BottomNavi.HOME.ordinal)
+private fun BottomNavigation(modifier: Modifier, onClick: (selected: Navigate.BottomNavi) -> Unit) {
+    var naviPos: Navigate.BottomNavi by remember {
+        mutableStateOf(Navigate.BottomNavi.Home)
     }
 
     BottomNavigation(
@@ -138,9 +133,11 @@ private fun BottomNavigation(modifier: Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            BottomNavi.values().forEach { item ->
-                BottomNaviItem(naviItem = item, selected = naviPos) { selectedPosition ->
+            Navigate.BottomNavi::class.sealedSubclasses.forEach { item ->
+                val naviItem = item.objectInstance ?: return@forEach
+                BottomNaviItem(naviItem = naviItem, selected = naviPos) { selectedPosition ->
                     naviPos = selectedPosition
+                    onClick(selectedPosition)
                 }
             }
         }
@@ -263,13 +260,16 @@ private fun PagerItem() {
 }
 
 @Composable
-private fun BottomNaviItem(naviItem: BottomNavi, selected: Int, onClick: (selected: Int) -> Unit = {}) {
-    val color = remember(naviItem.ordinal == selected) {
-        if (naviItem.ordinal == selected) R.color.primary else R.color.gray
-    }
+private fun BottomNaviItem(
+    naviItem: Navigate.BottomNavi,
+    selected: Navigate.BottomNavi,
+    onClick: (selected: Navigate.BottomNavi) -> Unit = {}
+) {
+    val color = if (naviItem == selected) R.color.primary else R.color.gray
+
     Column(
         modifier = Modifier
-            .clickable(onClick = { onClick(naviItem.ordinal) })
+            .clickable(onClick = { if (naviItem != selected) onClick(naviItem) })
             .padding(vertical = 3.dp, horizontal = 12.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally

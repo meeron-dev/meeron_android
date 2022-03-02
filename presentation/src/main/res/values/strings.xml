@@ -11,4 +11,10 @@
     <string name="calendar_title">%d월 %d일</string>
     <string name="calendar_month">%d 월</string>
     <string name="show_all">전체보기</string>
+    <string name="start">시작</string>
+    <string name="end">마감</string>
+    <string name="previous">이전</string>
+    <string name="next">다음</string>
+    <string name="create_title">회의 시간을\n입력해주세요.</string>
+    <string name="not_found_conference">예정된 회의가 없습니다.</string>
 </resources>

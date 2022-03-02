@@ -2,6 +2,18 @@
 <resources>
 
     <style name="Theme.Meeron" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:timePickerDialogTheme">@style/TimePickerStyle</item>
+    </style>
+
+    <style name="TimePickerStyle" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="android:timePickerMode">spinner</item>
+        <item name="android:timePickerStyle">@style/TimePickerDialogStyle</item>
+    </style>
+
+    <style name="TimePickerDialogStyle" parent="@android:style/Widget.Material.Light.TimePicker">
+        <item name="android:timePickerMode">spinner</item>
+        <item name="android:numbersTextColor">#ff000000</item>
+        <item name="android:numbersBackgroundColor">#ffdddddd</item>
 
     </style>
 </resources>

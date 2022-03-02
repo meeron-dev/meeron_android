@@ -44,6 +44,7 @@ dependencies {
 
     implementation(Dep.Kotlin.coroutineAndroid)
     implementation(Dep.Kotlin.coroutineRx2)
+    implementation(Dep.Kotlin.reflect)
 
     implementation(Dep.Dagger.hiltAndroid)
     implementation(Dep.Dagger.hiltLifeCycleViewModel)

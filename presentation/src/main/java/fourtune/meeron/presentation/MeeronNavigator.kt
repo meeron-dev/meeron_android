@@ -1,5 +1,7 @@
 package fourtune.meeron.presentation
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -9,6 +11,7 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import fourtune.meeron.presentation.ui.calendar.CalendarScreen
 import fourtune.meeron.presentation.ui.calendar.all.ShowAllScreen
+import fourtune.meeron.presentation.ui.create.CreateConferenceTimeScreen
 import fourtune.meeron.presentation.ui.login.LoginScreen
 import fourtune.meeron.presentation.ui.main.MainScreen
 
@@ -18,9 +21,15 @@ sealed interface Navigate {
     fun route(argument: Any) = route() + "/$argument"
 
     object Login : Navigate
-    object Main : Navigate
     object Calendar : Navigate
     object ShowAll : Navigate
+
+    sealed class BottomNavi(@DrawableRes val image: Int, @StringRes val text: Int) : Navigate {
+        object Home : BottomNavi(R.drawable.ic_navi_home, R.string.home)
+        object Team : BottomNavi(R.drawable.ic_navi_team, R.string.team)
+        object Plus : BottomNavi(R.drawable.ic_navi_plus, R.string.create_conference)
+        object My : BottomNavi(R.drawable.ic_navi_door, R.string.my_merron)
+    }
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -35,16 +44,23 @@ fun MeeronNavigator() {
         composable(route = Navigate.Login.route()) {
             LoginScreen(isLoginSuccess = {
                 navController.popBackStack()
-                navController.navigate(Navigate.Main.route())
+                navController.navigate(Navigate.BottomNavi.Home.route())
             })
         }
-        composable(route = Navigate.Main.route()) {
+        composable(route = Navigate.BottomNavi.Home.route()) {
             MainScreen(
                 openCalendar = {
                     navController.navigate(Navigate.Calendar.route())
+                },
+                onBottomNaviClick = { bottomNavi ->
+                    when (bottomNavi) {
+                        Navigate.BottomNavi.Home -> navController.navigate(Navigate.BottomNavi.Home.route())
+                        Navigate.BottomNavi.Team -> navController.navigate(Navigate.BottomNavi.Team.route())
+                        Navigate.BottomNavi.Plus -> navController.navigate(Navigate.BottomNavi.Plus.route())
+                        Navigate.BottomNavi.My -> navController.navigate(Navigate.BottomNavi.My.route())
+                    }
                 }
             )
-
         }
         composable(
             route = Navigate.Calendar.route(),
@@ -59,6 +75,18 @@ fun MeeronNavigator() {
 
         composable(Navigate.ShowAll.route()) {
             ShowAllScreen(onAction = { navController.navigateUp() })
+        }
+
+        composable(Navigate.BottomNavi.Plus.route()) {
+            CreateConferenceTimeScreen(onAction = { navController.navigateUp() })
+        }
+
+        composable(Navigate.BottomNavi.Team.route()) {
+
+        }
+
+        composable(Navigate.BottomNavi.My.route()) {
+
         }
     }
 }

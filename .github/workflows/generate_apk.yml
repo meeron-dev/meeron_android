@@ -3,7 +3,7 @@ name: generate_apk
 on:
 
   push:
-    branches: [ action ]
+    branches: [ develop ]
 
 jobs:
   build:

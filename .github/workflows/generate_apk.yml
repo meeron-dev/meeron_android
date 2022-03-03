@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-   name : extract_apk
+   name : APK Send to Slack
    runs-on: ubuntu-latest
    steps:
     - name : checkout
@@ -28,14 +28,14 @@ jobs:
       with:
           slack_token: ${{ secrets.SLACK_READ_WRITE_TOKEN }}
           channels: ${{ secrets.SLACK_CHANNEL_ID }}
-          file_path: 'app/build/outputs/apk/release/app-release-unsigned.apk'
-          file_name: 'meeron.apk'
+          file_path: 'app/build/outputs/apk/debug/app-debug.apk'
+          file_name: 'app-debug.apk'
           file_type: 'apk'
           initial_comment: '${{ github.ref }} 슬랙 배포 성공'
         
-    - name: 테스트용 apk artifact 업로드
+    - name: apk 업로드
       uses: actions/upload-artifact@v2
       with:
         name: meeron.apk
-        path: app/build/outputs/apk/release/meeron.apk
+        path: app/build/outputs/apk/debug/app-debug.apk
 

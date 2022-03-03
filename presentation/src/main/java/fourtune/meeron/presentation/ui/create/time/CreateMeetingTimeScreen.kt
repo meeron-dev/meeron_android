@@ -23,8 +23,6 @@ import forutune.meeron.domain.model.Time
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MerronButton
-import fourtune.meeron.presentation.ui.create.CreateMeetingTimeViewModel
-import fourtune.meeron.presentation.ui.create.MeetingTimeUiState
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
 private sealed interface CreateMeetingTimeEvent {
@@ -38,6 +36,7 @@ private sealed interface CreateMeetingTimeEvent {
 fun CreateMeetingTimeScreen(
     timeViewModel: CreateMeetingTimeViewModel = hiltViewModel(),
     onAction: () -> Unit = {},
+    onNext: () -> Unit = {},
     onPrevious: () -> Unit = {}
 ) {
     val uiState by timeViewModel.uiState().collectAsState()
@@ -51,7 +50,7 @@ fun CreateMeetingTimeScreen(
                     event.minute
                 )
                 CreateMeetingTimeEvent.Exit -> onAction()
-                CreateMeetingTimeEvent.Next -> TODO()
+                CreateMeetingTimeEvent.Next -> onNext()
                 CreateMeetingTimeEvent.Previous -> onPrevious()
             }
         }

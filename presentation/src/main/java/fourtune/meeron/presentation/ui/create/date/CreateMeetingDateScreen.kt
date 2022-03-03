@@ -21,8 +21,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import forutune.meeron.domain.model.Date
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
-import fourtune.meeron.presentation.ui.create.CreateMeetingDateViewModel
-import fourtune.meeron.presentation.ui.create.MeetingDateUiState
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
 sealed interface CreateMeetingDateEvent {

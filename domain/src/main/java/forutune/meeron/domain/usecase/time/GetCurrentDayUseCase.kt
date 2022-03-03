@@ -22,7 +22,13 @@ class GetCurrentDayUseCase @Inject constructor(
 ) {
     operator fun invoke(format: DateFormat.YYMMDD): DateResult.YYMMDD {
         val dateSection = getFormattedDate(format).split("/")
-        return DateResult.YYMMDD(Date(dateSection[YEAR], dateSection[MONTH], dateSection[HOUR_OF_DAY]))
+        return DateResult.YYMMDD(
+            Date(
+                dateSection[YEAR].toInt(),
+                dateSection[MONTH].toInt(),
+                dateSection[HOUR_OF_DAY].toInt()
+            )
+        )
     }
 
     operator fun invoke(format: DateFormat.SimpleString): DateResult.SimpleString {
@@ -31,7 +37,13 @@ class GetCurrentDayUseCase @Inject constructor(
 
     operator fun invoke(format: DateFormat.YYYYMMDD): DateResult.YYYYMMDD {
         val dateSection = getFormattedDate(format).split("/")
-        return DateResult.YYYYMMDD(Date(dateSection[YEAR], dateSection[MONTH], dateSection[HOUR_OF_DAY]))
+        return DateResult.YYYYMMDD(
+            Date(
+                dateSection[YEAR].toInt(),
+                dateSection[MONTH].toInt(),
+                dateSection[HOUR_OF_DAY].toInt()
+            )
+        )
     }
 
     private fun getFormattedDate(format: DateFormat): String =

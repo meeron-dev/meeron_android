@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.create
+package fourtune.meeron.presentation.ui.create.date
 
 import android.app.DatePickerDialog
 import android.content.Context
@@ -21,6 +21,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import forutune.meeron.domain.model.Date
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
+import fourtune.meeron.presentation.ui.create.CreateMeetingDateViewModel
+import fourtune.meeron.presentation.ui.create.MeetingDateUiState
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
 sealed interface CreateMeetingDateEvent {
@@ -70,8 +72,7 @@ private fun CreateMeetingDateScreen(uiState: MeetingDateUiState, event: (CreateM
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             DateScreen(
-                initialDate = uiState.initialDate,
-                displayDate = uiState.displayDate
+                date = uiState.date
             ) { context, date ->
                 showDatePickerDialog(context, date, event)
             }
@@ -96,8 +97,7 @@ private fun CreateMeetingDateScreen(uiState: MeetingDateUiState, event: (CreateM
 @Composable
 private fun DateScreen(
     modifier: Modifier = Modifier,
-    initialDate: Date,
-    displayDate: String,
+    date: Date,
     openDatePicker: (context: Context, date: Date) -> Unit
 ) {
     val context = LocalContext.current
@@ -113,10 +113,10 @@ private fun DateScreen(
         Spacer(modifier = Modifier.padding(32.dp))
         Column(
             Modifier
-                .clickable { openDatePicker(context, initialDate) }
+                .clickable { openDatePicker(context, date) }
         ) {
             Text(
-                text = displayDate,
+                text = date.toString(),
                 fontSize = 25.sp,
                 color = colorResource(id = R.color.black),
                 maxLines = 1,
@@ -132,11 +132,11 @@ private fun showDatePickerDialog(context: Context, date: Date, event: (CreateMee
         context,
         R.style.DatePickerStyle,
         { _, year, month, dayOfMonth ->
-            event(CreateMeetingDateEvent.ChangeDate(Date("$year", "${month + 1}", "$dayOfMonth")))
+            event(CreateMeetingDateEvent.ChangeDate(Date(year, month + 1, dayOfMonth)))
         },
-        date.year.toInt(),
-        date.month.toInt(),
-        date.hourOfDay.toInt()
+        date.year,
+        date.month - 1,
+        date.hourOfDay
     ).show()
 }
 

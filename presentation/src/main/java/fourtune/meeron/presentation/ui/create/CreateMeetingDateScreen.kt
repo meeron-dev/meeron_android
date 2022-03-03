@@ -132,7 +132,7 @@ private fun showDatePickerDialog(context: Context, date: Date, event: (CreateMee
         context,
         R.style.DatePickerStyle,
         { _, year, month, dayOfMonth ->
-            event(CreateMeetingDateEvent.ChangeDate(Date("$year", "$month", "$dayOfMonth")))
+            event(CreateMeetingDateEvent.ChangeDate(Date("$year", "${month + 1}", "$dayOfMonth")))
         },
         date.year.toInt(),
         date.month.toInt(),

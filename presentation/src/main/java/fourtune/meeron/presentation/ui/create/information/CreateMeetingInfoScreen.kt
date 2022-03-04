@@ -133,7 +133,7 @@ private fun CreateMeetingInfoScreen(
                         when (info) {
                             Info.Owners -> event(CreateMeetingInfoViewModel.BottomSheetState.Owner)
                             Info.Team -> event(CreateMeetingInfoViewModel.BottomSheetState.Team)
-                            else -> IllegalStateException("$info is Not Modal")
+                            else -> throw IllegalStateException("$info is Not Modal")
                         }
                         viewModel.clickModal(info)
                     },
@@ -182,7 +182,7 @@ private fun InformationFields(
 
 @Composable
 private fun InformationTitle(selectedDate: String, selectedTime: String, onClick: () -> Unit) {
-    Text(text = "회의의 기본 정보를\n입력해 주세요.", fontSize = 25.sp, color = colorResource(id = R.color.black))
+    Text(text = stringResource(id = R.string.info_title), fontSize = 25.sp, color = colorResource(id = R.color.black))
     Spacer(modifier = Modifier.padding(4.dp))
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Column {
@@ -195,7 +195,7 @@ private fun InformationTitle(selectedDate: String, selectedTime: String, onClick
             colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.medium_primary)),
             shape = RoundedCornerShape(30.dp)
         ) {
-            Text(text = "불러오기", fontSize = 15.sp, color = colorResource(id = R.color.light_gray_white))
+            Text(text = stringResource(R.string.load), fontSize = 15.sp, color = colorResource(id = R.color.light_gray_white))
         }
     }
 }

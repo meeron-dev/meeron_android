@@ -10,7 +10,9 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,7 +28,8 @@ fun OwnersSelectScreen() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp),
+            .padding(horizontal = 20.dp)
+            .height((LocalConfiguration.current.screenHeightDp * 0.9).dp),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -36,7 +39,7 @@ fun OwnersSelectScreen() {
         ) {
             Text(
                 modifier = Modifier.padding(top = 46.dp),
-                text = "공동 관리자 선택하기",
+                text = stringResource(R.string.owner_select_title),
                 fontSize = 18.sp,
                 color = colorResource(id = R.color.dark_gray)
             )
@@ -58,7 +61,6 @@ fun OwnersSelectScreen() {
                 }
             )
         }
-        Spacer(modifier = Modifier.padding(200.dp))
         MerronButton(modifier = Modifier.padding(bottom = 50.dp), {}, {})
     }
 }

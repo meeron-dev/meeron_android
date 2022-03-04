@@ -5,6 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.model.Time
 import forutune.meeron.domain.usecase.time.DateFormat
 import forutune.meeron.domain.usecase.time.GetCurrentDayUseCase
+import forutune.meeron.domain.usecase.time.GetCurrentTimeUseCase
 import forutune.meeron.domain.usecase.time.GetTimeUseCase
 import fourtune.meeron.presentation.R
 import kotlinx.coroutines.flow.MutableStateFlow

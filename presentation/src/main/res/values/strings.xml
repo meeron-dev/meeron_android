@@ -22,4 +22,6 @@
     <string name="meeting_personality">회의 성격</string>
     <string name="public_owners">공동 관리자</string>
     <string name="charged_team">담당 팀</string>
+    <string name="info_essential">필수 입력정보입니다.</string>
+    <string name="info_limit">공백 포함 %d자</string>
 </resources>

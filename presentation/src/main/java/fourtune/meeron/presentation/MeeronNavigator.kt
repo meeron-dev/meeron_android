@@ -46,7 +46,7 @@ fun MeeronNavigator() {
     val navController = rememberAnimatedNavController()
     AnimatedNavHost(
         navController = navController,
-        startDestination = Navigate.Login.route()
+        startDestination = Navigate.BottomNavi.Home.route()
     ) {
 
         composable(route = Navigate.Login.route()) {
@@ -115,7 +115,7 @@ fun MeeronNavigator() {
         composable(Navigate.CreateMeeting.Information.route()) {
             CreateMeetingInfoScreen(
                 onNext = {},
-                onPrevious = {},
+                onPrevious = { navController.navigateUp() },
                 onLoad = { navController.navigate(Navigate.Calendar.route()) }
             )
         }

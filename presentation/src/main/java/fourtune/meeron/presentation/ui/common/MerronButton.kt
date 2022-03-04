@@ -18,10 +18,10 @@ import androidx.compose.ui.unit.sp
 import fourtune.meeron.presentation.R
 
 @Composable
-fun MerronButton(leftClick: () -> Unit, rightClick: () -> Unit) {
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+fun MerronButton(modifier: Modifier = Modifier, leftClick: () -> Unit = {}, rightClick: () -> Unit = { }) {
+    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Button(
-            onClick = { leftClick() },
+            onClick = leftClick,
             colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.dark_gray_white)),
             contentPadding = PaddingValues(vertical = 16.dp, horizontal = 60.dp)
         ) {
@@ -33,7 +33,7 @@ fun MerronButton(leftClick: () -> Unit, rightClick: () -> Unit) {
             )
         }
         Button(
-            onClick = { rightClick() },
+            onClick = rightClick,
             colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.primary)),
             contentPadding = PaddingValues(vertical = 16.dp, horizontal = 60.dp)
         ) {
@@ -51,5 +51,5 @@ fun MerronButton(leftClick: () -> Unit, rightClick: () -> Unit) {
 @Preview
 @Composable
 private fun MeeronButtonPrev() {
-    MerronButton({}, {})
+    MerronButton(Modifier, {}, {})
 }

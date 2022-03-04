@@ -9,17 +9,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
-data class MeetingInfoUiState(
-    val date: Date = Date(),
-    val startTime: Time = Time(),
-    val endTime: Time = Time(),
-)
-
 @HiltViewModel
 class CreateMeetingInfoViewModel @Inject constructor(
 
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(MeetingInfoUiState())
+    private val _uiState = MutableStateFlow(UiState())
     fun uiState() = _uiState.asStateFlow()
 
     val listState = Info.values()
@@ -34,5 +28,16 @@ class CreateMeetingInfoViewModel @Inject constructor(
 
     fun clickModal(info: Info) {
         listState[info] = "asdasd"
+    }
+
+    data class UiState(
+        val date: Date = Date(),
+        val startTime: Time = Time(),
+        val endTime: Time = Time(),
+    )
+
+    sealed interface BottomSheetState {
+        object Owner : BottomSheetState
+        object Team : BottomSheetState
     }
 }

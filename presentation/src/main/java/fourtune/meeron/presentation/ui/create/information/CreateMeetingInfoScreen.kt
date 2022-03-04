@@ -1,18 +1,14 @@
 package fourtune.meeron.presentation.ui.create.information
 
+import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -25,6 +21,10 @@ import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronClickableText
 import fourtune.meeron.presentation.ui.common.MeeronTextField
 import fourtune.meeron.presentation.ui.common.MerronButton
+import fourtune.meeron.presentation.ui.common.bottomsheet.NoneScreen
+import fourtune.meeron.presentation.ui.common.bottomsheet.OwnersSelectScreen
+import fourtune.meeron.presentation.ui.common.bottomsheet.TeamSelectScreen
+import kotlinx.coroutines.launch
 
 enum class Info(
     @StringRes val title: Int,
@@ -38,6 +38,7 @@ enum class Info(
     Team(R.string.charged_team, isEssential = true, limit = 0, true)
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CreateMeetingInfoScreen(
     viewModel: CreateMeetingInfoViewModel = hiltViewModel(),
@@ -45,8 +46,59 @@ fun CreateMeetingInfoScreen(
     onPrevious: () -> Unit = {},
     onLoad: () -> Unit = {}
 ) {
+    val scope = rememberCoroutineScope()
     val uiState by viewModel.uiState().collectAsState()
+    var currentBottomSheet: CreateMeetingInfoViewModel.BottomSheetState? by remember {
+        mutableStateOf(null)
+    }
+    val bottomSheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded }
+    )
+    BackHandler {
+        if (bottomSheetState.isVisible) {
+            scope.launch { bottomSheetState.hide() }
+        } else {
+            onPrevious()
+        }
+    }
 
+    ModalBottomSheetLayout(
+        sheetState = bottomSheetState,
+        sheetContent = {
+            when (currentBottomSheet) {
+                CreateMeetingInfoViewModel.BottomSheetState.Owner -> OwnersSelectScreen()
+                CreateMeetingInfoViewModel.BottomSheetState.Team -> TeamSelectScreen()
+                else -> NoneScreen()
+            }
+        },
+        sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+        content = {
+            CreateMeetingInfoScreen(
+                uiState = uiState,
+                onLoad = onLoad,
+                viewModel = viewModel,
+                onPrevious = onPrevious,
+                onNext = onNext,
+                event = { event ->
+                    currentBottomSheet = event
+                    scope.launch { bottomSheetState.animateTo(ModalBottomSheetValue.Expanded) }
+                }
+            )
+        }
+    )
+
+}
+
+@Composable
+private fun CreateMeetingInfoScreen(
+    uiState: CreateMeetingInfoViewModel.UiState,
+    onLoad: () -> Unit,
+    viewModel: CreateMeetingInfoViewModel,
+    onPrevious: () -> Unit,
+    onNext: () -> Unit,
+    event: (CreateMeetingInfoViewModel.BottomSheetState) -> Unit = {}
+) {
     Scaffold(
         topBar = {
             CenterTextTopAppBar(
@@ -75,7 +127,18 @@ fun CreateMeetingInfoScreen(
                     selectedTime = "${uiState.startTime.time}${uiState.startTime.hourOfDay} ~ ${uiState.endTime.time}${uiState.endTime.hourOfDay}",
                     onClick = onLoad
                 )
-                InformationColumn(viewModel.listState, viewModel::clickModal, viewModel::updateText)
+                InformationFields(
+                    listState = viewModel.listState,
+                    clickModal = { info ->
+                        when (info) {
+                            Info.Owners -> event(CreateMeetingInfoViewModel.BottomSheetState.Owner)
+                            Info.Team -> event(CreateMeetingInfoViewModel.BottomSheetState.Team)
+                            else -> IllegalStateException("$info is Not Modal")
+                        }
+                        viewModel.clickModal(info)
+                    },
+                    onTextChange = viewModel::updateText
+                )
             }
 
             MerronButton(
@@ -89,7 +152,7 @@ fun CreateMeetingInfoScreen(
 }
 
 @Composable
-private fun InformationColumn(
+private fun InformationFields(
     listState: Map<Info, String>,
     clickModal: (Info) -> Unit,
     onTextChange: (Info, String) -> Unit

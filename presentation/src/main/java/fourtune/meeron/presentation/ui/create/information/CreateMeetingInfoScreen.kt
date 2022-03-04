@@ -145,7 +145,8 @@ private fun CreateMeetingInfoScreen(
                 leftClick = onPrevious,
                 rightClick = {
                     onNext()
-                }
+                },
+                rightEnable = uiState.isVerify
             )
         }
     }

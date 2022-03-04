@@ -1,6 +1,6 @@
 package fourtune.meeron.presentation.ui.create.information
 
-import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.toMutableStateMap
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.model.Date
@@ -22,12 +22,11 @@ class CreateMeetingInfoViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(MeetingInfoUiState())
     fun uiState() = _uiState.asStateFlow()
 
-    val listState = mutableStateMapOf(
-        Info.Title to "",
-        Info.Personality to "",
-        Info.Owners to "",
-        Info.Team to "",
-    )
+    val listState = Info.values()
+        .associate { info ->
+            info to ""
+        }.toList()
+        .toMutableStateMap()
 
     fun updateText(info: Info, input: String) {
         listState[info] = input

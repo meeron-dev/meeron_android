@@ -30,11 +30,12 @@ enum class Info(
     @StringRes val title: Int,
     val isEssential: Boolean = false,
     val limit: Int = 0,
+    val isModal: Boolean,
 ) {
-    Title(R.string.meeting_title, true, 30),
-    Personality(R.string.meeting_personality, true, 10),
-    Owners(R.string.public_owners, isEssential = false, limit = 0),
-    Team(R.string.charged_team, isEssential = true, limit = 0)
+    Title(R.string.meeting_title, true, 30, false),
+    Personality(R.string.meeting_personality, true, 10, false),
+    Owners(R.string.public_owners, isEssential = false, limit = 0, true),
+    Team(R.string.charged_team, isEssential = true, limit = 0, true)
 }
 
 @Composable
@@ -74,54 +75,42 @@ fun CreateMeetingInfoScreen(
                     selectedTime = "${uiState.startTime.time}${uiState.startTime.hourOfDay} ~ ${uiState.endTime.time}${uiState.endTime.hourOfDay}",
                     onClick = onLoad
                 )
-                Column {
-                    Spacer(modifier = Modifier.padding(19.dp))
-                    MeeronTextField(
-                        title = stringResource(id = Info.Title.title),
-                        isEssential = Info.Title.isEssential,
-                        limit = Info.Title.limit,
-                        text = viewModel.listState[Info.Title].orEmpty(),
-                        onValueChange = {
-                            viewModel.updateText(Info.Title, it)
-                        }
-                    )
-                    Spacer(modifier = Modifier.padding(19.dp))
-                    MeeronTextField(
-                        title = stringResource(id = Info.Personality.title),
-                        isEssential = Info.Personality.isEssential,
-                        limit = Info.Personality.limit,
-                        text = viewModel.listState[Info.Personality].orEmpty(),
-                        onValueChange = {
-                            viewModel.updateText(Info.Personality, it)
-                        }
-                    )
-                    Spacer(modifier = Modifier.padding(19.dp))
-                    MeeronClickableText(
-                        title = stringResource(id = Info.Owners.title),
-                        isEssential = Info.Owners.isEssential,
-                        limit = Info.Owners.limit,
-                        text = viewModel.listState[Info.Owners].orEmpty(),
-                        onClick = {
-                            viewModel.clickModal(Info.Owners)
-                        }
-                    )
-                    Spacer(modifier = Modifier.padding(19.dp))
-                    MeeronClickableText(
-                        title = stringResource(id = Info.Team.title),
-                        isEssential = Info.Team.isEssential,
-                        limit = Info.Team.limit,
-                        text = viewModel.listState[Info.Team].orEmpty(),
-                        onClick = {
-                            viewModel.clickModal(Info.Team)
-                        }
-                    )
-                }
+                InformationColumn(viewModel.listState, viewModel::clickModal, viewModel::updateText)
             }
+
             MerronButton(
                 leftClick = onPrevious,
                 rightClick = {
                     onNext()
                 }
+            )
+        }
+    }
+}
+
+@Composable
+private fun InformationColumn(
+    listState: Map<Info, String>,
+    clickModal: (Info) -> Unit,
+    onTextChange: (Info, String) -> Unit
+) {
+    Info.values().forEach { info ->
+        Spacer(modifier = Modifier.padding(19.dp))
+        if (info.isModal) {
+            MeeronClickableText(
+                title = stringResource(id = info.title),
+                isEssential = info.isEssential,
+                limit = info.limit,
+                text = listState[info].orEmpty(),
+                onClick = { clickModal(info) }
+            )
+        } else {
+            MeeronTextField(
+                title = stringResource(id = info.title),
+                isEssential = info.isEssential,
+                limit = info.limit,
+                text = listState[info].orEmpty(),
+                onValueChange = { onTextChange(info, it) }
             )
         }
     }

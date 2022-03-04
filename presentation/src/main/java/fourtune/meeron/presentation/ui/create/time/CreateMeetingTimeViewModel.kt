@@ -24,6 +24,7 @@ data class MeetingTimeUiState(
 @HiltViewModel
 class CreateMeetingTimeViewModel @Inject constructor(
     private val getTimeUseCase: GetTimeUseCase,
+    private val getCurrentTimeUseCase: GetCurrentTimeUseCase,
     private val getCurrentDayUseCase: GetCurrentDayUseCase
 ) : ViewModel() {
 
@@ -32,7 +33,14 @@ class CreateMeetingTimeViewModel @Inject constructor(
 
     init {
         _uiState.update {
-            it.copy(currentDay = getCurrentDayUseCase(DateFormat.SimpleString).string)
+            val currentTime = getCurrentTimeUseCase(onTime = true)
+            it.copy(
+                timeMap = mapOf(
+                    R.string.start to currentTime,
+                    R.string.end to currentTime
+                ),
+                currentDay = getCurrentDayUseCase(DateFormat.SimpleString).string
+            )
         }
     }
 

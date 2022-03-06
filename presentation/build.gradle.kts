@@ -34,6 +34,7 @@ dependencies {
     implementation(Dep.Compose.tooling)
     implementation(Dep.Compose.material)
     implementation(Dep.Compose.coil)
+    implementation(Dep.Compose.constraint)
 
     implementation(Dep.Accompanist.pager)
     implementation(Dep.Accompanist.navigationAnimation)

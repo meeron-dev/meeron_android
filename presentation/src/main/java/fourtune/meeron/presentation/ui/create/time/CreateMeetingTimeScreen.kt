@@ -22,7 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import forutune.meeron.domain.model.Time
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
-import fourtune.meeron.presentation.ui.common.MerronButton
+import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
 private sealed interface CreateMeetingTimeEvent {
@@ -76,19 +76,14 @@ private fun CreateMeetingTimeScreen(
             )
         }
     ) {
-        Column(
+        MeeronButtonBackGround(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(vertical = 40.dp, horizontal = 20.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+            leftClick = { event(CreateMeetingTimeEvent.Previous) },
+            rightClick = { event(CreateMeetingTimeEvent.Next) }
         ) {
             TimeScreen(uiState, event)
-            MerronButton(
-                leftClick = { event(CreateMeetingTimeEvent.Previous) },
-                rightClick = { event(CreateMeetingTimeEvent.Next) }
-            )
         }
-
 
     }
 }

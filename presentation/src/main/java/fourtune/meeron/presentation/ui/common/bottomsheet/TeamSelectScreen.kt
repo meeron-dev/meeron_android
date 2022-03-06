@@ -11,7 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fourtune.meeron.presentation.R
-import fourtune.meeron.presentation.ui.common.MerronButton
+import fourtune.meeron.presentation.ui.common.MeeronButton
 
 @Composable
 fun TeamSelectScreen() {
@@ -32,7 +32,7 @@ fun TeamSelectScreen() {
                 color = colorResource(id = R.color.dark_gray)
             )
         }
-        MerronButton(
+        MeeronButton(
             modifier = Modifier
                 .padding(bottom = 50.dp)
                 .align(Alignment.BottomCenter),

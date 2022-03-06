@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fourtune.meeron.presentation.R
-import fourtune.meeron.presentation.ui.common.MerronButton
+import fourtune.meeron.presentation.ui.common.MeeronButton
 
 @Composable
 fun OwnersSelectScreen() {
@@ -61,7 +61,7 @@ fun OwnersSelectScreen() {
                 }
             )
         }
-        MerronButton(modifier = Modifier.padding(bottom = 50.dp), {}, {})
+        MeeronButton(modifier = Modifier.padding(bottom = 50.dp), {}, {})
     }
 }
 

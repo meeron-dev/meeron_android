@@ -44,6 +44,7 @@ object Dep {
         const val material = "androidx.compose.material:material:$version"
         const val tooling = "androidx.compose.ui:ui-tooling:$version"
         const val coil = "io.coil-kt:coil-compose:1.4.0"
+        const val constraint = "androidx.constraintlayout:constraintlayout-compose:1.0.0"
 
     }
 

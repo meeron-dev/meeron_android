@@ -1,7 +1,6 @@
 package fourtune.meeron.presentation.ui.create.information
 
 import androidx.activity.compose.BackHandler
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,25 +16,14 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
-import fourtune.meeron.presentation.ui.common.MeeronClickableText
-import fourtune.meeron.presentation.ui.common.MeeronTextField
-import fourtune.meeron.presentation.ui.common.MerronButton
+import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
+import fourtune.meeron.presentation.ui.common.action.ContentFactory
+import fourtune.meeron.presentation.ui.common.action.MeeronActionBox
 import fourtune.meeron.presentation.ui.common.bottomsheet.NoneScreen
 import fourtune.meeron.presentation.ui.common.bottomsheet.OwnersSelectScreen
 import fourtune.meeron.presentation.ui.common.bottomsheet.TeamSelectScreen
 import kotlinx.coroutines.launch
 
-enum class Info(
-    @StringRes val title: Int,
-    val isEssential: Boolean = false,
-    val limit: Int = 0,
-    val isModal: Boolean,
-) {
-    Title(R.string.meeting_title, true, 30, false),
-    Personality(R.string.meeting_personality, true, 10, false),
-    Owners(R.string.public_owners, isEssential = false, limit = 0, true),
-    Team(R.string.charged_team, isEssential = true, limit = 0, true)
-}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -112,11 +100,11 @@ private fun CreateMeetingInfoScreen(
             )
         },
     ) {
-        Column(
-            modifier = Modifier
-                .padding(vertical = 40.dp, horizontal = 20.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween
+        MeeronButtonBackGround(
+            modifier = Modifier.padding(vertical = 40.dp, horizontal = 20.dp),
+            leftClick = onPrevious,
+            rightClick = onNext,
+            rightEnable = uiState.isVerify
         ) {
             Column {
                 InformationTitle(
@@ -128,8 +116,8 @@ private fun CreateMeetingInfoScreen(
                     listState = viewModel.listState,
                     clickModal = { info ->
                         when (info) {
-                            Info.Owners -> event(CreateMeetingInfoViewModel.BottomSheetState.Owner)
-                            Info.Team -> event(CreateMeetingInfoViewModel.BottomSheetState.Team)
+                            CreateMeetingInfoViewModel.Info.Owners -> event(CreateMeetingInfoViewModel.BottomSheetState.Owner)
+                            CreateMeetingInfoViewModel.Info.Team -> event(CreateMeetingInfoViewModel.BottomSheetState.Team)
                             else -> throw IllegalStateException("$info is Not Modal")
                         }
                         viewModel.clickModal(info)
@@ -137,44 +125,34 @@ private fun CreateMeetingInfoScreen(
                     onTextChange = viewModel::updateText
                 )
             }
-
-            MerronButton(
-                leftClick = onPrevious,
-                rightClick = {
-                    onNext()
-                },
-                rightEnable = uiState.isVerify
-            )
         }
     }
 }
 
 @Composable
 private fun InformationFields(
-    listState: Map<Info, String>,
-    clickModal: (Info) -> Unit,
-    onTextChange: (Info, String) -> Unit
+    listState: Map<CreateMeetingInfoViewModel.Info, String>,
+    clickModal: (CreateMeetingInfoViewModel.Info) -> Unit,
+    onTextChange: (CreateMeetingInfoViewModel.Info, String) -> Unit
 ) {
     Column(Modifier.verticalScroll(state = rememberScrollState())) {
-        Info.values().forEach { info ->
+        CreateMeetingInfoViewModel.Info.values().forEach { info ->
             Spacer(modifier = Modifier.padding(19.dp))
-            if (info.isModal) {
-                MeeronClickableText(
-                    title = stringResource(id = info.title),
+            val factory = if (info.isModal) {
+                ContentFactory.ActionField(
                     isEssential = info.isEssential,
-                    limit = info.limit,
                     text = listState[info].orEmpty(),
                     onClick = { clickModal(info) }
                 )
             } else {
-                MeeronTextField(
-                    title = stringResource(id = info.title),
+                ContentFactory.LimitTextField(
+                    text = listState[info].orEmpty(),
+                    onValueChange = { onTextChange(info, it) },
                     isEssential = info.isEssential,
                     limit = info.limit,
-                    text = listState[info].orEmpty(),
-                    onValueChange = { onTextChange(info, it) }
                 )
             }
+            MeeronActionBox(factory = factory, title = stringResource(id = info.title))
         }
     }
 }

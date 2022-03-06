@@ -1,10 +1,12 @@
 package fourtune.meeron.presentation.ui.create.information
 
+import androidx.annotation.StringRes
 import androidx.compose.runtime.toMutableStateMap
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.model.Date
 import forutune.meeron.domain.model.Time
+import fourtune.meeron.presentation.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -50,5 +52,17 @@ class CreateMeetingInfoViewModel @Inject constructor(
     sealed interface BottomSheetState {
         object Owner : BottomSheetState
         object Team : BottomSheetState
+    }
+
+    enum class Info(
+        @StringRes val title: Int,
+        val isEssential: Boolean = false,
+        val limit: Int = 0,
+        val isModal: Boolean,
+    ) {
+        Title(R.string.meeting_title, true, 30, false),
+        Personality(R.string.meeting_personality, true, 10, false),
+        Owners(R.string.public_owners, isEssential = false, limit = 0, true),
+        Team(R.string.charged_team, isEssential = true, limit = 0, true)
     }
 }

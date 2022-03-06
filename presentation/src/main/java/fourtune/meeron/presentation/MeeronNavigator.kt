@@ -39,6 +39,7 @@ sealed interface Navigate {
         object Time : CreateMeeting
         object Information : CreateMeeting
         object Agenda : CreateMeeting
+        object Complete : CreateMeeting
     }
 }
 
@@ -48,8 +49,8 @@ fun MeeronNavigator() {
     val navController = rememberAnimatedNavController()
     AnimatedNavHost(
         navController = navController,
-        startDestination =Navigate.CreateMeeting.Information.route()
-//        Navigate.BottomNavi.Home.route()
+        startDestination = Navigate.CreateMeeting.Agenda.route()
+//        startDestination = Navigate.BottomNavi.Home.route()
     ) {
 
         composable(route = Navigate.Login.route()) {
@@ -125,8 +126,14 @@ fun MeeronNavigator() {
 
         composable(Navigate.CreateMeeting.Agenda.route()) {
             CreateAgendaScreen(
-
+                onAction = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
+                onPrevious = { navController.navigateUp() },
+                onNext = { navController.navigate(Navigate.CreateMeeting.Complete.route()) }
             )
+        }
+
+        composable(Navigate.CreateMeeting.Complete.route()) {
+
         }
     }
 }

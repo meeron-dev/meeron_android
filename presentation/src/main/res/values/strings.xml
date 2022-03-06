@@ -28,4 +28,9 @@
     <string name="load">불러오기</string>
     <string name="owner_select_title">공동 관리자 선택하기</string>
     <string name="team_select_title">담당 팀 선택하기</string>
+    <string name="agenda">아젠다</string>
+    <string name="core_agenda">핵심 아젠다</string>
+    <string name="issue">이슈</string>
+    <string name="add_file">자료 첨부</string>
+    <string name="delete">삭제</string>
 </resources>

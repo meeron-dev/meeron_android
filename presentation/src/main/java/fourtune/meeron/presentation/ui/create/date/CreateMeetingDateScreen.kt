@@ -65,7 +65,7 @@ private fun CreateMeetingDateScreen(uiState: MeetingDateUiState, event: (CreateM
     ) {
         Column(
             modifier = Modifier
-                .padding(vertical = 50.dp, horizontal = 20.dp)
+                .padding(vertical = 40.dp, horizontal = 20.dp)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {

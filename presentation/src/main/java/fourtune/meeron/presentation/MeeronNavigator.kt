@@ -11,6 +11,7 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import fourtune.meeron.presentation.ui.calendar.CalendarScreen
 import fourtune.meeron.presentation.ui.calendar.all.ShowAllScreen
+import fourtune.meeron.presentation.ui.create.agenda.CreateAgendaScreen
 import fourtune.meeron.presentation.ui.create.date.CreateMeetingDateScreen
 import fourtune.meeron.presentation.ui.create.information.CreateMeetingInfoScreen
 import fourtune.meeron.presentation.ui.create.time.CreateMeetingTimeScreen
@@ -37,6 +38,7 @@ sealed interface Navigate {
         object Date : CreateMeeting
         object Time : CreateMeeting
         object Information : CreateMeeting
+        object Agenda : CreateMeeting
     }
 }
 
@@ -46,7 +48,8 @@ fun MeeronNavigator() {
     val navController = rememberAnimatedNavController()
     AnimatedNavHost(
         navController = navController,
-        startDestination = Navigate.BottomNavi.Home.route()
+        startDestination =Navigate.CreateMeeting.Information.route()
+//        Navigate.BottomNavi.Home.route()
     ) {
 
         composable(route = Navigate.Login.route()) {
@@ -114,9 +117,15 @@ fun MeeronNavigator() {
 
         composable(Navigate.CreateMeeting.Information.route()) {
             CreateMeetingInfoScreen(
-                onNext = {},
+                onNext = { navController.navigate(Navigate.CreateMeeting.Agenda.route()) },
                 onPrevious = { navController.navigateUp() },
                 onLoad = { navController.navigate(Navigate.Calendar.route()) }
+            )
+        }
+
+        composable(Navigate.CreateMeeting.Agenda.route()) {
+            CreateAgendaScreen(
+
             )
         }
     }

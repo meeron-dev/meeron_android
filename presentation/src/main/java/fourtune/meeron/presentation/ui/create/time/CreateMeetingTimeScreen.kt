@@ -79,7 +79,7 @@ private fun CreateMeetingTimeScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(vertical = 50.dp, horizontal = 20.dp),
+                .padding(vertical = 40.dp, horizontal = 20.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             TimeScreen(uiState, event)

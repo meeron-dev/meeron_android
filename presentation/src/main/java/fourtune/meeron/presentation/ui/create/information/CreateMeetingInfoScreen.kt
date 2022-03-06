@@ -2,11 +2,10 @@ package fourtune.meeron.presentation.ui.create.information
 
 import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -113,12 +112,10 @@ private fun CreateMeetingInfoScreen(
             )
         },
     ) {
-        val scrollState = rememberScrollState()
         Column(
             modifier = Modifier
                 .padding(vertical = 40.dp, horizontal = 20.dp)
-                .fillMaxSize()
-                .scrollable(state = scrollState, orientation = Orientation.Vertical),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
@@ -158,24 +155,26 @@ private fun InformationFields(
     clickModal: (Info) -> Unit,
     onTextChange: (Info, String) -> Unit
 ) {
-    Info.values().forEach { info ->
-        Spacer(modifier = Modifier.padding(19.dp))
-        if (info.isModal) {
-            MeeronClickableText(
-                title = stringResource(id = info.title),
-                isEssential = info.isEssential,
-                limit = info.limit,
-                text = listState[info].orEmpty(),
-                onClick = { clickModal(info) }
-            )
-        } else {
-            MeeronTextField(
-                title = stringResource(id = info.title),
-                isEssential = info.isEssential,
-                limit = info.limit,
-                text = listState[info].orEmpty(),
-                onValueChange = { onTextChange(info, it) }
-            )
+    Column(Modifier.verticalScroll(state = rememberScrollState())) {
+        Info.values().forEach { info ->
+            Spacer(modifier = Modifier.padding(19.dp))
+            if (info.isModal) {
+                MeeronClickableText(
+                    title = stringResource(id = info.title),
+                    isEssential = info.isEssential,
+                    limit = info.limit,
+                    text = listState[info].orEmpty(),
+                    onClick = { clickModal(info) }
+                )
+            } else {
+                MeeronTextField(
+                    title = stringResource(id = info.title),
+                    isEssential = info.isEssential,
+                    limit = info.limit,
+                    text = listState[info].orEmpty(),
+                    onValueChange = { onTextChange(info, it) }
+                )
+            }
         }
     }
 }

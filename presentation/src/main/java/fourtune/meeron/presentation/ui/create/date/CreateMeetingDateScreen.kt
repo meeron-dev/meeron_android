@@ -21,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import forutune.meeron.domain.model.Date
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
+import fourtune.meeron.presentation.ui.create.CreateTitle
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
 sealed interface CreateMeetingDateEvent {
@@ -103,11 +104,7 @@ private fun DateScreen(
         modifier = modifier
             .fillMaxWidth()
     ) {
-        Text(
-            text = stringResource(id = R.string.create_data_title),
-            fontSize = 25.sp,
-            color = colorResource(id = R.color.black)
-        )
+        CreateTitle(title = R.string.create_data_title)
         Spacer(modifier = Modifier.padding(32.dp))
         Column(
             Modifier

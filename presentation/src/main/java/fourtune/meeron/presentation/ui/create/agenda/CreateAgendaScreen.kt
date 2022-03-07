@@ -28,6 +28,8 @@ import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
 import fourtune.meeron.presentation.ui.common.action.ContentFactory
 import fourtune.meeron.presentation.ui.common.action.MeeronActionBox
+import fourtune.meeron.presentation.ui.create.CreateText
+import fourtune.meeron.presentation.ui.create.CreateTitle
 import fourtune.meeron.presentation.ui.create.agenda.CreateAgendaViewModel.Companion.MAX_AGENDA_SIZE
 import fourtune.meeron.presentation.ui.create.agenda.CreateAgendaViewModel.Companion.MIN_AGENDA_SIZE
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
@@ -100,12 +102,17 @@ private fun CreateAgendaScreen(
             )
         },
     ) {
-        MeeronButtonBackGround(modifier = Modifier.padding(vertical = 40.dp, horizontal = 20.dp)) {
+        MeeronButtonBackGround(
+            modifier = Modifier.padding(vertical = 40.dp, horizontal = 20.dp),
+            rightClick = { event(CreateAgendaViewModel.Event.Next) },
+            leftClick = { event(CreateAgendaViewModel.Event.Previous) }
+        ) {
             Column {
-                AgendaTitle(
-                    title = uiState.title,
+                CreateTitle(
+                    title = R.string.info_title,
                     selectedDate = uiState.date.toString(),
                     selectedTime = "${uiState.startTime.time}${uiState.startTime.hourOfDay} ~ ${uiState.endTime.time}${uiState.endTime.hourOfDay}",
+                    extraContents = { CreateText(text = uiState.title) }
                 )
                 Spacer(modifier = Modifier.padding(15.dp))
                 AgendaBody(
@@ -114,29 +121,6 @@ private fun CreateAgendaScreen(
                     selected = uiState.selectedAgenda,
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun AgendaTitle(
-    title: String,
-    selectedDate: String,
-    selectedTime: String,
-) {
-    Column {
-        Text(
-            text = stringResource(id = R.string.info_title),
-            fontSize = 25.sp,
-            color = colorResource(id = R.color.black)
-        )
-        Spacer(modifier = Modifier.padding(4.dp))
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Column {
-                Text(text = selectedDate, fontSize = 13.sp, color = colorResource(id = R.color.light_gray))
-                Text(text = selectedTime, fontSize = 13.sp, color = colorResource(id = R.color.light_gray))
-            }
-            Text(text = title, fontSize = 13.sp, color = colorResource(id = R.color.light_gray))
         }
     }
 }

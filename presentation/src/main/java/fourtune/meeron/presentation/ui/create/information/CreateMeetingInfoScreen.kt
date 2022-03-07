@@ -1,7 +1,10 @@
 package fourtune.meeron.presentation.ui.create.information
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -22,6 +25,7 @@ import fourtune.meeron.presentation.ui.common.action.MeeronActionBox
 import fourtune.meeron.presentation.ui.common.bottomsheet.NoneScreen
 import fourtune.meeron.presentation.ui.common.bottomsheet.OwnersSelectScreen
 import fourtune.meeron.presentation.ui.common.bottomsheet.TeamSelectScreen
+import fourtune.meeron.presentation.ui.create.CreateTitle
 import kotlinx.coroutines.launch
 
 
@@ -160,22 +164,25 @@ private fun InformationFields(
 
 @Composable
 private fun InformationTitle(selectedDate: String, selectedTime: String, onClick: () -> Unit) {
-    Text(text = stringResource(id = R.string.info_title), fontSize = 25.sp, color = colorResource(id = R.color.black))
-    Spacer(modifier = Modifier.padding(4.dp))
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Column {
-            Text(text = selectedDate, fontSize = 13.sp, color = colorResource(id = R.color.light_gray))
-            Text(text = selectedTime, fontSize = 13.sp, color = colorResource(id = R.color.light_gray))
+    CreateTitle(
+        title = R.string.info_title,
+        selectedDate = selectedDate,
+        selectedTime = selectedTime,
+        extraContents = {
+            Button(
+                onClick = onClick,
+                contentPadding = PaddingValues(vertical = 3.dp, horizontal = 12.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.medium_primary)),
+                shape = RoundedCornerShape(30.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.load),
+                    fontSize = 15.sp,
+                    color = colorResource(id = R.color.light_gray_white)
+                )
+            }
         }
-        Button(
-            onClick = onClick,
-            contentPadding = PaddingValues(vertical = 3.dp, horizontal = 12.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.medium_primary)),
-            shape = RoundedCornerShape(30.dp)
-        ) {
-            Text(text = stringResource(R.string.load), fontSize = 15.sp, color = colorResource(id = R.color.light_gray_white))
-        }
-    }
+    )
 }
 
 @Preview

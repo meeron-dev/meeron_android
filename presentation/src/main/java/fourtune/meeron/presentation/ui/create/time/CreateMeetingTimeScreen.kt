@@ -23,6 +23,7 @@ import forutune.meeron.domain.model.Time
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
+import fourtune.meeron.presentation.ui.create.CreateTitle
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
 private sealed interface CreateMeetingTimeEvent {
@@ -110,17 +111,7 @@ private fun TimeScreen(
     createMeetingTimeEvent: (CreateMeetingTimeEvent) -> Unit
 ) {
     Column {
-        Text(
-            text = stringResource(id = R.string.create_time_title),
-            fontSize = 25.sp,
-            color = colorResource(id = R.color.black)
-        )
-        Spacer(modifier = Modifier.padding(5.dp))
-        Text(
-            text = uiState.currentDay,
-            fontSize = 15.sp,
-            color = colorResource(id = R.color.light_gray)
-        )
+        CreateTitle(title = R.string.create_time_title, selectedDate = uiState.currentDay)
         Spacer(modifier = Modifier.padding(21.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             uiState.timeMap.forEach {

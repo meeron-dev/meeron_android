@@ -4,12 +4,16 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.toMutableStateMap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
 import fourtune.meeron.presentation.R
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,7 +26,7 @@ class CreateMeetingInfoViewModel @Inject constructor(
             time = savedStateHandle.get<String>(Const.Time).orEmpty()
         )
     )
-
+    private var searchJob: Job? = null
     fun uiState() = _uiState.asStateFlow()
 
     val listState = Info.values()
@@ -39,6 +43,14 @@ class CreateMeetingInfoViewModel @Inject constructor(
     fun clickModal(info: Info) {
         listState[info] = "asdasd"
         checkEssentialField()
+    }
+
+    fun onSearch(text: String) {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(500)
+            //todo searchUseCase(text)
+        }
     }
 
     private fun checkEssentialField() {
@@ -76,4 +88,5 @@ class CreateMeetingInfoViewModel @Inject constructor(
         Owners(R.string.public_owners, isEssential = false, limit = 0, true),
         Team(R.string.charged_team, isEssential = true, limit = 0, true)
     }
+
 }

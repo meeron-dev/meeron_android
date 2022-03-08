@@ -58,7 +58,7 @@ fun CreateMeetingInfoScreen(
         sheetState = bottomSheetState,
         sheetContent = {
             when (currentBottomSheet) {
-                CreateMeetingInfoViewModel.BottomSheetState.Owner -> OwnersSelectScreen()
+                CreateMeetingInfoViewModel.BottomSheetState.Owner -> OwnersSelectScreen(onSearch = viewModel::onSearch)
                 CreateMeetingInfoViewModel.BottomSheetState.Team -> TeamSelectScreen()
                 else -> NoneScreen()
             }

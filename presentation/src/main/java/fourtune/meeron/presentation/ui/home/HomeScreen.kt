@@ -168,14 +168,6 @@ private fun TitleText(modifier: Modifier) {
     }
 }
 
-@Preview
-@Composable
-private fun PagerItemPrev() {
-    MeeronTheme {
-        PagerItem()
-    }
-}
-
 @Composable
 private fun PagerItem() {
     Card(modifier = Modifier.fillMaxHeight(), elevation = 1.dp) {
@@ -316,6 +308,14 @@ private fun HomeTab(modifier: Modifier = Modifier, selectedTabIndex: Int, onClic
                 Dot(color = colorResource(id = R.color.dark_primary), size = 4.dp)
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun PagerItemPrev() {
+    MeeronTheme {
+        PagerItem()
     }
 }
 

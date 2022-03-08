@@ -3,8 +3,13 @@ package fourtune.meeron.presentation.ui.create.date
 import android.app.DatePickerDialog
 import android.content.Context
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Divider
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -12,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,9 +25,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import forutune.meeron.domain.model.Date
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
+import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
 import fourtune.meeron.presentation.ui.create.CreateTitle
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
-
 
 
 @Composable
@@ -60,30 +64,13 @@ private fun CreateMeetingDateScreen(uiState: MeetingDateUiState, event: (CreateM
             )
         },
     ) {
-        Column(
-            modifier = Modifier
-                .padding(vertical = 40.dp, horizontal = 20.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween
+        MeeronSingleButtonBackGround(
+            modifier = Modifier.padding(vertical = 40.dp, horizontal = 20.dp),
+            text = stringResource(id = R.string.next),
+            onClick = { event(CreateMeetingDateViewModel.Event.OnNext) }
         ) {
-            DateScreen(
-                date = uiState.date
-            ) { context, date ->
+            DateScreen(date = uiState.date) { context, date ->
                 showDatePickerDialog(context, date, event)
-            }
-
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { event(CreateMeetingDateViewModel.Event.OnNext) },
-                contentPadding = PaddingValues(vertical = 18.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.primary))
-            ) {
-                Text(
-                    text = stringResource(id = R.string.next),
-                    fontSize = 18.sp,
-                    color = colorResource(id = R.color.white),
-                    fontWeight = FontWeight.Bold
-                )
             }
         }
     }

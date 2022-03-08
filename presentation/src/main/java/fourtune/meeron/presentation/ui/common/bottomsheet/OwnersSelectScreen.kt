@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fourtune.meeron.presentation.R
-import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
+import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
 import fourtune.meeron.presentation.ui.common.UserItem
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -43,9 +43,9 @@ fun OwnersSelectScreen(
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        MeeronButtonBackGround(
+        MeeronSingleButtonBackGround(
             modifier = Modifier.padding(bottom = 50.dp),
-            rightText = "선택 완료"
+            enable = true
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),

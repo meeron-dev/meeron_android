@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fourtune.meeron.presentation.R
-import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
+import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
 
 @Composable
 fun TeamSelectScreen(
@@ -33,7 +33,11 @@ fun TeamSelectScreen(
             .padding(horizontal = 20.dp)
             .height((LocalConfiguration.current.screenHeightDp * 0.9).dp)
     ) {
-        MeeronButtonBackGround(Modifier.padding(bottom = 50.dp)) {
+        MeeronSingleButtonBackGround(
+            modifier = Modifier.padding(bottom = 50.dp),
+            enable = true
+            //selected != null
+        ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally

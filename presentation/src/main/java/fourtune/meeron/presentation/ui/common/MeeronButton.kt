@@ -6,6 +6,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -58,13 +59,45 @@ fun MeeronButtonBackGround(
 }
 
 @Composable
+fun MeeronSingleButtonBackGround(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    text: String = stringResource(R.string.complete),
+    enable: Boolean = true,
+    contents: @Composable () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize(),
+    ) {
+        contents()
+        Button(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            onClick = onClick,
+            colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.primary)),
+            contentPadding = PaddingValues(vertical = 16.dp),
+            enabled = enable
+        ) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = text,
+                fontSize = 16.sp,
+                color = colorResource(id = if (enable) R.color.white else R.color.light_gray),
+                maxLines = 1,
+                textAlign = TextAlign.Center,
+            )
+        }
+    }
+}
+
+
+@Composable
 fun MeeronButton(
     modifier: Modifier = Modifier,
     leftClick: () -> Unit = {},
     rightClick: () -> Unit = {},
     leftText: String = stringResource(R.string.previous),
-    rightText: String = "바로가기",
-//        stringResource(R.string.next),
+    rightText: String = stringResource(R.string.next),
     rightEnable: Boolean = true
 ) {
     Row(modifier = modifier.fillMaxWidth()) {
@@ -134,4 +167,12 @@ private fun Preview() {
 @Composable
 private fun MeeronButtonPrev() {
     MeeronButton(Modifier, {}, {})
+}
+
+@Preview
+@Composable
+private fun Preview2() {
+    MeeronSingleButtonBackGround(enable = false) {
+
+    }
 }

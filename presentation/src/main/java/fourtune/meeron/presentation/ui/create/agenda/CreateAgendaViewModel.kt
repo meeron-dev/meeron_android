@@ -4,11 +4,14 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
+import forutune.meeron.domain.usecase.GetMeetingUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class Agenda(
@@ -19,19 +22,28 @@ data class Agenda(
 
 @HiltViewModel
 class CreateAgendaViewModel @Inject constructor(
+    private val getMeetingUseCase: GetMeetingUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(
-        UiState(
-            title = savedStateHandle.get<String>(Const.Title).orEmpty(),
-            date= savedStateHandle.get<String>(Const.Date).orEmpty(),
-            time = savedStateHandle.get<String>(Const.Time).orEmpty()
+    private val meetingId = requireNotNull(savedStateHandle.get<Long>(Const.MeetingId))
 
-    )
-    )
+    private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
 
     val agendas = mutableStateListOf(Agenda())
+
+    init {
+        viewModelScope.launch {
+            val meeting = getMeetingUseCase(meetingId = meetingId)
+            _uiState.update {
+                it.copy(
+                    title = meeting.title,
+                    date = meeting.date,
+                    time = meeting.time,
+                )
+            }
+        }
+    }
 
     fun addAgenda() {
         if (agendas.size < MAX_AGENDA_SIZE) {
@@ -83,8 +95,8 @@ class CreateAgendaViewModel @Inject constructor(
 
     data class UiState(
         val title: String = "",
-        val date: String,
-        val time: String,
+        val date: String = "",
+        val time: String = "",
         val selectedAgenda: Int = 0
     )
 

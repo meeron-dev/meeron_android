@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun CreateMeetingInfoScreen(
     viewModel: CreateMeetingInfoViewModel = hiltViewModel(),
-    onNext: (date: String, time: String, title: String) -> Unit = { _, _, _ -> },
+    onNext: (meetingId: Long) -> Unit = {},
     onPrevious: () -> Unit = {},
     onLoad: () -> Unit = {}
 ) {
@@ -72,11 +72,7 @@ fun CreateMeetingInfoScreen(
                     when (event) {
                         CreateMeetingInfoViewModel.Event.Load -> onLoad()
                         CreateMeetingInfoViewModel.Event.Next -> {
-                            onNext(
-                                uiState.date,
-                                uiState.time,
-                                viewModel.listState[CreateMeetingInfoViewModel.Info.Title].orEmpty()
-                            )
+                            viewModel.createMeeting(onNext)
                         }
                         CreateMeetingInfoViewModel.Event.Previous -> onPrevious()
                     }

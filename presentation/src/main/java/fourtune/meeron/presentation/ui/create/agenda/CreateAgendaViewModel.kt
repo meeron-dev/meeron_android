@@ -2,10 +2,10 @@ package fourtune.meeron.presentation.ui.create.agenda
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import forutune.meeron.domain.model.Date
-import forutune.meeron.domain.model.Time
+import forutune.meeron.domain.Const
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -19,9 +19,16 @@ data class Agenda(
 
 @HiltViewModel
 class CreateAgendaViewModel @Inject constructor(
-
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(UiState())
+    private val _uiState = MutableStateFlow(
+        UiState(
+            title = savedStateHandle.get<String>(Const.Title).orEmpty(),
+            date= savedStateHandle.get<String>(Const.Date).orEmpty(),
+            time = savedStateHandle.get<String>(Const.Time).orEmpty()
+
+    )
+    )
     val uiState = _uiState.asStateFlow()
 
     val agendas = mutableStateListOf(Agenda())
@@ -76,9 +83,8 @@ class CreateAgendaViewModel @Inject constructor(
 
     data class UiState(
         val title: String = "",
-        val date: Date = Date(),
-        val startTime: Time = Time(),
-        val endTime: Time = Time(),
+        val date: String,
+        val time: String,
         val selectedAgenda: Int = 0
     )
 

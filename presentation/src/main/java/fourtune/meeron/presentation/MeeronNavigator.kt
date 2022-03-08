@@ -133,13 +133,24 @@ fun MeeronNavigator() {
             )
         ) {
             CreateMeetingInfoScreen(
-                onNext = { navController.navigate(Navigate.CreateMeeting.Agenda.route()) },
+                onNext = { date, time, title ->
+                    navController.navigate(
+                        Navigate.CreateMeeting.Agenda.route(date, time, title)
+                    )
+                },
                 onPrevious = { navController.navigateUp() },
                 onLoad = { navController.navigate(Navigate.Calendar.route()) }
             )
         }
 
-        composable(Navigate.CreateMeeting.Agenda.route()) {
+        composable(
+            route = Navigate.CreateMeeting.Agenda.destination(Const.Date, Const.Time, Const.Title),
+            arguments = listOf(
+                navArgument(Const.Date) { type = NavType.StringType },
+                navArgument(Const.Time) { type = NavType.StringType },
+                navArgument(Const.Title) { type = NavType.StringType }
+            )
+        ) {
             CreateAgendaScreen(
                 onAction = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
                 onPrevious = { navController.navigateUp() },

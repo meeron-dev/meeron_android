@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun CreateMeetingInfoScreen(
     viewModel: CreateMeetingInfoViewModel = hiltViewModel(),
-    onNext: () -> Unit = {},
+    onNext: (date: String, time: String, title: String) -> Unit = { _, _, _ -> },
     onPrevious: () -> Unit = {},
     onLoad: () -> Unit = {}
 ) {
@@ -67,11 +67,21 @@ fun CreateMeetingInfoScreen(
         content = {
             CreateMeetingInfoScreen(
                 uiState = uiState,
-                onLoad = onLoad,
                 viewModel = viewModel,
-                onPrevious = onPrevious,
-                onNext = onNext,
                 event = { event ->
+                    when (event) {
+                        CreateMeetingInfoViewModel.Event.Load -> onLoad()
+                        CreateMeetingInfoViewModel.Event.Next -> {
+                            onNext(
+                                uiState.date,
+                                uiState.time,
+                                viewModel.listState[CreateMeetingInfoViewModel.Info.Title].orEmpty()
+                            )
+                        }
+                        CreateMeetingInfoViewModel.Event.Previous -> onPrevious()
+                    }
+                },
+                bottomSheetEvent = { event ->
                     currentBottomSheet = event
                     scope.launch { bottomSheetState.animateTo(ModalBottomSheetValue.Expanded) }
                 }
@@ -84,11 +94,9 @@ fun CreateMeetingInfoScreen(
 @Composable
 private fun CreateMeetingInfoScreen(
     uiState: CreateMeetingInfoViewModel.UiState,
-    onLoad: () -> Unit,
     viewModel: CreateMeetingInfoViewModel,
-    onPrevious: () -> Unit,
-    onNext: () -> Unit,
-    event: (CreateMeetingInfoViewModel.BottomSheetState) -> Unit = {}
+    event: (CreateMeetingInfoViewModel.Event) -> Unit,
+    bottomSheetEvent: (CreateMeetingInfoViewModel.BottomSheetState) -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -106,22 +114,22 @@ private fun CreateMeetingInfoScreen(
     ) {
         MeeronButtonBackGround(
             modifier = Modifier.padding(vertical = 40.dp, horizontal = 20.dp),
-            leftClick = onPrevious,
-            rightClick = onNext,
+            leftClick = { event(CreateMeetingInfoViewModel.Event.Previous) },
+            rightClick = { event(CreateMeetingInfoViewModel.Event.Next) },
             rightEnable = uiState.isVerify
         ) {
             Column {
                 InformationTitle(
                     selectedDate = uiState.date,
                     selectedTime = uiState.time,
-                    onClick = onLoad
+                    onClick = { event(CreateMeetingInfoViewModel.Event.Load) }
                 )
                 InformationFields(
                     listState = viewModel.listState,
                     clickModal = { info ->
                         when (info) {
-                            CreateMeetingInfoViewModel.Info.Owners -> event(CreateMeetingInfoViewModel.BottomSheetState.Owner)
-                            CreateMeetingInfoViewModel.Info.Team -> event(CreateMeetingInfoViewModel.BottomSheetState.Team)
+                            CreateMeetingInfoViewModel.Info.Owners -> bottomSheetEvent(CreateMeetingInfoViewModel.BottomSheetState.Owner)
+                            CreateMeetingInfoViewModel.Info.Team -> bottomSheetEvent(CreateMeetingInfoViewModel.BottomSheetState.Team)
                             else -> throw IllegalStateException("$info is Not Modal")
                         }
                         viewModel.clickModal(info)

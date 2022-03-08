@@ -59,6 +59,12 @@ class CreateMeetingInfoViewModel @Inject constructor(
         object Team : BottomSheetState
     }
 
+    sealed interface Event {
+        object Next : Event
+        object Previous : Event
+        object Load : Event
+    }
+
     enum class Info(
         @StringRes val title: Int,
         val isEssential: Boolean = false,

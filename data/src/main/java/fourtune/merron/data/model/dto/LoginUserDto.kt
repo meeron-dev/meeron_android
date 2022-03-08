@@ -1,4 +1,4 @@
-package fourtune.merron.data.dto
+package fourtune.merron.data.model.dto
 
 import forutune.meeron.domain.model.LoginUser
 import kotlinx.serialization.SerialName

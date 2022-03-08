@@ -1,7 +1,7 @@
-package fourtune.merron.data.source
+package fourtune.merron.data.source.remote
 
-import fourtune.merron.data.dto.LoginUserDto
-import fourtune.merron.data.dto.Token
+import fourtune.merron.data.model.dto.LoginUserDto
+import fourtune.merron.data.model.dto.Token
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST

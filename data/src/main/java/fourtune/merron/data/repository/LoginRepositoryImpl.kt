@@ -3,8 +3,8 @@ package fourtune.merron.data.repository
 import forutune.meeron.domain.di.IoDispatcher
 import forutune.meeron.domain.model.LoginUser
 import forutune.meeron.domain.repository.LoginRepository
-import fourtune.merron.data.dto.LoginUserDto
-import fourtune.merron.data.source.LoginApi
+import fourtune.merron.data.model.dto.LoginUserDto
+import fourtune.merron.data.source.remote.LoginApi
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

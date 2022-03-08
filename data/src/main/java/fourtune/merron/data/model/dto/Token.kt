@@ -1,4 +1,4 @@
-package fourtune.merron.data.dto
+package fourtune.merron.data.model.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

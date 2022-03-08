@@ -2,7 +2,7 @@ package fourtune.meeron.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
+val DarkPrimary = Color(0xFF016e8d)
 val PrimaryColor = Color(0xFFFFFFFF)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+val LightPrimary = Color(0xFFa0c9d7)
+val Gray = Color(0xFF818181)

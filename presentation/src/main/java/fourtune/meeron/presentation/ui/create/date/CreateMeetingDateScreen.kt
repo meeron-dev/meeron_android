@@ -24,11 +24,7 @@ import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.create.CreateTitle
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
-sealed interface CreateMeetingDateEvent {
-    object OnBack : CreateMeetingDateEvent
-    object OnNext : CreateMeetingDateEvent
-    class ChangeDate(val date: Date) : CreateMeetingDateEvent
-}
+
 
 @Composable
 fun CreateMeetingDateScreen(
@@ -41,19 +37,19 @@ fun CreateMeetingDateScreen(
         uiState = uiState
     ) { event ->
         when (event) {
-            is CreateMeetingDateEvent.ChangeDate -> viewModel.changeDate(event.date)
-            CreateMeetingDateEvent.OnBack -> onAction()
-            CreateMeetingDateEvent.OnNext -> onNext()
+            is CreateMeetingDateViewModel.Event.ChangeDate -> viewModel.changeDate(event.date)
+            CreateMeetingDateViewModel.Event.OnBack -> onAction()
+            CreateMeetingDateViewModel.Event.OnNext -> onNext()
         }
     }
 }
 
 @Composable
-private fun CreateMeetingDateScreen(uiState: MeetingDateUiState, event: (CreateMeetingDateEvent) -> Unit = {}) {
+private fun CreateMeetingDateScreen(uiState: MeetingDateUiState, event: (CreateMeetingDateViewModel.Event) -> Unit = {}) {
     Scaffold(
         topBar = {
             CenterTextTopAppBar(
-                onAction = { event(CreateMeetingDateEvent.OnBack) },
+                onAction = { event(CreateMeetingDateViewModel.Event.OnBack) },
                 text = {
                     Text(
                         text = stringResource(id = R.string.create_meeting),
@@ -78,7 +74,7 @@ private fun CreateMeetingDateScreen(uiState: MeetingDateUiState, event: (CreateM
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { event(CreateMeetingDateEvent.OnNext) },
+                onClick = { event(CreateMeetingDateViewModel.Event.OnNext) },
                 contentPadding = PaddingValues(vertical = 18.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.primary))
             ) {
@@ -122,12 +118,12 @@ private fun DateScreen(
     }
 }
 
-private fun showDatePickerDialog(context: Context, date: Date, event: (CreateMeetingDateEvent) -> Unit) {
+private fun showDatePickerDialog(context: Context, date: Date, event: (CreateMeetingDateViewModel.Event) -> Unit) {
     DatePickerDialog(
         context,
         R.style.DatePickerStyle,
         { _, year, month, dayOfMonth ->
-            event(CreateMeetingDateEvent.ChangeDate(Date(year, month + 1, dayOfMonth)))
+            event(CreateMeetingDateViewModel.Event.ChangeDate(Date(year, month + 1, dayOfMonth)))
         },
         date.year,
         date.month - 1,

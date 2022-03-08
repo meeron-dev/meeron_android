@@ -54,4 +54,11 @@ class CreateMeetingTimeViewModel @Inject constructor(
             )
         }
     }
+
+    sealed interface Event {
+        class ChangeTime(val key: Int, val hour: Int, val minute: Int) : Event
+        object Previous : Event
+        object Next : Event
+        object Exit : Event
+    }
 }

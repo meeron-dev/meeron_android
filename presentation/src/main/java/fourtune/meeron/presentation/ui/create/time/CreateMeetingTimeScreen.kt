@@ -26,12 +26,6 @@ import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
 import fourtune.meeron.presentation.ui.create.CreateTitle
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
-private sealed interface CreateMeetingTimeEvent {
-    class ChangeTime(val key: Int, val hour: Int, val minute: Int) : CreateMeetingTimeEvent
-    object Previous : CreateMeetingTimeEvent
-    object Next : CreateMeetingTimeEvent
-    object Exit : CreateMeetingTimeEvent
-}
 
 @Composable
 fun CreateMeetingTimeScreen(
@@ -45,14 +39,14 @@ fun CreateMeetingTimeScreen(
         uiState,
         event = { event ->
             when (event) {
-                is CreateMeetingTimeEvent.ChangeTime -> timeViewModel.changeTime(
+                is CreateMeetingTimeViewModel.Event.ChangeTime -> timeViewModel.changeTime(
                     event.key,
                     event.hour,
                     event.minute
                 )
-                CreateMeetingTimeEvent.Exit -> onAction()
-                CreateMeetingTimeEvent.Next -> onNext()
-                CreateMeetingTimeEvent.Previous -> onPrevious()
+                CreateMeetingTimeViewModel.Event.Exit -> onAction()
+                CreateMeetingTimeViewModel.Event.Next -> onNext()
+                CreateMeetingTimeViewModel.Event.Previous -> onPrevious()
             }
         }
     )
@@ -61,7 +55,7 @@ fun CreateMeetingTimeScreen(
 @Composable
 private fun CreateMeetingTimeScreen(
     uiState: MeetingTimeUiState,
-    event: (CreateMeetingTimeEvent) -> Unit
+    event: (CreateMeetingTimeViewModel.Event) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -73,15 +67,15 @@ private fun CreateMeetingTimeScreen(
                         color = colorResource(id = R.color.black)
                     )
                 },
-                onAction = { event(CreateMeetingTimeEvent.Exit) }
+                onAction = { event(CreateMeetingTimeViewModel.Event.Exit) }
             )
         }
     ) {
         MeeronButtonBackGround(
             modifier = Modifier
                 .padding(vertical = 40.dp, horizontal = 20.dp),
-            leftClick = { event(CreateMeetingTimeEvent.Previous) },
-            rightClick = { event(CreateMeetingTimeEvent.Next) }
+            leftClick = { event(CreateMeetingTimeViewModel.Event.Previous) },
+            rightClick = { event(CreateMeetingTimeViewModel.Event.Next) }
         ) {
             TimeScreen(uiState, event)
         }
@@ -108,7 +102,7 @@ private fun showTimePickerDialog(
 @Composable
 private fun TimeScreen(
     uiState: MeetingTimeUiState,
-    createMeetingTimeEvent: (CreateMeetingTimeEvent) -> Unit
+    createMeetingTimeEvent: (CreateMeetingTimeViewModel.Event) -> Unit
 ) {
     Column {
         CreateTitle(title = R.string.create_time_title, selectedDate = uiState.currentDay)
@@ -120,7 +114,7 @@ private fun TimeScreen(
                         context = context,
                         onChangeTime = { hour: Int, minute: Int ->
                             createMeetingTimeEvent(
-                                CreateMeetingTimeEvent.ChangeTime(it.key, hour, minute)
+                                CreateMeetingTimeViewModel.Event.ChangeTime(it.key, hour, minute)
                             )
                         }
                     )

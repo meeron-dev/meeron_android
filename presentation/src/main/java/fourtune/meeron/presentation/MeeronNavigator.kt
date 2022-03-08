@@ -52,8 +52,8 @@ fun MeeronNavigator() {
     val navController = rememberAnimatedNavController()
     AnimatedNavHost(
         navController = navController,
-        startDestination = Navigate.CreateMeeting.Agenda.route()
-//        startDestination = Navigate.BottomNavi.Home.route()
+//        startDestination = Navigate.CreateMeeting.Agenda.route()
+        startDestination = Navigate.BottomNavi.Home.route()
     ) {
 
         composable(route = Navigate.Login.route()) {

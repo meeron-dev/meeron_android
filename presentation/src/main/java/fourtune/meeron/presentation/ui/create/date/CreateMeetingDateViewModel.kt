@@ -33,5 +33,10 @@ class CreateMeetingDateViewModel @Inject constructor(
             it.copy(date = date)
         }
     }
+    sealed interface Event {
+        object OnBack : Event
+        object OnNext : Event
+        class ChangeDate(val date: Date) : Event
+    }
 
 }

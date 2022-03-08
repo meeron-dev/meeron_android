@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.main
+package fourtune.meeron.presentation.ui.home
 
 import androidx.lifecycle.ViewModel
 import com.prolificinteractive.materialcalendarview.CalendarDay
@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
 
 ) : ViewModel() {
     private val _currentDay = MutableStateFlow(CalendarDay.today())

@@ -20,8 +20,8 @@ import fourtune.meeron.presentation.ui.create.date.CreateMeetingDateScreen
 import fourtune.meeron.presentation.ui.create.information.CreateMeetingInfoScreen
 import fourtune.meeron.presentation.ui.create.participants.CreateMeetingParticipantsScreen
 import fourtune.meeron.presentation.ui.create.time.CreateMeetingTimeScreen
+import fourtune.meeron.presentation.ui.home.HomeScreen
 import fourtune.meeron.presentation.ui.login.LoginScreen
-import fourtune.meeron.presentation.ui.main.MainScreen
 
 sealed interface Navigate {
     fun route() = requireNotNull(this::class.qualifiedName)
@@ -35,7 +35,6 @@ sealed interface Navigate {
     sealed class BottomNavi(@DrawableRes val image: Int, @StringRes val text: Int) : Navigate {
         object Home : BottomNavi(R.drawable.ic_navi_home, R.string.home)
         object Team : BottomNavi(R.drawable.ic_navi_team, R.string.team)
-        object Plus : BottomNavi(R.drawable.ic_navi_plus, R.string.create_meeting)
         object My : BottomNavi(R.drawable.ic_navi_door, R.string.my_merron)
     }
 
@@ -66,7 +65,7 @@ fun MeeronNavigator() {
             })
         }
         composable(route = Navigate.BottomNavi.Home.route()) {
-            MainScreen(
+            HomeScreen(
                 openCalendar = {
                     navController.navigate(Navigate.Calendar.route())
                 },
@@ -74,10 +73,10 @@ fun MeeronNavigator() {
                     when (bottomNavi) {
                         Navigate.BottomNavi.Home -> navController.navigate(Navigate.BottomNavi.Home.route())
                         Navigate.BottomNavi.Team -> navController.navigate(Navigate.BottomNavi.Team.route())
-                        Navigate.BottomNavi.Plus -> navController.navigate(Navigate.CreateMeeting.Date.route())
                         Navigate.BottomNavi.My -> navController.navigate(Navigate.BottomNavi.My.route())
                     }
-                }
+                },
+                addMeeting = { navController.navigate(Navigate.CreateMeeting.Date.route()) }
             )
         }
         composable(
@@ -93,10 +92,6 @@ fun MeeronNavigator() {
 
         composable(Navigate.ShowAll.route()) {
             ShowAllScreen(onAction = { navController.navigateUp() })
-        }
-
-        composable(Navigate.BottomNavi.Plus.route()) {
-
         }
 
         composable(Navigate.BottomNavi.Team.route()) {

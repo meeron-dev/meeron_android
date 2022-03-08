@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.main
+package fourtune.meeron.presentation.ui.home
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -40,12 +40,13 @@ enum class TabItems(@StringRes val text: Int) {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MainScreen(
+fun HomeScreen(
     openCalendar: () -> Unit = {},
     onBottomNaviClick: (selected: Navigate.BottomNavi) -> Unit = {},
-    mainViewModel: MainViewModel = hiltViewModel()
+    addMeeting: () -> Unit = {},
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
-    val currentDay by mainViewModel.currentDay().collectAsState()
+    val currentDay by homeViewModel.currentDay().collectAsState()
     val pagerState = rememberPagerState(0)
     val bottomBarSize = 90.dp
     var tabPos by rememberSaveable {
@@ -60,7 +61,15 @@ fun MainScreen(
                     }
                 },
                 title = { TitleText(Modifier.fillMaxWidth()) },
-                actions = { ActionRow(Modifier.padding(horizontal = 18.dp)) },
+                actions = {
+                    Image(
+                        modifier = Modifier
+                            .padding(horizontal = 18.dp)
+                            .clickable(onClick = addMeeting),
+                        painter = painterResource(id = R.drawable.ic_plus),
+                        contentDescription = null
+                    )
+                },
             )
         },
         bottomBar = {
@@ -84,7 +93,7 @@ fun MainScreen(
                 date = currentDay,
                 openCalendar = openCalendar
             )
-            MainTab(selectedTabIndex = tabPos, onClick = { selectedPosition -> tabPos = selectedPosition })
+            HomeTab(selectedTabIndex = tabPos, onClick = { selectedPosition -> tabPos = selectedPosition })
             Spacer(modifier = Modifier.padding(6.dp))
             when (tabPos) {
                 TabItems.COMPLETE.ordinal -> {
@@ -156,15 +165,6 @@ private fun TitleText(modifier: Modifier) {
             color = Color.Black,
             fontWeight = FontWeight.Bold
         )
-    }
-}
-
-@Composable
-private fun ActionRow(modifier: Modifier) {
-    Row(modifier = modifier) {
-        Image(painter = painterResource(id = R.drawable.ic_home_search), contentDescription = "search")
-        Spacer(modifier = Modifier.padding(5.dp))
-        Image(painter = painterResource(id = R.drawable.ic_home_bell), contentDescription = "alert")
     }
 }
 
@@ -299,7 +299,7 @@ private fun CalendarTitle(modifier: Modifier, date: CalendarDay, openCalendar: (
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-private fun MainTab(modifier: Modifier = Modifier, selectedTabIndex: Int, onClick: (selected: Int) -> Unit) {
+private fun HomeTab(modifier: Modifier = Modifier, selectedTabIndex: Int, onClick: (selected: Int) -> Unit) {
     ScrollableTabRow(modifier = modifier, selectedTabIndex = selectedTabIndex, edgePadding = 20.dp) {
         TabItems.values().forEachIndexed { index, tabItems ->
             Row(
@@ -321,8 +321,8 @@ private fun MainTab(modifier: Modifier = Modifier, selectedTabIndex: Int, onClic
 
 @Preview(showBackground = true)
 @Composable
-private fun Main() {
+private fun Preview() {
     MeeronTheme {
-        MainScreen()
+        HomeScreen()
     }
 }

@@ -54,7 +54,8 @@ fun MeeronNavigator() {
     val navController = rememberAnimatedNavController()
     AnimatedNavHost(
         navController = navController,
-        startDestination = Navigate.BottomNavi.Home.route()
+//        startDestination = Navigate.BottomNavi.Home.route()
+        startDestination = Navigate.CreateMeeting.Participants.route()
     ) {
 
         composable(route = Navigate.Login.route()) {
@@ -63,6 +64,7 @@ fun MeeronNavigator() {
                 navController.navigate(Navigate.BottomNavi.Home.route())
             })
         }
+
         composable(route = Navigate.BottomNavi.Home.route()) {
             HomeScreen(
                 openCalendar = {
@@ -78,6 +80,14 @@ fun MeeronNavigator() {
                 addMeeting = { navController.navigate(Navigate.CreateMeeting.Date.route()) }
             )
         }
+        composable(Navigate.BottomNavi.Team.route()) {
+
+        }
+
+        composable(Navigate.BottomNavi.My.route()) {
+
+        }
+
         composable(
             route = Navigate.Calendar.route(),
             enterTransition = { slideInVertically(initialOffsetY = { it }) },
@@ -93,13 +103,7 @@ fun MeeronNavigator() {
             ShowAllScreen(onAction = { navController.navigateUp() })
         }
 
-        composable(Navigate.BottomNavi.Team.route()) {
 
-        }
-
-        composable(Navigate.BottomNavi.My.route()) {
-
-        }
 
         composable(Navigate.CreateMeeting.Date.route()) {
             CreateMeetingDateScreen(
@@ -153,11 +157,19 @@ fun MeeronNavigator() {
         }
 
         composable(Navigate.CreateMeeting.Participants.route()) {
-            CreateMeetingParticipantsScreen()
+            CreateMeetingParticipantsScreen(
+                onAction = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
+                onPrevious = { navController.navigateUp() },
+                onNext = { navController.navigate(Navigate.CreateMeeting.Complete.route()) }
+            )
         }
 
         composable(Navigate.CreateMeeting.Complete.route()) {
-            CompleteMeetingScreen()
+            CompleteMeetingScreen(
+                onAction = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
+                onNext = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
+                onPrevious = { navController.navigateUp() }
+            )
         }
     }
 }

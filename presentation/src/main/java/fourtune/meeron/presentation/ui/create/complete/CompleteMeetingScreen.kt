@@ -1,6 +1,7 @@
 package fourtune.meeron.presentation.ui.create.complete
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
@@ -16,17 +17,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
+import forutune.meeron.domain.model.Meeting
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
 import fourtune.meeron.presentation.ui.create.CreateTitle
 
 @Composable
-fun CompleteMeetingScreen(viewModel: CompleteMeetingViewModel = hiltViewModel()) {
+fun CompleteMeetingScreen(
+    viewModel: CompleteMeetingViewModel = hiltViewModel(),
+    onPrevious: () -> Unit = {},
+    onNext: () -> Unit = {},
+    onAction: () -> Unit = {}
+) {
     val uiState by viewModel.uiState.collectAsState()
     Scaffold(topBar = {
         CenterTextTopAppBar(
-            onAction = { /*TODO*/ },
+            onAction = onAction,
             text = {
                 Text(
                     text = stringResource(id = R.string.create_meeting),
@@ -35,19 +42,35 @@ fun CompleteMeetingScreen(viewModel: CompleteMeetingViewModel = hiltViewModel())
                 )
             })
     }) {
-        MeeronButtonBackGround(modifier = Modifier.padding(vertical = 40.dp, horizontal = 20.dp)) {
-            Column {
-                Text(text = "ㅏ이틀", fontSize = 18.sp, color = colorResource(id = R.color.dark_gray))
-                MeetingItem("회의 날짜", "2022년 2월 4일")
-            }
+        MeeronButtonBackGround(
+            modifier = Modifier.padding(vertical = 40.dp, horizontal = 20.dp),
+            rightClick = onNext,
+            leftClick = onPrevious,
+            rightText = "바로가기"
+        ) {
+            Content(uiState.meeting)
         }
     }
 }
 
 @Composable
-private fun MeetingItem(title: String, text: String) {
+private fun Content(meeting: Meeting) {
     Column {
         CreateTitle(title = R.string.complete_create)
+        Text(text = "타이틀", fontSize = 18.sp, color = colorResource(id = R.color.dark_gray))
+        Spacer(modifier = Modifier.padding(8.dp))
+        MeetingItem("회의 날짜", meeting.date)
+        MeetingItem("회의 성격", meeting.personality)
+        MeetingItem("공동 관리자", meeting.owner)
+        MeetingItem("담당 팀", meeting.team)
+        MeetingItem("아젠다", meeting.agenda)
+        MeetingItem("참가자", meeting.participants)
+    }
+}
+
+@Composable
+private fun MeetingItem(title: String, text: String) {
+    Column(modifier = Modifier.padding(vertical = 8.dp)) {
         ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
             val (left, right) = createRefs()
             val guideLine = createGuidelineFromStart(0.3f)

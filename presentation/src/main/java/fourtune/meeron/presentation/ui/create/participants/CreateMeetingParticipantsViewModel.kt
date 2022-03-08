@@ -21,4 +21,10 @@ class CreateMeetingParticipantsViewModel @Inject constructor(
         val startTime: Time = Time(),
         val endTime: Time = Time(),
     )
+
+    sealed interface Event {
+        object Action : Event
+        object Previous : Event
+        object Next : Event
+    }
 }

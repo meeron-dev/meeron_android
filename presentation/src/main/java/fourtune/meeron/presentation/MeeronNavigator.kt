@@ -25,8 +25,8 @@ import fourtune.meeron.presentation.ui.main.MainScreen
 
 sealed interface Navigate {
     fun route() = requireNotNull(this::class.qualifiedName)
-    fun routeWith(path: Any) = route() + "/{$path}"
-    fun route(argument: Any) = route() + "/$argument"
+    fun destination(vararg path: Any) = route() + path.joinToString("") { "/{$it}" }
+    fun route(vararg argument: Any) = route() + argument.joinToString("") { "/$it" }
 
     object Login : Navigate
     object Calendar : Navigate
@@ -115,20 +115,23 @@ fun MeeronNavigator() {
         }
 
         composable(
-            route = Navigate.CreateMeeting.Time.routeWith(Const.Date),
-            arguments = listOf(navArgument(Const.Date) {
-                type = NavType.StringType
-                nullable = false
-            })
+            route = Navigate.CreateMeeting.Time.destination(Const.Date),
+            arguments = listOf(element = navArgument(Const.Date) { type = NavType.StringType })
         ) {
             CreateMeetingTimeScreen(
                 onAction = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
                 onPrevious = { navController.navigateUp() },
-                onNext = { navController.navigate(Navigate.CreateMeeting.Information.route()) }
+                onNext = { date, time -> navController.navigate(Navigate.CreateMeeting.Information.route(date, time)) }
             )
         }
 
-        composable(Navigate.CreateMeeting.Information.route()) {
+        composable(
+            route = Navigate.CreateMeeting.Information.destination(Const.Date, Const.Time),
+            arguments = listOf(
+                navArgument(Const.Date) { type = NavType.StringType },
+                navArgument(Const.Time) { type = NavType.StringType }
+            )
+        ) {
             CreateMeetingInfoScreen(
                 onNext = { navController.navigate(Navigate.CreateMeeting.Agenda.route()) },
                 onPrevious = { navController.navigateUp() },

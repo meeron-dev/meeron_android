@@ -2,10 +2,10 @@ package fourtune.meeron.presentation.ui.create.information
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.toMutableStateMap
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import forutune.meeron.domain.model.Date
-import forutune.meeron.domain.model.Time
+import forutune.meeron.domain.Const
 import fourtune.meeron.presentation.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,9 +14,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateMeetingInfoViewModel @Inject constructor(
-
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(UiState())
+    private val _uiState = MutableStateFlow(
+        UiState(
+            date = savedStateHandle.get<String>(Const.Date).orEmpty(),
+            time = savedStateHandle.get<String>(Const.Time).orEmpty()
+        )
+    )
+
     fun uiState() = _uiState.asStateFlow()
 
     val listState = Info.values()
@@ -43,9 +49,8 @@ class CreateMeetingInfoViewModel @Inject constructor(
     }
 
     data class UiState(
-        val date: Date = Date(),
-        val startTime: Time = Time(),
-        val endTime: Time = Time(),
+        val date: String,
+        val time: String,
         val isVerify: Boolean = false
     )
 

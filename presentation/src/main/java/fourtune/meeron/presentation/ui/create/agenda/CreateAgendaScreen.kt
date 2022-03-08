@@ -111,7 +111,7 @@ private fun CreateAgendaScreen(
                 CreateTitle(
                     title = R.string.info_title,
                     selectedDate = uiState.date.toString(),
-                    selectedTime = "${uiState.startTime.time}${uiState.startTime.hourOfDay} ~ ${uiState.endTime.time}${uiState.endTime.hourOfDay}",
+                    selectedTime = "${uiState.startTime} ~ ${uiState.endTime}",
                     extraContents = { CreateText(text = uiState.title) }
                 )
                 Spacer(modifier = Modifier.padding(15.dp))

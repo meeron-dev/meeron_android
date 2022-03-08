@@ -31,7 +31,7 @@ import fourtune.meeron.presentation.ui.theme.MeeronTheme
 fun CreateMeetingTimeScreen(
     timeViewModel: CreateMeetingTimeViewModel = hiltViewModel(),
     onAction: () -> Unit = {},
-    onNext: () -> Unit = {},
+    onNext: (date: String, time: String) -> Unit = { _, _ -> },
     onPrevious: () -> Unit = {}
 ) {
     val uiState by timeViewModel.uiState().collectAsState()
@@ -45,7 +45,10 @@ fun CreateMeetingTimeScreen(
                     event.minute
                 )
                 CreateMeetingTimeViewModel.Event.Exit -> onAction()
-                CreateMeetingTimeViewModel.Event.Next -> onNext()
+                CreateMeetingTimeViewModel.Event.Next -> onNext(
+                    uiState.currentDay,
+                    "${uiState.timeMap[R.string.start]} ~ ${uiState.timeMap[R.string.end]}"
+                )
                 CreateMeetingTimeViewModel.Event.Previous -> onPrevious()
             }
         }

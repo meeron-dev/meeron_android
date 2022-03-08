@@ -45,7 +45,7 @@ private fun CreateMeetingParticipantsScreen(uiState: CreateMeetingParticipantsVi
             Column {
                 CreateTitle(
                     title = R.string.create_participants,
-                    selectedTime = "${uiState.startTime.time}${uiState.startTime.hourOfDay} ~ ${uiState.endTime.time}${uiState.endTime.hourOfDay}",
+                    selectedTime = "${uiState.startTime} ~ ${uiState.endTime}",
                     selectedDate = uiState.date.toString(),
                     extraContents = {
                         CreateText(text = uiState.title)

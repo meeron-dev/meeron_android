@@ -112,8 +112,8 @@ private fun CreateMeetingInfoScreen(
         ) {
             Column {
                 InformationTitle(
-                    selectedDate = uiState.date.toString(),
-                    selectedTime = "${uiState.startTime.time}${uiState.startTime.hourOfDay} ~ ${uiState.endTime.time}${uiState.endTime.hourOfDay}",
+                    selectedDate = uiState.date,
+                    selectedTime = uiState.time,
                     onClick = onLoad
                 )
                 InformationFields(

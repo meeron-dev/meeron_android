@@ -30,7 +30,7 @@ import fourtune.meeron.presentation.ui.theme.MeeronTheme
 fun CreateMeetingDateScreen(
     viewModel: CreateMeetingDateViewModel = hiltViewModel(),
     onAction: () -> Unit = {},
-    onNext: () -> Unit = {}
+    onNext: (String) -> Unit = {}
 ) {
     val uiState by viewModel.uiState().collectAsState()
     CreateMeetingDateScreen(
@@ -39,7 +39,7 @@ fun CreateMeetingDateScreen(
         when (event) {
             is CreateMeetingDateViewModel.Event.ChangeDate -> viewModel.changeDate(event.date)
             CreateMeetingDateViewModel.Event.OnBack -> onAction()
-            CreateMeetingDateViewModel.Event.OnNext -> onNext()
+            CreateMeetingDateViewModel.Event.OnNext -> onNext("${uiState.date.year}년 ${uiState.date.month}월 ${uiState.date.hourOfDay}일")
         }
     }
 }

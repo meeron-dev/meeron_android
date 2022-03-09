@@ -106,6 +106,7 @@ class CreateMeetingInfoViewModel @Inject constructor(
     }
 
     sealed interface Event {
+        class OnTextChange(val info: Info,val input: String):Event
         object Next : Event
         object Previous : Event
         object Load : Event

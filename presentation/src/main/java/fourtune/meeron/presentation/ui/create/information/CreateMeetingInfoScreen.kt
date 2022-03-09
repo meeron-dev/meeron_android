@@ -74,7 +74,6 @@ fun CreateMeetingInfoScreen(
         content = {
             CreateMeetingInfoScreen(
                 uiState = uiState,
-                viewModel = viewModel,
                 event = { event ->
                     when (event) {
                         CreateMeetingInfoViewModel.Event.Load -> onLoad()
@@ -82,12 +81,17 @@ fun CreateMeetingInfoScreen(
                             viewModel.createMeeting(onNext)
                         }
                         CreateMeetingInfoViewModel.Event.Previous -> onPrevious()
+                        is CreateMeetingInfoViewModel.Event.OnTextChange -> viewModel.updateText(
+                            event.info,
+                            event.input
+                        )
                     }
                 },
                 bottomSheetEvent = { event ->
                     currentBottomSheet = event
                     scope.launch { bottomSheetState.animateTo(ModalBottomSheetValue.Expanded) }
-                }
+                },
+                listState = viewModel.listState
             )
         }
     )
@@ -97,9 +101,9 @@ fun CreateMeetingInfoScreen(
 @Composable
 private fun CreateMeetingInfoScreen(
     uiState: CreateMeetingInfoViewModel.UiState,
-    viewModel: CreateMeetingInfoViewModel,
     event: (CreateMeetingInfoViewModel.Event) -> Unit,
-    bottomSheetEvent: (CreateMeetingInfoViewModel.BottomSheetState) -> Unit = {}
+    bottomSheetEvent: (CreateMeetingInfoViewModel.BottomSheetState) -> Unit = {},
+    listState: Map<CreateMeetingInfoViewModel.Info, String>
 ) {
     Scaffold(
         topBar = {
@@ -128,7 +132,7 @@ private fun CreateMeetingInfoScreen(
                     onClick = { event(CreateMeetingInfoViewModel.Event.Load) }
                 )
                 InformationFields(
-                    listState = viewModel.listState,
+                    listState = listState,
                     clickModal = { info ->
                         when (info) {
                             CreateMeetingInfoViewModel.Info.Owners -> bottomSheetEvent(CreateMeetingInfoViewModel.BottomSheetState.Owner)
@@ -136,7 +140,7 @@ private fun CreateMeetingInfoScreen(
                             else -> throw IllegalStateException("$info is Not Modal")
                         }
                     },
-                    onTextChange = viewModel::updateText
+                    onTextChange = { info, input -> event(CreateMeetingInfoViewModel.Event.OnTextChange(info, input)) }
                 )
             }
         }

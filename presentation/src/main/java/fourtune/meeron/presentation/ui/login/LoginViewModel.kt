@@ -35,7 +35,11 @@ class LoginViewModel @Inject constructor(
     private val _loginSuccess = MutableSharedFlow<Boolean>()
     fun loginSuccess() = _loginSuccess.asSharedFlow()
 
+    private val _toast = MutableSharedFlow<String?>()
+    val toast = _toast.asSharedFlow()
+
     private val loginContext = CoroutineExceptionHandler { _, throwable ->
+        _toast.tryEmit(throwable.message ?: "coroutine error $throwable")
         Timber.tag("🔥zero:").e("$throwable")
     }
 
@@ -45,7 +49,10 @@ class LoginViewModel @Inject constructor(
                 runCatching {
                     loginUseCase(getMe = { UserApiClient.rx.me().await().toLoginUser() })
                 }
-                    .onFailure { Timber.tag("🔥zero:initLogin").w("$it") }
+                    .onFailure {
+                        Timber.tag("🔥zero:initLogin").w("$it")
+                        _toast.emit(it.message)
+                    }
                     .isSuccess
             _loginSuccess.emit(isLoginSuccess)
         }
@@ -61,7 +68,10 @@ class LoginViewModel @Inject constructor(
                     getMe = { UserApiClient.rx.me().await().toLoginUser() }
                 )
             }
-                .onFailure { Timber.tag("🔥zero:launchKakaoLogin").w("$it") }
+                .onFailure {
+                    Timber.tag("🔥zero:launchKakaoLogin").w("$it")
+                    _toast.emit(it.message)
+                }
                 .isSuccess
             _loginSuccess.emit(isLoginSuccess)
         }

@@ -1,5 +1,6 @@
 package fourtune.meeron.presentation.ui.login
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,11 +19,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import fourtune.meeron.presentation.R
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun LoginScreen(viewModel: LoginViewModel = hiltViewModel(), isLoginSuccess: () -> Unit) {
     val context = LocalContext.current
+    LaunchedEffect(key1 = true) {
+        viewModel.toast.collect {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        }
+    }
     LaunchedEffect(key1 = true) {
         viewModel.loginSuccess().collectLatest { isLoginSuccess ->
             if (isLoginSuccess) isLoginSuccess()

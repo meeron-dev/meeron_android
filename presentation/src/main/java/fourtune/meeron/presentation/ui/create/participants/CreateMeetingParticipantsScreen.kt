@@ -32,7 +32,7 @@ import fourtune.meeron.presentation.ui.create.CreateTitle
 fun CreateMeetingParticipantsScreen(
     viewModel: CreateMeetingParticipantsViewModel = hiltViewModel(),
     onAction: () -> Unit,
-    onNext: (meetingId: Long) -> Unit,
+    onNext: (meeting: Meeting) -> Unit,
     onPrevious: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -41,7 +41,7 @@ fun CreateMeetingParticipantsScreen(
         event = { event ->
             when (event) {
                 CreateMeetingParticipantsViewModel.Event.Action -> onAction()
-                CreateMeetingParticipantsViewModel.Event.Next -> onNext(viewModel.meetingId)
+                CreateMeetingParticipantsViewModel.Event.Next -> onNext(uiState.meeting)
                 CreateMeetingParticipantsViewModel.Event.Previous -> onPrevious()
             }
         }

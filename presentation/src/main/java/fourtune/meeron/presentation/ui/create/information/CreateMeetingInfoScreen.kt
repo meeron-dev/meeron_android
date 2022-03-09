@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import forutune.meeron.domain.model.Meeting
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
@@ -33,7 +34,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun CreateMeetingInfoScreen(
     viewModel: CreateMeetingInfoViewModel = hiltViewModel(),
-    onNext: (meetingId: Long) -> Unit = {},
+    onNext: (meeting: Meeting) -> Unit = {},
     onPrevious: () -> Unit = {},
     onLoad: () -> Unit = {}
 ) {

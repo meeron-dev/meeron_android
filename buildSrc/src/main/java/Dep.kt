@@ -59,7 +59,7 @@ object Dep {
 
         const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
 
-        const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0"
+        const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2"
         const val serializationPlugin = "org.jetbrains.kotlin:kotlin-serialization:$version"
 
         private const val coroutineVersion = "1.5.2"

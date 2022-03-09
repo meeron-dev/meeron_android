@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.Meeting
-import forutune.meeron.domain.usecase.CreateMeetingUseCase
 import fourtune.meeron.presentation.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -20,7 +19,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateMeetingInfoViewModel @Inject constructor(
-    private val createMeetingUseCase: CreateMeetingUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
@@ -63,9 +61,9 @@ class CreateMeetingInfoViewModel @Inject constructor(
             .also { isVerify -> _uiState.update { it.copy(isVerify = isVerify) } }
     }
 
-    fun createMeeting(onCreate: (Long) -> Unit) {
+    fun createMeeting(onCreate: (Meeting) -> Unit) {
         viewModelScope.launch {
-            createMeetingUseCase(
+            onCreate(
                 Meeting(
                     title = listState[Info.Title].orEmpty(),
                     date = _uiState.value.date,
@@ -73,10 +71,10 @@ class CreateMeetingInfoViewModel @Inject constructor(
                     personality = listState[Info.Personality].orEmpty(),
                     owner = listState[Info.Owners].orEmpty(),
                     team = listState[Info.Team].orEmpty(),//todo List<String> 변경 유무 확인
-                    agenda = "",//todo List<String> 변경 유무 확인
-                    participants = ""//todo List<String> 변경 유무 확인
+                    agenda = emptyList(),//todo List<String> 변경 유무 확인
+                    participants = emptyList()//todo List<String> 변경 유무 확인
                 )
-            ).also(onCreate)
+            )
         }
     }
 

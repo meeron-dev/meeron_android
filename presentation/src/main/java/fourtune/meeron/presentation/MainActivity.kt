@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import dagger.hilt.android.AndroidEntryPoint
+import fourtune.meeron.presentation.navigator.MeeronNavigator
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
 @AndroidEntryPoint

@@ -11,12 +11,8 @@ data class MeetingEntity(
     val date: String = "",
     val time: String = "",
     val personality: String = "",
-    val owner: String = "",
-    val team: String = "",
-    val agenda: String = "",
-    val participants: String = ""
 ) {
-    fun toMeeting() = Meeting(title, date, time, personality, owner, team, agenda, participants)
+    fun toMeeting() = Meeting(title, date, time, personality)
 
     companion object {
         fun from(meeting: Meeting) =
@@ -26,10 +22,6 @@ data class MeetingEntity(
                     date = date,
                     time = time,
                     personality = personality,
-                    owner = owner,
-                    team = team,
-                    agenda = agenda,
-                    participants = participants
                 )
             }
     }

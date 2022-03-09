@@ -29,8 +29,8 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.prolificinteractive.materialcalendarview.CalendarDay
-import fourtune.meeron.presentation.Navigate
 import fourtune.meeron.presentation.R
+import fourtune.meeron.presentation.navigator.Navigate
 import fourtune.meeron.presentation.ui.common.Dot
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 

@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import forutune.meeron.domain.model.Meeting
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
@@ -38,7 +39,7 @@ import fourtune.meeron.presentation.ui.theme.MeeronTheme
 fun CreateAgendaScreen(
     viewModel: CreateAgendaViewModel = hiltViewModel(),
     onAction: () -> Unit = {},
-    onNext: (meetingId: Long) -> Unit = {},
+    onNext: (meeting: Meeting) -> Unit = {},
     onPrevious: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -72,7 +73,7 @@ fun CreateAgendaScreen(
                 )
 
                 CreateAgendaViewModel.Event.Exit -> onAction()
-                CreateAgendaViewModel.Event.Next -> onNext(viewModel.meetingId)
+                CreateAgendaViewModel.Event.Next -> onNext(uiState.meeting)
                 CreateAgendaViewModel.Event.Previous -> onPrevious()
 
                 is CreateAgendaViewModel.Event.AgendaSelected -> viewModel.selectAgenda(event.selected)
@@ -110,9 +111,9 @@ private fun CreateAgendaScreen(
             Column {
                 CreateTitle(
                     title = R.string.info_title,
-                    selectedDate = uiState.date,
-                    selectedTime = uiState.time,
-                    extraContents = { CreateText(text = uiState.title) }
+                    selectedDate = uiState.meeting.date,
+                    selectedTime = uiState.meeting.time,
+                    extraContents = { CreateText(text = uiState.meeting.title) }
                 )
                 Spacer(modifier = Modifier.padding(15.dp))
                 AgendaBody(

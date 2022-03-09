@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation
+package fourtune.meeron.presentation.navigator
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -12,6 +12,8 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import forutune.meeron.domain.Const
+import fourtune.meeron.presentation.R
+import fourtune.meeron.presentation.navigator.ext.encodeJson
 import fourtune.meeron.presentation.ui.calendar.CalendarScreen
 import fourtune.meeron.presentation.ui.calendar.all.ShowAllScreen
 import fourtune.meeron.presentation.ui.create.agenda.CreateAgendaScreen
@@ -47,6 +49,7 @@ sealed interface Navigate {
         object Complete : CreateMeeting
     }
 }
+
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -102,8 +105,6 @@ fun MeeronNavigator() {
             ShowAllScreen(onAction = { navController.navigateUp() })
         }
 
-
-
         composable(Navigate.CreateMeeting.Date.route()) {
             CreateMeetingDateScreen(
                 onAction = { navController.navigateUp() },
@@ -130,8 +131,10 @@ fun MeeronNavigator() {
             )
         ) {
             CreateMeetingInfoScreen(
-                onNext = { meetingId ->
-                    navController.navigate(Navigate.CreateMeeting.Agenda.route(meetingId))
+                onNext = { meeting ->
+                    navController.navigate(
+                        Navigate.CreateMeeting.Agenda.route(meeting.encodeJson())
+                    )
                 },
                 onPrevious = { navController.navigateUp() },
                 onLoad = { navController.navigate(Navigate.Calendar.route()) }
@@ -139,35 +142,43 @@ fun MeeronNavigator() {
         }
 
         composable(
-            route = Navigate.CreateMeeting.Agenda.destination(Const.MeetingId),
+            route = Navigate.CreateMeeting.Agenda.destination(Const.Meeting),
             arguments = listOf(
-                navArgument(Const.MeetingId) { type = NavType.LongType },
+                navArgument(Const.Meeting) { type = MeetingType() },
             )
         ) {
             CreateAgendaScreen(
                 onAction = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
                 onPrevious = { navController.navigateUp() },
-                onNext = { meetingId -> navController.navigate(Navigate.CreateMeeting.Participants.route(meetingId)) }
+                onNext = { meeting ->
+                    navController.navigate(
+                        Navigate.CreateMeeting.Participants.route(meeting.encodeJson())
+                    )
+                }
             )
         }
 
         composable(
-            route = Navigate.CreateMeeting.Participants.destination(Const.MeetingId),
+            route = Navigate.CreateMeeting.Participants.destination(Const.Meeting),
             arguments = listOf(
-                navArgument(Const.MeetingId) { type = NavType.LongType },
+                navArgument(Const.Meeting) { type = MeetingType() },
             )
         ) {
             CreateMeetingParticipantsScreen(
                 onAction = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
                 onPrevious = { navController.navigateUp() },
-                onNext = { meetingId -> navController.navigate(Navigate.CreateMeeting.Complete.route(meetingId)) }
+                onNext = { meeting ->
+                    navController.navigate(
+                        Navigate.CreateMeeting.Complete.route(meeting.encodeJson())
+                    )
+                }
             )
         }
 
         composable(
-            route = Navigate.CreateMeeting.Complete.destination(Const.MeetingId),
+            route = Navigate.CreateMeeting.Complete.destination(Const.Meeting),
             arguments = listOf(
-                navArgument(Const.MeetingId) { type = NavType.LongType },
+                navArgument(Const.Meeting) { type = MeetingType() },
             )
         ) {
             CompleteMeetingScreen(

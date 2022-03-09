@@ -170,7 +170,10 @@ private fun InformationFields(
                     limit = info.limit,
                 )
             }
-            MeeronActionBox(factory = factory, title = stringResource(id = info.title))
+            MeeronActionBox(
+                factory = factory,
+                title = stringResource(id = info.title) + if (info.isEssential) " *" else ""
+            )
         }
     }
 }

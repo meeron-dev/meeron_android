@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import forutune.meeron.domain.model.Meeting
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
@@ -31,7 +32,7 @@ import fourtune.meeron.presentation.ui.create.CreateTitle
 fun CreateMeetingParticipantsScreen(
     viewModel: CreateMeetingParticipantsViewModel = hiltViewModel(),
     onAction: () -> Unit,
-    onNext: () -> Unit,
+    onNext: (meetingId: Long) -> Unit,
     onPrevious: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -40,7 +41,7 @@ fun CreateMeetingParticipantsScreen(
         event = { event ->
             when (event) {
                 CreateMeetingParticipantsViewModel.Event.Action -> onAction()
-                CreateMeetingParticipantsViewModel.Event.Next -> onNext()
+                CreateMeetingParticipantsViewModel.Event.Next -> onNext(viewModel.meetingId)
                 CreateMeetingParticipantsViewModel.Event.Previous -> onPrevious()
             }
         }
@@ -72,10 +73,10 @@ private fun CreateMeetingParticipantsScreen(
             Column {
                 CreateTitle(
                     title = R.string.create_participants,
-                    selectedTime = "${uiState.startTime} ~ ${uiState.endTime}",
-                    selectedDate = uiState.date.toString(),
+                    selectedTime = uiState.meeting.time,
+                    selectedDate = uiState.meeting.date,
                     extraContents = {
-                        CreateText(text = uiState.title)
+                        CreateText(text = uiState.meeting.title)
                     }
                 )
                 Spacer(modifier = Modifier.padding(10.dp))
@@ -154,5 +155,5 @@ private fun TeamExpandItem(teams: List<String>) {
 @Preview
 @Composable
 private fun Preview() {
-    CreateMeetingParticipantsScreen(CreateMeetingParticipantsViewModel.UiState())
+    CreateMeetingParticipantsScreen(CreateMeetingParticipantsViewModel.UiState(Meeting()))
 }

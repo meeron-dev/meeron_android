@@ -147,19 +147,29 @@ fun MeeronNavigator() {
             CreateAgendaScreen(
                 onAction = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
                 onPrevious = { navController.navigateUp() },
-                onNext = { navController.navigate(Navigate.CreateMeeting.Participants.route()) }
+                onNext = { meetingId -> navController.navigate(Navigate.CreateMeeting.Participants.route(meetingId)) }
             )
         }
 
-        composable(Navigate.CreateMeeting.Participants.route()) {
+        composable(
+            route = Navigate.CreateMeeting.Participants.destination(Const.MeetingId),
+            arguments = listOf(
+                navArgument(Const.MeetingId) { type = NavType.LongType },
+            )
+        ) {
             CreateMeetingParticipantsScreen(
                 onAction = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
                 onPrevious = { navController.navigateUp() },
-                onNext = { navController.navigate(Navigate.CreateMeeting.Complete.route()) }
+                onNext = { meetingId -> navController.navigate(Navigate.CreateMeeting.Complete.route(meetingId)) }
             )
         }
 
-        composable(Navigate.CreateMeeting.Complete.route()) {
+        composable(
+            route = Navigate.CreateMeeting.Complete.destination(Const.MeetingId),
+            arguments = listOf(
+                navArgument(Const.MeetingId) { type = NavType.LongType },
+            )
+        ) {
             CompleteMeetingScreen(
                 onAction = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
                 onNext = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },

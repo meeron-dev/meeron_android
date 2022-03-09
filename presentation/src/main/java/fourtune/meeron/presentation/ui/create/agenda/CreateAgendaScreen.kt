@@ -38,7 +38,7 @@ import fourtune.meeron.presentation.ui.theme.MeeronTheme
 fun CreateAgendaScreen(
     viewModel: CreateAgendaViewModel = hiltViewModel(),
     onAction: () -> Unit = {},
-    onNext: () -> Unit = {},
+    onNext: (meetingId: Long) -> Unit = {},
     onPrevious: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -72,7 +72,7 @@ fun CreateAgendaScreen(
                 )
 
                 CreateAgendaViewModel.Event.Exit -> onAction()
-                CreateAgendaViewModel.Event.Next -> onNext()
+                CreateAgendaViewModel.Event.Next -> onNext(viewModel.meetingId)
                 CreateAgendaViewModel.Event.Previous -> onPrevious()
 
                 is CreateAgendaViewModel.Event.AgendaSelected -> viewModel.selectAgenda(event.selected)

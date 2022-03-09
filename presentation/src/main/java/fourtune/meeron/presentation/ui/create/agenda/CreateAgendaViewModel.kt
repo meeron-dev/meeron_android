@@ -25,7 +25,7 @@ class CreateAgendaViewModel @Inject constructor(
     private val getMeetingUseCase: GetMeetingUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val meetingId = requireNotNull(savedStateHandle.get<Long>(Const.MeetingId))
+    val meetingId = requireNotNull(savedStateHandle.get<Long>(Const.MeetingId))
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()

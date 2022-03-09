@@ -73,13 +73,15 @@ fun CreateAgendaScreen(
                 )
 
                 CreateAgendaViewModel.Event.Exit -> onAction()
-                CreateAgendaViewModel.Event.Next -> onNext(uiState.meeting)
+                CreateAgendaViewModel.Event.Next -> {
+                    onNext(viewModel.saveSnapShot())
+                }
                 CreateAgendaViewModel.Event.Previous -> onPrevious()
 
                 is CreateAgendaViewModel.Event.AgendaSelected -> viewModel.selectAgenda(event.selected)
             }
         },
-        agendas = viewModel.agendas
+        agendaStates = viewModel.agendas
     )
 }
 
@@ -87,7 +89,7 @@ fun CreateAgendaScreen(
 private fun CreateAgendaScreen(
     uiState: CreateAgendaViewModel.UiState,
     event: (CreateAgendaViewModel.Event) -> Unit,
-    agendas: List<Agenda>
+    agendaStates: List<AgendaState>
 ) {
     Scaffold(
         topBar = {
@@ -117,7 +119,7 @@ private fun CreateAgendaScreen(
                 )
                 Spacer(modifier = Modifier.padding(15.dp))
                 AgendaBody(
-                    agendas = agendas,
+                    agendaStates = agendaStates,
                     event = event,
                     selected = uiState.selectedAgenda,
                 )
@@ -128,7 +130,7 @@ private fun CreateAgendaScreen(
 
 @Composable
 fun AgendaBody(
-    agendas: List<Agenda>,
+    agendaStates: List<AgendaState>,
     event: (CreateAgendaViewModel.Event) -> Unit,
     selected: Int,
 ) {
@@ -140,12 +142,12 @@ fun AgendaBody(
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AgendaCountRow(agendas, event, selected, onClick = {
+        AgendaCountRow(agendaStates, event, selected, onClick = {
             event(CreateAgendaViewModel.Event.AgendaSelected(it))
         })
-        Agenda(agendas, selected, event)
-        Issues(agendas, selected, event)
-        Files(agendas, selected, event)
+        Agenda(agendaStates, selected, event)
+        Issues(agendaStates, selected, event)
+        Files(agendaStates, selected, event)
         Spacer(modifier = Modifier.padding(30.dp))
         Text(
             modifier = Modifier.padding(vertical = 30.dp),
@@ -158,7 +160,7 @@ fun AgendaBody(
 
 @Composable
 private fun AgendaCountRow(
-    agendas: List<Agenda>,
+    agendaStates: List<AgendaState>,
     event: (CreateAgendaViewModel.Event) -> Unit,
     selected: Int,
     onClick: (Int) -> Unit
@@ -172,17 +174,17 @@ private fun AgendaCountRow(
         LazyRow(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            itemsIndexed(agendas) { index, _ ->
+            itemsIndexed(agendaStates) { index, _ ->
                 AgendaCountItem(index = index, isSelected = selected, onClick = onClick)
             }
         }
         Row {
-            if (agendas.size != MAX_AGENDA_SIZE) {
+            if (agendaStates.size != MAX_AGENDA_SIZE) {
                 IconButton(onClick = { event(CreateAgendaViewModel.Event.AddAgenda) }) {
                     Image(painter = painterResource(id = R.drawable.ic_agenda_plus), contentDescription = null)
                 }
             }
-            if (agendas.size != MIN_AGENDA_SIZE) {
+            if (agendaStates.size != MIN_AGENDA_SIZE) {
                 IconButton(onClick = { event(CreateAgendaViewModel.Event.DeleteAgenda(selected)) }) {
                     Image(painter = painterResource(id = R.drawable.ic_agenda_delete), contentDescription = null)
                 }
@@ -193,7 +195,7 @@ private fun AgendaCountRow(
 
 @Composable
 private fun Agenda(
-    agendas: List<Agenda>,
+    agendaStates: List<AgendaState>,
     selected: Int,
     event: (CreateAgendaViewModel.Event) -> Unit
 ) {
@@ -201,7 +203,7 @@ private fun Agenda(
     MeeronActionBox(
         factory =
         ContentFactory.LimitTextField(
-            text = agendas[selected].name,
+            text = agendaStates[selected].name,
             onValueChange = {
                 event(CreateAgendaViewModel.Event.AgendaTextChanged(selected, it))
             },
@@ -214,12 +216,12 @@ private fun Agenda(
 
 @Composable
 private fun Issues(
-    agendas: List<Agenda>,
+    agendaStates: List<AgendaState>,
     selected: Int,
     event: (CreateAgendaViewModel.Event) -> Unit
 ) {
     Spacer(modifier = Modifier.padding(15.dp))
-    agendas[selected].issue.forEachIndexed { index, s ->
+    agendaStates[selected].issue.forEachIndexed { index, s ->
         Spacer(modifier = Modifier.padding(10.dp))
         if (index == 0) {
             MeeronActionBox(
@@ -265,12 +267,12 @@ private fun Issues(
 
 @Composable
 private fun Files(
-    agendas: List<Agenda>,
+    agendaStates: List<AgendaState>,
     selected: Int,
     event: (CreateAgendaViewModel.Event) -> Unit
 ) {
     Spacer(modifier = Modifier.padding(15.dp))
-    agendas[selected].file.forEachIndexed { index, s ->
+    agendaStates[selected].file.forEachIndexed { index, s ->
         Spacer(modifier = Modifier.padding(10.dp))
         if (index == 0) {
             MeeronActionBox(factory = ContentFactory.ActionField(

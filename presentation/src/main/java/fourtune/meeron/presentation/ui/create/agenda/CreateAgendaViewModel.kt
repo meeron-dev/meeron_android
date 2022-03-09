@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
+import forutune.meeron.domain.model.File
+import forutune.meeron.domain.model.Issue
 import forutune.meeron.domain.model.Meeting
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class Agenda(
+data class AgendaState(
     val name: String = "",
     val issue: SnapshotStateList<String> = mutableStateListOf(""),
     val file: SnapshotStateList<String> = mutableStateListOf("")
@@ -28,7 +30,7 @@ class CreateAgendaViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
 
-    val agendas = mutableStateListOf(Agenda())
+    val agendas = mutableStateListOf(AgendaState())
 
     init {
         viewModelScope.launch {
@@ -42,7 +44,7 @@ class CreateAgendaViewModel @Inject constructor(
 
     fun addAgenda() {
         if (agendas.size < MAX_AGENDA_SIZE) {
-            agendas.add(Agenda())
+            agendas.add(AgendaState())
             selectAgenda(agendas.size - 1)
         }
     }
@@ -86,6 +88,18 @@ class CreateAgendaViewModel @Inject constructor(
         _uiState.update {
             it.copy(selectedAgenda = selected)
         }
+    }
+
+    fun saveSnapShot(): Meeting {
+        return uiState.value.meeting.copy(
+            agenda = agendas.map { agenda ->
+                forutune.meeron.domain.model.Agenda(
+                    agenda = agenda.name,
+                    issues = agenda.issue.map(::Issue),
+                    files = agenda.file.map(::File)
+                )
+            }
+        )
     }
 
     data class UiState(

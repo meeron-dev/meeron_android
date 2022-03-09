@@ -48,13 +48,13 @@ fun CompleteMeetingScreen(
             leftClick = onPrevious,
             rightText = "바로가기"
         ) {
-            Content(uiState.meeting)
+            Content(uiState.meeting, uiState.meeting.agenda.size, uiState.meeting.participants.size)
         }
     }
 }
 
 @Composable
-private fun Content(meeting: Meeting) {
+private fun Content(meeting: Meeting, agendaSize: Int, participants: Int) {
     Column {
         CreateTitle(title = R.string.complete_create)
         Text(text = meeting.title, fontSize = 18.sp, color = colorResource(id = R.color.dark_gray))
@@ -63,8 +63,8 @@ private fun Content(meeting: Meeting) {
         MeetingItem("회의 성격", meeting.purpose)
         MeetingItem("공동 관리자", meeting.owner)
         MeetingItem("담당 팀", meeting.team.name)
-        MeetingItem("아젠다", meeting.agenda.toString())
-        MeetingItem("참가자", meeting.participants.toString())
+        MeetingItem("아젠다", String.format("%d개", agendaSize))
+        MeetingItem("참가자", String.format("%d명", participants))
     }
 }
 

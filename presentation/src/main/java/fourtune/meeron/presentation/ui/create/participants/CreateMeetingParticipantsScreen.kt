@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import forutune.meeron.domain.model.Meeting
+import forutune.meeron.domain.model.Team
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
@@ -95,7 +96,7 @@ private fun CreateMeetingParticipantsScreen(
                 }
 
                 Spacer(modifier = Modifier.padding(4.dp))
-                TeamExpandItem(listOf("hello", "world", "json"))
+                TeamExpandItem(uiState.teams)
                 Spacer(modifier = Modifier.padding(10.dp))
                 //TODO 여기에 팀 선택화면 들어가기 (재활용 가능해보임 데이터셋 나오면 적용하자)
                 // @See OwnerSelectScreen
@@ -108,7 +109,7 @@ private fun CreateMeetingParticipantsScreen(
 
 @OptIn(ExperimentalMaterialApi::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
-private fun TeamExpandItem(teams: List<String>) {
+private fun TeamExpandItem(teams: List<Team>) {
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -139,7 +140,7 @@ private fun TeamExpandItem(teams: List<String>) {
             ) {
                 items(teams) {
                     Text(
-                        text = "팀이름",
+                        text = it.name,
                         fontSize = 18.sp,
                         color = colorResource(id = R.color.gray)
                     )

@@ -44,7 +44,9 @@ class LoginViewModel @Inject constructor(
             val isLoginSuccess =
                 runCatching {
                     loginUseCase(getMe = { UserApiClient.rx.me().await().toLoginUser() })
-                }.isSuccess
+                }
+                    .onFailure { Timber.tag("🔥zero:initLogin").w("$it") }
+                    .isSuccess
             _loginSuccess.emit(isLoginSuccess)
         }
     }
@@ -58,7 +60,9 @@ class LoginViewModel @Inject constructor(
                     kakaoLoginWithAccount = { UserApiClient.rx.loginWithKakaoAccount(context).await() },
                     getMe = { UserApiClient.rx.me().await().toLoginUser() }
                 )
-            }.isSuccess
+            }
+                .onFailure { Timber.tag("🔥zero:launchKakaoLogin").w("$it") }
+                .isSuccess
             _loginSuccess.emit(isLoginSuccess)
         }
     }

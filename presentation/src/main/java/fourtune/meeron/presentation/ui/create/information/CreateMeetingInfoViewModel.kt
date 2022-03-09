@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.model.Team
+import forutune.meeron.domain.usecase.GetWorkSpaceTeamUseCase
 import fourtune.meeron.presentation.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -20,7 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateMeetingInfoViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    getWorkSpaceTeamUseCase: GetWorkSpaceTeamUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         UiState(
@@ -28,6 +30,17 @@ class CreateMeetingInfoViewModel @Inject constructor(
             time = savedStateHandle.get<String>(Const.Time).orEmpty()
         )
     )
+
+    init {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    teams = getWorkSpaceTeamUseCase()
+                )
+            }
+        }
+    }
+
     private var searchJob: Job? = null
     fun uiState() = _uiState.asStateFlow()
 
@@ -39,11 +52,6 @@ class CreateMeetingInfoViewModel @Inject constructor(
 
     fun updateText(info: Info, input: String) {
         listState[info] = input
-        checkEssentialField()
-    }
-
-    fun clickModal(info: Info) {
-        listState[info] = "asdasd"
         checkEssentialField()
     }
 
@@ -71,7 +79,7 @@ class CreateMeetingInfoViewModel @Inject constructor(
                     time = _uiState.value.time,
                     purpose = listState[Info.Purpose].orEmpty(),
                     owner = listState[Info.Owners].orEmpty(),
-                    team = Team(listState[Info.Team].orEmpty()),//todo List<String> 변경 유무 확인
+                    team = Team(name = listState[Info.Team].orEmpty()),
                     agenda = emptyList(),//todo List<String> 변경 유무 확인
                     participants = emptyList()//todo List<String> 변경 유무 확인
                 )
@@ -79,10 +87,17 @@ class CreateMeetingInfoViewModel @Inject constructor(
         }
     }
 
+    fun selectTeam(teamId: Long) {
+        listState[Info.Team] = uiState().value.teams.find { it.id == teamId }?.name.orEmpty()
+        checkEssentialField()
+    }
+
     data class UiState(
         val date: String,
         val time: String,
-        val isVerify: Boolean = false
+        val isVerify: Boolean = false,
+        val teams: List<Team> = emptyList(),
+        val selectedTeamName: String = ""
     )
 
     sealed interface BottomSheetState {

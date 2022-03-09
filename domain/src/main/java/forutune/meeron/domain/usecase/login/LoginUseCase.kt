@@ -16,7 +16,7 @@ class LoginUseCase @Inject constructor(
         getMe: suspend () -> LoginUser
     ) = withContext(dispatcher) {
         val me = getMe()
-        loginRepository.login(me)
+        return@withContext loginRepository.login(me)
     }
 
 

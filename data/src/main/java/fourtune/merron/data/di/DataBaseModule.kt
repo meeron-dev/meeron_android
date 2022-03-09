@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import fourtune.merron.data.source.local.DataBase
 import fourtune.merron.data.source.local.dao.MeetingDao
+import fourtune.merron.data.source.local.dao.UserDao
 import javax.inject.Singleton
 
 @Module
@@ -24,4 +25,8 @@ class DataBaseModule {
     @Provides
     @Singleton
     fun provideMeetingDao(dataBase: DataBase): MeetingDao = dataBase.meetingDao()
+
+    @Provides
+    @Singleton
+    fun provideUserDao(dataBase: DataBase): UserDao = dataBase.userDao()
 }

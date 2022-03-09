@@ -15,13 +15,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import forutune.meeron.domain.model.Team
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
 
 @Composable
 fun TeamSelectScreen(
-    teams: List<String> = emptyList(),
-    onSelectTeam: (Int) -> Unit = {}
+    teams: List<Team> = emptyList(),
+    onSelectTeam: (Long) -> Unit = {}
 ) {
     var selected: Int? by remember {
         mutableStateOf(null)
@@ -35,8 +36,8 @@ fun TeamSelectScreen(
     ) {
         MeeronSingleButtonBackGround(
             modifier = Modifier.padding(bottom = 50.dp),
-            enable = true
-            //selected != null
+            enable = selected != null,
+            onClick = { onSelectTeam(teams[requireNotNull(selected)].id) }
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -58,10 +59,10 @@ fun TeamSelectScreen(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { onSelectTeam(index) }
+                                .clickable { selected = index }
                         ) {
                             Text(
-                                text = item,
+                                text = item.name,
                                 fontSize = 19.sp,
                                 color = colorResource(id = if (index == selected) R.color.primary else R.color.dark_gray),
                                 fontWeight = if (index == selected) FontWeight.Bold else FontWeight.Medium
@@ -78,5 +79,5 @@ fun TeamSelectScreen(
 @Preview
 @Composable
 private fun Preview() {
-    TeamSelectScreen(listOf("hello", "world"))
+    TeamSelectScreen(teams = listOf(Team(name = "asdasd"), Team(name = "asdasd")))
 }

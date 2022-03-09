@@ -60,7 +60,13 @@ fun CreateMeetingInfoScreen(
         sheetContent = {
             when (currentBottomSheet) {
                 CreateMeetingInfoViewModel.BottomSheetState.Owner -> OwnersSelectScreen(onSearch = viewModel::onSearch)
-                CreateMeetingInfoViewModel.BottomSheetState.Team -> TeamSelectScreen()
+                CreateMeetingInfoViewModel.BottomSheetState.Team -> TeamSelectScreen(
+                    teams = uiState.teams,
+                    onSelectTeam = { selectedTeamId ->
+                        scope.launch { bottomSheetState.hide() }
+                        viewModel.selectTeam(selectedTeamId)
+                    }
+                )
                 else -> NoneScreen()
             }
         },
@@ -129,7 +135,6 @@ private fun CreateMeetingInfoScreen(
                             CreateMeetingInfoViewModel.Info.Team -> bottomSheetEvent(CreateMeetingInfoViewModel.BottomSheetState.Team)
                             else -> throw IllegalStateException("$info is Not Modal")
                         }
-                        viewModel.clickModal(info)
                     },
                     onTextChange = viewModel::updateText
                 )

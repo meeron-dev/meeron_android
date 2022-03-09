@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.Meeting
+import forutune.meeron.domain.model.Team
+import forutune.meeron.domain.usecase.GetWorkSpaceTeamUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -14,6 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateMeetingParticipantsViewModel @Inject constructor(
+    private val getWorkSpaceTeamUseCase: GetWorkSpaceTeamUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -24,7 +27,8 @@ class CreateMeetingParticipantsViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    meeting = requireNotNull(savedStateHandle[Const.Meeting])
+                    meeting = requireNotNull(savedStateHandle[Const.Meeting]),
+                    teams = getWorkSpaceTeamUseCase()
                 )
             }
         }
@@ -32,6 +36,7 @@ class CreateMeetingParticipantsViewModel @Inject constructor(
 
     data class UiState(
         val meeting: Meeting = Meeting(),
+        val teams: List<Team> = emptyList()
     )
 
     sealed interface Event {

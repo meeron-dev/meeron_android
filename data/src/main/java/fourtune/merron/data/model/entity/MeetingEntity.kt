@@ -10,9 +10,9 @@ data class MeetingEntity(
     val title: String = "",
     val date: String = "",
     val time: String = "",
-    val personality: String = "",
+    val purpose: String = "",
 ) {
-    fun toMeeting() = Meeting(title, date, time, personality)
+    fun toMeeting() = Meeting(title, date, time, purpose)
 
     companion object {
         fun from(meeting: Meeting) =
@@ -21,7 +21,7 @@ data class MeetingEntity(
                     title = title,
                     date = date,
                     time = time,
-                    personality = personality,
+                    purpose = purpose,
                 )
             }
     }

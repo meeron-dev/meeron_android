@@ -7,7 +7,7 @@ data class Meeting(
     val title: String = "",
     val date: String = "",
     val time: String = "",
-    val personality: String = "",
+    val purpose: String = "",
     val owner: String = "",
     val team: Team = Team(),
     val agenda: List<Agenda> = emptyList(),

@@ -8,8 +8,8 @@ import com.kakao.sdk.user.model.User
 import com.kakao.sdk.user.rx
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.model.LoginUser
-import forutune.meeron.domain.usecase.LoginUseCase
-import forutune.meeron.domain.usecase.LogoutUseCase
+import forutune.meeron.domain.usecase.login.LoginUseCase
+import forutune.meeron.domain.usecase.login.LogoutUseCase
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

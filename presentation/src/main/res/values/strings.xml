@@ -19,7 +19,7 @@
     <string name="create_data_title">회의 날짜를\n입력해주세요.</string>
     <string name="not_found_meeting">예정된 회의가 없습니다.</string>
     <string name="meeting_title">회의명</string>
-    <string name="meeting_personality">회의 성격</string>
+    <string name="meeting_purpose">회의 성격</string>
     <string name="public_owners">공동 관리자</string>
     <string name="charged_team">담당 팀</string>
     <string name="info_essential">필수 입력정보입니다.</string>

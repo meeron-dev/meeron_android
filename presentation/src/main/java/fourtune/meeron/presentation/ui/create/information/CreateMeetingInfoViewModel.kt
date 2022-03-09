@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.Meeting
+import forutune.meeron.domain.model.Team
 import fourtune.meeron.presentation.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -68,9 +69,9 @@ class CreateMeetingInfoViewModel @Inject constructor(
                     title = listState[Info.Title].orEmpty(),
                     date = _uiState.value.date,
                     time = _uiState.value.time,
-                    personality = listState[Info.Personality].orEmpty(),
+                    purpose = listState[Info.Purpose].orEmpty(),
                     owner = listState[Info.Owners].orEmpty(),
-                    team = listState[Info.Team].orEmpty(),//todo List<String> 변경 유무 확인
+                    team = Team(listState[Info.Team].orEmpty()),//todo List<String> 변경 유무 확인
                     agenda = emptyList(),//todo List<String> 변경 유무 확인
                     participants = emptyList()//todo List<String> 변경 유무 확인
                 )
@@ -102,7 +103,7 @@ class CreateMeetingInfoViewModel @Inject constructor(
         val isModal: Boolean,
     ) {
         Title(R.string.meeting_title, true, 30, false),
-        Personality(R.string.meeting_personality, true, 10, false),
+        Purpose(R.string.meeting_purpose, true, 10, false),
         Owners(R.string.public_owners, isEssential = false, limit = 0, true),
         Team(R.string.charged_team, isEssential = true, limit = 0, true)
     }

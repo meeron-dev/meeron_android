@@ -60,9 +60,9 @@ private fun Content(meeting: Meeting) {
         Text(text = meeting.title, fontSize = 18.sp, color = colorResource(id = R.color.dark_gray))
         Spacer(modifier = Modifier.padding(8.dp))
         MeetingItem("회의 날짜", meeting.date)
-        MeetingItem("회의 성격", meeting.personality)
+        MeetingItem("회의 성격", meeting.purpose)
         MeetingItem("공동 관리자", meeting.owner)
-        MeetingItem("담당 팀", meeting.team)
+        MeetingItem("담당 팀", meeting.team.name)
         MeetingItem("아젠다", meeting.agenda.toString())
         MeetingItem("참가자", meeting.participants.toString())
     }

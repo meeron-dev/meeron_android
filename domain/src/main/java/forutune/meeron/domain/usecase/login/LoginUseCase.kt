@@ -1,4 +1,4 @@
-package forutune.meeron.domain.usecase
+package forutune.meeron.domain.usecase.login
 
 import forutune.meeron.domain.di.IoDispatcher
 import forutune.meeron.domain.model.LoginUser

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.Meeting
+import forutune.meeron.domain.usecase.CreateMeetingUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -14,6 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CompleteMeetingViewModel @Inject constructor(
+    private val createMeetingUseCase: CreateMeetingUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState(Meeting()))
@@ -24,6 +26,12 @@ class CompleteMeetingViewModel @Inject constructor(
             _uiState.update {
                 it.copy(meeting = requireNotNull(savedStateHandle[Const.Meeting]))
             }
+        }
+    }
+
+    fun createMeeting() {
+        viewModelScope.launch {
+            createMeetingUseCase(_uiState.value.meeting)
         }
     }
 

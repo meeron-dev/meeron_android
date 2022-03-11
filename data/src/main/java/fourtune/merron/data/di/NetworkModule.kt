@@ -10,6 +10,7 @@ import forutune.meeron.domain.di.OK_HTTP_CLIENT
 import forutune.meeron.domain.di.OK_HTTP_CLIENT_NO_AUTH
 import fourtune.merron.data.source.remote.AuthorizationInterceptor
 import fourtune.merron.data.source.remote.LoginApi
+import fourtune.merron.data.source.remote.MeetingApi
 import fourtune.merron.data.source.remote.TeamApi
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -94,9 +95,16 @@ class NetworkModule {
     fun provideTeamApi(
         @OK_HTTP_CLIENT okHttpClient: OkHttpClient,
         convertFactory: Converter.Factory,
-    ): TeamApi {
-        return createRetrofit(convertFactory, okHttpClient).create(TeamApi::class.java)
-    }
+    ): TeamApi = createRetrofit(convertFactory, okHttpClient).create(TeamApi::class.java)
+
+
+    @Provides
+    @Singleton
+    fun provideMeetingApi(
+        @OK_HTTP_CLIENT okHttpClient: OkHttpClient,
+        convertFactory: Converter.Factory,
+    ): MeetingApi = createRetrofit(convertFactory, okHttpClient).create(MeetingApi::class.java)
+
 
     companion object {
         private const val BASE_URL = "https://dev.meeron.net/"

@@ -44,9 +44,12 @@ fun CompleteMeetingScreen(
     }) {
         MeeronButtonBackGround(
             modifier = Modifier.padding(vertical = 40.dp, horizontal = 20.dp),
-            rightClick = onNext,
+            rightClick = {
+                viewModel.createMeeting()
+                onNext()
+            },
             leftClick = onPrevious,
-            rightText = "바로가기"
+            rightText = "바로가기",
         ) {
             Content(uiState.meeting, uiState.meeting.agenda.size, uiState.meeting.participants.size)
         }

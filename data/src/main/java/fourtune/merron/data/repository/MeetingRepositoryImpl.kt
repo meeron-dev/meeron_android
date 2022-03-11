@@ -2,15 +2,28 @@ package fourtune.merron.data.repository
 
 import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.repository.MeetingRepository
-import fourtune.merron.data.model.entity.MeetingEntity
+import fourtune.merron.data.model.dto.MeetingDto
 import fourtune.merron.data.source.local.dao.MeetingDao
+import fourtune.merron.data.source.remote.MeetingApi
 import javax.inject.Inject
 
 class MeetingRepositoryImpl @Inject constructor(
-    private val meetingDao: MeetingDao
+    private val meetingDao: MeetingDao,
+    private val meetingApi: MeetingApi
 ) : MeetingRepository {
-    override suspend fun createMeeting(meeting: Meeting): Long {
-        return meetingDao.insert(MeetingEntity.from(meeting))
+    override suspend fun createMeeting(meeting: Meeting) {
+        val (start, end) = meeting.time.split("~")
+        val meetingDto = MeetingDto(
+            meetingDate = meeting.date,
+            startTime = start.trim(),
+            endTime = end.trim(),
+            meetingName = meeting.title,
+            meetingPurpose = meeting.purpose,
+            operationTeamId = meeting.team.id,
+            meetingAdminIds = listOf(1)
+        )
+
+        meetingApi.createMeeting(meetingDto)
     }
 
     override suspend fun getMeeting(meetingId: Long): Meeting {

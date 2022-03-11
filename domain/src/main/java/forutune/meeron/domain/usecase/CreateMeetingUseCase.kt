@@ -7,7 +7,7 @@ import javax.inject.Inject
 class CreateMeetingUseCase @Inject constructor(
     private val meetingRepository: MeetingRepository
 ) {
-    suspend operator fun invoke(meeting: Meeting): Long {
-        return meetingRepository.createMeeting(meeting)
+    suspend operator fun invoke(meeting: Meeting) {
+        meetingRepository.createMeeting(meeting)
     }
 }

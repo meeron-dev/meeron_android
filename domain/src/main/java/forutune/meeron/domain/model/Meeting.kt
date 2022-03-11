@@ -8,7 +8,7 @@ data class Meeting(
     val date: String = "",
     val time: String = "",
     val purpose: String = "",
-    val owner: String = "",
+    val ownerIds: List<Long> = emptyList(),
     val team: Team = Team(),
     val agenda: List<Agenda> = emptyList(),
     val participants: List<Participant> = emptyList()

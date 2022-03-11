@@ -8,10 +8,7 @@ import dagger.hilt.components.SingletonComponent
 import forutune.meeron.domain.MeeronPreference
 import forutune.meeron.domain.di.OK_HTTP_CLIENT
 import forutune.meeron.domain.di.OK_HTTP_CLIENT_NO_AUTH
-import fourtune.merron.data.source.remote.AuthorizationInterceptor
-import fourtune.merron.data.source.remote.LoginApi
-import fourtune.merron.data.source.remote.MeetingApi
-import fourtune.merron.data.source.remote.TeamApi
+import fourtune.merron.data.source.remote.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
@@ -66,6 +63,7 @@ class NetworkModule {
     fun provideJson(): Json = Json {
         ignoreUnknownKeys = true
         prettyPrint = true
+        coerceInputValues = true
     }
 
     @ExperimentalSerializationApi
@@ -105,6 +103,12 @@ class NetworkModule {
         convertFactory: Converter.Factory,
     ): MeetingApi = createRetrofit(convertFactory, okHttpClient).create(MeetingApi::class.java)
 
+    @Provides
+    @Singleton
+    fun provideUserApi(
+        @OK_HTTP_CLIENT okHttpClient: OkHttpClient,
+        convertFactory: Converter.Factory,
+    ): UserApi = createRetrofit(convertFactory, okHttpClient).create(UserApi::class.java)
 
     companion object {
         private const val BASE_URL = "https://dev.meeron.net/"

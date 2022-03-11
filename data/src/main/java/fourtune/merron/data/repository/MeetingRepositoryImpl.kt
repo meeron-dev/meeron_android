@@ -20,7 +20,7 @@ class MeetingRepositoryImpl @Inject constructor(
             meetingName = meeting.title,
             meetingPurpose = meeting.purpose,
             operationTeamId = meeting.team.id,
-            meetingAdminIds = listOf(1)
+            meetingAdminIds = meeting.ownerIds
         )
 
         meetingApi.createMeeting(meetingDto)

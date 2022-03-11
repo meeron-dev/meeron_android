@@ -2,10 +2,11 @@ package fourtune.meeron.presentation.ui.common.bottomsheet
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
@@ -20,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import forutune.meeron.domain.model.WorkspaceUser
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
 import fourtune.meeron.presentation.ui.common.UserItem
@@ -27,11 +29,15 @@ import fourtune.meeron.presentation.ui.common.UserItem
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OwnersSelectScreen(
-    owners: List<String> = emptyList(),
-    onSearch: (String) -> Unit = {}
+    owners: List<WorkspaceUser> = emptyList(),
+    onSearch: (String) -> Unit = {},
+    onComplete: (List<WorkspaceUser>) -> Unit = {}
 ) {
     var text by remember {
         mutableStateOf("")
+    }
+    val selectedUsers = remember {
+        mutableStateListOf<WorkspaceUser>()
     }
 
 
@@ -45,7 +51,8 @@ fun OwnersSelectScreen(
     ) {
         MeeronSingleButtonBackGround(
             modifier = Modifier.padding(bottom = 50.dp),
-            enable = true
+            enable = selectedUsers.isNotEmpty(),
+            onClick = { onComplete(selectedUsers) }
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -76,8 +83,19 @@ fun OwnersSelectScreen(
                 )
                 Spacer(modifier = Modifier.padding(20.dp))
                 LazyVerticalGrid(cells = GridCells.Fixed(4)) {
-                    itemsIndexed(owners) { index, item ->
-                        UserItem(selected = false, admin = false)
+                    items(items = owners, key = { it.workspaceUserId }) { user ->
+                        UserItem(
+                            modifier = Modifier.clickable {
+                                if (selectedUsers.contains(user)) {
+                                    selectedUsers.remove(user)
+                                } else {
+                                    selectedUsers.add(user)
+                                }
+                            },
+                            user = user,
+                            selected = selectedUsers.contains(user),
+                            admin = false
+                        )
                     }
                 }
             }

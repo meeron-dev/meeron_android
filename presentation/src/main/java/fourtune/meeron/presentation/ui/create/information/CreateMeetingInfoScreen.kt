@@ -34,6 +34,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun CreateMeetingInfoScreen(
     viewModel: CreateMeetingInfoViewModel = hiltViewModel(),
+    onAction: () -> Unit = {},
     onNext: (meeting: Meeting) -> Unit = {},
     onPrevious: () -> Unit = {},
     onLoad: () -> Unit = {}
@@ -59,7 +60,14 @@ fun CreateMeetingInfoScreen(
         sheetState = bottomSheetState,
         sheetContent = {
             when (currentBottomSheet) {
-                CreateMeetingInfoViewModel.BottomSheetState.Owner -> OwnersSelectScreen(onSearch = viewModel::onSearch)
+                CreateMeetingInfoViewModel.BottomSheetState.Owner -> OwnersSelectScreen(
+                    onSearch = viewModel::onSearch,
+                    owners = uiState.searchedUsers,
+                    onComplete = {selectedOwners->
+                        scope.launch { bottomSheetState.hide() }
+                        viewModel.selectOwner(selectedOwners)
+                    }
+                )
                 CreateMeetingInfoViewModel.BottomSheetState.Team -> TeamSelectScreen(
                     teams = uiState.teams,
                     onSelectTeam = { selectedTeamId ->
@@ -85,6 +93,7 @@ fun CreateMeetingInfoScreen(
                             event.info,
                             event.input
                         )
+                        CreateMeetingInfoViewModel.Event.Action -> onAction()
                     }
                 },
                 bottomSheetEvent = { event ->
@@ -108,7 +117,7 @@ private fun CreateMeetingInfoScreen(
     Scaffold(
         topBar = {
             CenterTextTopAppBar(
-                onAction = { },
+                onAction = { event(CreateMeetingInfoViewModel.Event.Action) },
                 text = {
                     Text(
                         text = stringResource(id = R.string.create_meeting),
@@ -127,8 +136,8 @@ private fun CreateMeetingInfoScreen(
         ) {
             Column {
                 InformationTitle(
-                    selectedDate = uiState.date,
-                    selectedTime = uiState.time,
+                    selectedDate = uiState.meeting.date,
+                    selectedTime = uiState.meeting.time,
                     onClick = { event(CreateMeetingInfoViewModel.Event.Load) }
                 )
                 InformationFields(

@@ -13,17 +13,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
+import forutune.meeron.domain.model.WorkspaceUser
 import fourtune.meeron.presentation.R
 
 @Composable
-fun UserItem(selected: Boolean, admin: Boolean) {
+fun UserItem(modifier: Modifier = Modifier, user: WorkspaceUser, selected: Boolean, admin: Boolean) {
     val selectedModifier =
-        if (selected) Modifier.background(color = colorResource(id = R.color.primary).copy(alpha = 0.7f)) else Modifier
+        if (selected) modifier.background(color = colorResource(id = R.color.primary).copy(alpha = 0.7f)) else modifier
     Column(modifier = Modifier.wrapContentSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Box(
             modifier = Modifier
@@ -42,18 +43,18 @@ fun UserItem(selected: Boolean, admin: Boolean) {
             }
             Image(
                 modifier = Modifier.clip(CircleShape),
-                painter = painterResource(R.drawable.ic_small_plus),
+                painter = rememberImagePainter(data = user.profileImageUrl),
                 contentDescription = null
             )
         }
         Text(
-            text = "조수정",
+            text = user.nickname,
             fontSize = 13.sp,
             color = colorResource(id = if (selected) R.color.primary else R.color.black),
             textAlign = TextAlign.Center
         )
         Text(
-            text = "팀장",
+            text = user.position,
             fontSize = 12.sp,
             color = colorResource(id = if (selected) R.color.primary else R.color.dark_gray),
             textAlign = TextAlign.Center
@@ -65,18 +66,18 @@ fun UserItem(selected: Boolean, admin: Boolean) {
 @Composable
 private fun Preview() {
     Column {
-        UserItem(true, false)
+        UserItem(user = WorkspaceUser(nickname = "zero", position = "android"), selected = true, admin = false)
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun Preview2() {
-    UserItem(false, false)
+    UserItem(user = WorkspaceUser(nickname = "zero", position = "android"), selected = false, admin = false)
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun Preview3() {
-    UserItem(true, true)
+    UserItem(user = WorkspaceUser(nickname = "zero", position = "android"), selected = true, admin = true)
 }

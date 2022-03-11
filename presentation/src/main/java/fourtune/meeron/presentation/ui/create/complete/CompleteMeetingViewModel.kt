@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.usecase.CreateMeetingUseCase
+import forutune.meeron.domain.usecase.SearchUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -16,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CompleteMeetingViewModel @Inject constructor(
     private val createMeetingUseCase: CreateMeetingUseCase,
+    searchUseCase: SearchUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState(Meeting()))
@@ -24,7 +26,13 @@ class CompleteMeetingViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             _uiState.update {
-                it.copy(meeting = requireNotNull(savedStateHandle[Const.Meeting]))
+                val meeting: Meeting = requireNotNull(savedStateHandle[Const.Meeting])
+                val workspaceUserIds = meeting.ownerIds.toLongArray()
+                val owners = searchUseCase.invoke(workspaceUserIds = *workspaceUserIds)
+                it.copy(
+                    meeting = meeting,
+                    owners = String.format("${owners.firstOrNull()?.nickname} 외 %d명", owners.size - 1)
+                )
             }
         }
     }
@@ -36,6 +44,7 @@ class CompleteMeetingViewModel @Inject constructor(
     }
 
     data class UiState(
-        val meeting: Meeting
+        val meeting: Meeting,
+        val owners: String = ""
     )
 }

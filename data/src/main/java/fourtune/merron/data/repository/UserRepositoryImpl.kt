@@ -8,11 +8,15 @@ import javax.inject.Inject
 class UserRepositoryImpl @Inject constructor(
     private val userApi: UserApi
 ) : UserRepository {
-    override suspend fun searchUsers(workspaceId: Long, nickName: String): List<WorkspaceUser> {
-        return userApi.searchUsers(workspaceId, nickName).workspaceUsers
+    override suspend fun getUsers(workspaceId: Long, nickName: String): List<WorkspaceUser> {
+        return userApi.getUsers(workspaceId, nickName).workspaceUsers
     }
 
-    override suspend fun searchUser(workspaceUserId: Long): WorkspaceUser {
+    override suspend fun getUsers(teamId: Long): List<WorkspaceUser> {
+        return userApi.getTeamUser(teamId).workspaceUsers
+    }
+
+    override suspend fun getUser(workspaceUserId: Long): WorkspaceUser {
         return userApi.getWorkspaceUser(workspaceUserId)
     }
 

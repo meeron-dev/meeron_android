@@ -10,8 +10,8 @@ import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.model.Team
 import forutune.meeron.domain.model.WorkspaceUser
+import forutune.meeron.domain.usecase.GetUserUseCase
 import forutune.meeron.domain.usecase.GetWorkSpaceTeamUseCase
-import forutune.meeron.domain.usecase.SearchUseCase
 import fourtune.meeron.presentation.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateMeetingInfoViewModel @Inject constructor(
-    private val searchUseCase: SearchUseCase,
+    private val getUserUseCase: GetUserUseCase,
     getWorkSpaceTeamUseCase: GetWorkSpaceTeamUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -62,7 +62,7 @@ class CreateMeetingInfoViewModel @Inject constructor(
         searchJob = viewModelScope.launch {
             delay(500)
             _uiState.update {
-                it.copy(searchedUsers = searchUseCase.invoke(text))
+                it.copy(searchedUsers = getUserUseCase.invoke(text))
             }
         }
     }

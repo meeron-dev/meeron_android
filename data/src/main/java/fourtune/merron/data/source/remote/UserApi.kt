@@ -18,9 +18,12 @@ interface UserApi {
     suspend fun getWorkspaceUser(@Path("workspaceUserId") workspaceUserId: Long): WorkspaceUser
 
     @GET("/api/workspace-users")
-    suspend fun searchUsers(
+    suspend fun getUsers(
         @Query("workspaceId") workspaceId: Long,
         @Query("nickname") nickname: String
     ): WorkspaceUsers
+
+    @GET("/api/teams/{teamId}/workspace-users")
+    suspend fun getTeamUser(@Path("teamId") teamId: Long): WorkspaceUsers
 
 }

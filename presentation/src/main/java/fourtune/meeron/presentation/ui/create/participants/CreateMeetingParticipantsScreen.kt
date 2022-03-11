@@ -23,9 +23,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.model.Team
+import forutune.meeron.domain.model.WorkspaceUser
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
+import fourtune.meeron.presentation.ui.common.UserGrids
 import fourtune.meeron.presentation.ui.create.CreateText
 import fourtune.meeron.presentation.ui.create.CreateTitle
 
@@ -42,8 +44,11 @@ fun CreateMeetingParticipantsScreen(
         event = { event ->
             when (event) {
                 CreateMeetingParticipantsViewModel.Event.Action -> onAction()
-                CreateMeetingParticipantsViewModel.Event.Next -> onNext(uiState.meeting)
+                is CreateMeetingParticipantsViewModel.Event.Next -> {
+                    onNext(uiState.meeting.copy(participants = event.participants))
+                }
                 CreateMeetingParticipantsViewModel.Event.Previous -> onPrevious()
+                is CreateMeetingParticipantsViewModel.Event.SelectTeam -> viewModel.getTeamMembers(event.id)
             }
         }
     )
@@ -54,6 +59,10 @@ private fun CreateMeetingParticipantsScreen(
     uiState: CreateMeetingParticipantsViewModel.UiState,
     event: (CreateMeetingParticipantsViewModel.Event) -> Unit = {}
 ) {
+    val selectedUsers = remember {
+        mutableStateListOf<WorkspaceUser>()
+    }
+
     Scaffold(topBar = {
         CenterTextTopAppBar(
             onAction = { event(CreateMeetingParticipantsViewModel.Event.Action) },
@@ -68,7 +77,7 @@ private fun CreateMeetingParticipantsScreen(
         MeeronButtonBackGround(
             modifier = Modifier.padding(vertical = 40.dp, horizontal = 20.dp),
             rightText = "완료",
-            rightClick = { event(CreateMeetingParticipantsViewModel.Event.Next) },
+            rightClick = { event(CreateMeetingParticipantsViewModel.Event.Next(selectedUsers)) },
             leftClick = { event(CreateMeetingParticipantsViewModel.Event.Previous) }
         ) {
             Column {
@@ -88,7 +97,7 @@ private fun CreateMeetingParticipantsScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = String.format("%d명 선택됨", 0),
+                        text = String.format("%d명 선택됨", selectedUsers.size),
                         fontSize = 14.sp,
                         color = colorResource(id = R.color.dark_primary)
                     )
@@ -96,11 +105,12 @@ private fun CreateMeetingParticipantsScreen(
                 }
 
                 Spacer(modifier = Modifier.padding(4.dp))
-                TeamExpandItem(uiState.teams)
+                TeamExpandItem(
+                    teams = uiState.teams,
+                    onSelectTeam = { event(CreateMeetingParticipantsViewModel.Event.SelectTeam(it)) }
+                )
                 Spacer(modifier = Modifier.padding(10.dp))
-                //TODO 여기에 팀 선택화면 들어가기 (재활용 가능해보임 데이터셋 나오면 적용하자)
-                // @See OwnerSelectScreen
-
+                UserGrids(users = uiState.teamMembers, selectedUsers = selectedUsers)
 
             }
         }
@@ -109,9 +119,15 @@ private fun CreateMeetingParticipantsScreen(
 
 @OptIn(ExperimentalMaterialApi::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
-private fun TeamExpandItem(teams: List<Team>) {
+private fun TeamExpandItem(teams: List<Team>, onSelectTeam: (Long) -> Unit = {}) {
     var expanded by remember {
-        mutableStateOf(false)
+        mutableStateOf(true)
+    }
+
+    val firstTeam = teams.firstOrNull() ?: return
+    val remainTeams = teams - firstTeam
+    var selected by remember {
+        mutableStateOf(firstTeam.id)
     }
 
     Column {
@@ -125,9 +141,22 @@ private fun TeamExpandItem(teams: List<Team>) {
                 contentDescription = null
             )
             Spacer(modifier = Modifier.padding(6.dp))
-            Text(text = "팀이름", fontSize = 18.sp, color = colorResource(id = R.color.dark_gray))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        selected = firstTeam.id
+                        onSelectTeam(firstTeam.id)
+                    }
+            ) {
+                Text(
+                    text = firstTeam.name,
+                    fontSize = 18.sp,
+                    color = colorResource(id = if (firstTeam.id == selected) R.color.dark_gray else R.color.gray)
+                )
+            }
         }
-        Spacer(modifier = Modifier.padding(10.dp))
+        Spacer(modifier = Modifier.padding(16.dp))
 
         AnimatedVisibility(
             visible = expanded,
@@ -138,12 +167,21 @@ private fun TeamExpandItem(teams: List<Team>) {
                 contentPadding = PaddingValues(horizontal = 36.dp),
                 verticalArrangement = Arrangement.spacedBy(35.dp)
             ) {
-                items(teams) {
-                    Text(
-                        text = it.name,
-                        fontSize = 18.sp,
-                        color = colorResource(id = R.color.gray)
-                    )
+                items(remainTeams, key = { it.id }) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                selected = it.id
+                                onSelectTeam(it.id)
+                            }
+                    ) {
+                        Text(
+                            text = it.name,
+                            fontSize = 18.sp,
+                            color = colorResource(id = if (it.id == selected) R.color.dark_gray else R.color.gray)
+                        )
+                    }
                 }
             }
         }

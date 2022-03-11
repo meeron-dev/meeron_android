@@ -1,12 +1,7 @@
 package fourtune.meeron.presentation.ui.common.bottomsheet
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
@@ -24,9 +19,8 @@ import androidx.compose.ui.unit.sp
 import forutune.meeron.domain.model.WorkspaceUser
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
-import fourtune.meeron.presentation.ui.common.UserItem
+import fourtune.meeron.presentation.ui.common.UserGrids
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OwnersSelectScreen(
     owners: List<WorkspaceUser> = emptyList(),
@@ -82,22 +76,7 @@ fun OwnersSelectScreen(
                     }
                 )
                 Spacer(modifier = Modifier.padding(20.dp))
-                LazyVerticalGrid(cells = GridCells.Fixed(4)) {
-                    items(items = owners, key = { it.workspaceUserId }) { user ->
-                        UserItem(
-                            modifier = Modifier.clickable {
-                                if (selectedUsers.contains(user)) {
-                                    selectedUsers.remove(user)
-                                } else {
-                                    selectedUsers.add(user)
-                                }
-                            },
-                            user = user,
-                            selected = selectedUsers.contains(user),
-                            admin = false
-                        )
-                    }
-                }
+                UserGrids(owners, selectedUsers)
             }
         }
     }

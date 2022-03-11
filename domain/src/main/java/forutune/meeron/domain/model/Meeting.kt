@@ -11,5 +11,5 @@ data class Meeting(
     val ownerIds: List<Long> = emptyList(),
     val team: Team = Team(),
     val agenda: List<Agenda> = emptyList(),
-    val participants: List<Participant> = emptyList()
+    val participants: List<WorkspaceUser> = emptyList()
 ) : Serializable

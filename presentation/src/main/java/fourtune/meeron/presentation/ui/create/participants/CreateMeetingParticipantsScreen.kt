@@ -75,7 +75,7 @@ private fun CreateMeetingParticipantsScreen(
                 CreateTitle(
                     title = R.string.create_participants,
                     selectedTime = uiState.meeting.time,
-                    selectedDate = uiState.meeting.date,
+                    selectedDate = uiState.meeting.date.displayString(),
                     extraContents = {
                         CreateText(text = uiState.meeting.title)
                     }

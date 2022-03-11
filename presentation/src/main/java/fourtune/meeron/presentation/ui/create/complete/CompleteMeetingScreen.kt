@@ -67,7 +67,7 @@ private fun Content(meeting: Meeting, owners: String, agendaSize: Int, participa
         CreateTitle(title = R.string.complete_create)
         Text(text = meeting.title, fontSize = 18.sp, color = colorResource(id = R.color.dark_gray))
         Spacer(modifier = Modifier.padding(8.dp))
-        MeetingItem("회의 날짜", meeting.date)
+        MeetingItem("회의 날짜", meeting.date.displayString())
         MeetingItem("회의 성격", meeting.purpose)
         MeetingItem("공동 관리자", owners)
         MeetingItem("담당 팀", meeting.team.name)

@@ -2,6 +2,7 @@ package fourtune.merron.data.model.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import forutune.meeron.domain.model.Date
 import forutune.meeron.domain.model.Meeting
 
 @Entity
@@ -12,14 +13,14 @@ data class MeetingEntity(
     val time: String = "",
     val purpose: String = "",
 ) {
-    fun toMeeting() = Meeting(title, date, time, purpose)
+    fun toMeeting() = Meeting(title, Date() , time, purpose)
 
     companion object {
         fun from(meeting: Meeting) =
             with(meeting) {
                 MeetingEntity(
                     title = title,
-                    date = date,
+                    date = date.displayString(),
                     time = time,
                     purpose = purpose,
                 )

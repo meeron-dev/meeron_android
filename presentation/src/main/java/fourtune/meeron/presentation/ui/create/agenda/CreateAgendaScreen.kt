@@ -113,7 +113,7 @@ private fun CreateAgendaScreen(
             Column {
                 CreateTitle(
                     title = R.string.info_title,
-                    selectedDate = uiState.meeting.date,
+                    selectedDate = uiState.meeting.date.displayString(),
                     selectedTime = uiState.meeting.time,
                     extraContents = { CreateText(text = uiState.meeting.title) }
                 )

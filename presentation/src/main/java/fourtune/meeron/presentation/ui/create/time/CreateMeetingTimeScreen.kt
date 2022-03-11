@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.model.Time
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
@@ -31,7 +32,7 @@ import fourtune.meeron.presentation.ui.theme.MeeronTheme
 fun CreateMeetingTimeScreen(
     timeViewModel: CreateMeetingTimeViewModel = hiltViewModel(),
     onAction: () -> Unit = {},
-    onNext: (date: String, time: String) -> Unit = { _, _ -> },
+    onNext: (meeting: Meeting) -> Unit = {},
     onPrevious: () -> Unit = {}
 ) {
     val uiState by timeViewModel.uiState().collectAsState()
@@ -45,10 +46,7 @@ fun CreateMeetingTimeScreen(
                     event.minute
                 )
                 CreateMeetingTimeViewModel.Event.Exit -> onAction()
-                CreateMeetingTimeViewModel.Event.Next -> onNext(
-                    uiState.currentDay,
-                    "${uiState.timeMap[R.string.start]} ~ ${uiState.timeMap[R.string.end]}"
-                )
+                CreateMeetingTimeViewModel.Event.Next -> onNext(timeViewModel.uiState().value.meeting)
                 CreateMeetingTimeViewModel.Event.Previous -> onPrevious()
             }
         }
@@ -108,7 +106,7 @@ private fun TimeScreen(
     createMeetingTimeEvent: (CreateMeetingTimeViewModel.Event) -> Unit
 ) {
     Column {
-        CreateTitle(title = R.string.create_time_title, selectedDate = uiState.currentDay)
+        CreateTitle(title = R.string.create_time_title, selectedDate = uiState.meeting.date.displayString())
         Spacer(modifier = Modifier.padding(21.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             uiState.timeMap.forEach {

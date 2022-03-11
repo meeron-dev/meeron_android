@@ -14,7 +14,7 @@ class MeetingRepositoryImpl @Inject constructor(
     override suspend fun createMeeting(meeting: Meeting) {
         val (start, end) = meeting.time.split("~")
         val meetingDto = MeetingDto(
-            meetingDate = meeting.date,
+            meetingDate = meeting.date.formattedString(),
             startTime = start.trim(),
             endTime = end.trim(),
             meetingName = meeting.title,

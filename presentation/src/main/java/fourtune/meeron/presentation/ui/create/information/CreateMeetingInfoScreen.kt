@@ -136,7 +136,7 @@ private fun CreateMeetingInfoScreen(
         ) {
             Column {
                 InformationTitle(
-                    selectedDate = uiState.meeting.date,
+                    selectedDate = uiState.meeting.date.displayString(),
                     selectedTime = uiState.meeting.time,
                     onClick = { event(CreateMeetingInfoViewModel.Event.Load) }
                 )

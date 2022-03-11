@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import forutune.meeron.domain.model.Date
+import forutune.meeron.domain.model.Meeting
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
@@ -34,7 +35,7 @@ import fourtune.meeron.presentation.ui.theme.MeeronTheme
 fun CreateMeetingDateScreen(
     viewModel: CreateMeetingDateViewModel = hiltViewModel(),
     onAction: () -> Unit = {},
-    onNext: (String) -> Unit = {}
+    onNext: (Meeting) -> Unit = {}
 ) {
     val uiState by viewModel.uiState().collectAsState()
     CreateMeetingDateScreen(
@@ -43,7 +44,7 @@ fun CreateMeetingDateScreen(
         when (event) {
             is CreateMeetingDateViewModel.Event.ChangeDate -> viewModel.changeDate(event.date)
             CreateMeetingDateViewModel.Event.OnBack -> onAction()
-            CreateMeetingDateViewModel.Event.OnNext -> onNext("${uiState.date.year}년 ${uiState.date.month}월 ${uiState.date.hourOfDay}일")
+            CreateMeetingDateViewModel.Event.OnNext -> onNext(Meeting(date = uiState.date))
         }
     }
 }
@@ -94,7 +95,7 @@ private fun DateScreen(
                 .clickable { openDatePicker(context, date) }
         ) {
             Text(
-                text = date.toString(),
+                text = date.formattedString(),
                 fontSize = 25.sp,
                 color = colorResource(id = R.color.black),
                 maxLines = 1,

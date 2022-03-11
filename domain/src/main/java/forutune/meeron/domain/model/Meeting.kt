@@ -5,7 +5,7 @@ import java.io.Serializable
 @kotlinx.serialization.Serializable
 data class Meeting(
     val title: String = "",
-    val date: String = "",
+    val date: Date = Date(),
     val time: String = "",
     val purpose: String = "",
     val ownerIds: List<Long> = emptyList(),

@@ -6,7 +6,6 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -109,26 +108,25 @@ fun MeeronNavigator() {
         composable(Navigate.CreateMeeting.Date.route()) {
             CreateMeetingDateScreen(
                 onAction = { navController.navigateUp() },
-                onNext = { navController.navigate(Navigate.CreateMeeting.Time.route(it)) }
+                onNext = { meeting -> navController.navigate(Navigate.CreateMeeting.Time.route(meeting.encodeJson())) }
             )
         }
 
         composable(
-            route = Navigate.CreateMeeting.Time.destination(Const.Date),
-            arguments = listOf(element = navArgument(Const.Date) { type = NavType.StringType })
+            route = Navigate.CreateMeeting.Time.destination(Const.Meeting),
+            arguments = listOf(element = navArgument(Const.Meeting) { type = MeetingType() })
         ) {
             CreateMeetingTimeScreen(
                 onAction = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
                 onPrevious = { navController.navigateUp() },
-                onNext = { date, time -> navController.navigate(Navigate.CreateMeeting.Information.route(date, time)) }
+                onNext = { meeting -> navController.navigate(Navigate.CreateMeeting.Information.route(meeting.encodeJson())) }
             )
         }
 
         composable(
-            route = Navigate.CreateMeeting.Information.destination(Const.Date, Const.Time),
+            route = Navigate.CreateMeeting.Information.destination(Const.Meeting),
             arguments = listOf(
-                navArgument(Const.Date) { type = NavType.StringType },
-                navArgument(Const.Time) { type = NavType.StringType }
+                navArgument(Const.Meeting) { type = MeetingType() }
             )
         ) {
             CreateMeetingInfoScreen(

@@ -29,10 +29,7 @@ class CreateMeetingInfoViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         UiState(
-            meeting = Meeting(
-                date = savedStateHandle.get<String>(Const.Date).orEmpty(),
-                time = savedStateHandle.get<String>(Const.Time).orEmpty()
-            ),
+            meeting = requireNotNull(savedStateHandle[Const.Meeting])
         )
     )
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
+import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.model.Time
 import forutune.meeron.domain.usecase.time.GetCurrentTimeUseCase
 import forutune.meeron.domain.usecase.time.GetTimeUseCase
@@ -18,7 +19,7 @@ data class MeetingTimeUiState(
         R.string.start to Time("12:00", "AM"),
         R.string.end to Time("12:00", "PM")
     ),
-    val currentDay: String = ""
+    val meeting: Meeting = Meeting()
 )
 
 @HiltViewModel
@@ -31,7 +32,7 @@ class CreateMeetingTimeViewModel @Inject constructor(
     private val _uiState =
         MutableStateFlow(
             MeetingTimeUiState(
-                currentDay = savedStateHandle.get<String>(Const.Date).orEmpty()
+                meeting = requireNotNull(savedStateHandle[Const.Meeting]),
             )
         )
 
@@ -44,6 +45,9 @@ class CreateMeetingTimeViewModel @Inject constructor(
                 timeMap = mapOf(
                     R.string.start to currentTime,
                     R.string.end to currentTime
+                ),
+                meeting = it.meeting.copy(
+                    time = "$currentTime ~ $currentTime"
                 )
             )
         }
@@ -55,7 +59,10 @@ class CreateMeetingTimeViewModel @Inject constructor(
             it.copy(
                 timeMap = it.timeMap.toMutableMap().apply {
                     this[key] = time
-                }
+                },
+                meeting = it.meeting.copy(
+                    time = "${it.timeMap[R.string.start]} ~ ${it.timeMap[R.string.end]}"
+                )
             )
         }
     }

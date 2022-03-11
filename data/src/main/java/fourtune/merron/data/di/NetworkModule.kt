@@ -6,6 +6,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import forutune.meeron.domain.MeeronPreference
+import forutune.meeron.domain.di.OK_HTTP_CLIENT
+import forutune.meeron.domain.di.OK_HTTP_CLIENT_NO_AUTH
 import fourtune.merron.data.source.remote.AuthorizationInterceptor
 import fourtune.merron.data.source.remote.LoginApi
 import fourtune.merron.data.source.remote.TeamApi
@@ -33,6 +35,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
+    @OK_HTTP_CLIENT
     fun provideOkhttpClient(
         authorizationInterceptor: AuthorizationInterceptor
     ): OkHttpClient =
@@ -44,6 +47,18 @@ class NetworkModule {
                 }
             )
             .build()
+
+
+    @Provides
+    @Singleton
+    @OK_HTTP_CLIENT_NO_AUTH
+    fun provideOkhttpClientNoAuth(): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(
+            HttpLoggingInterceptor().apply {
+                setLevel(HttpLoggingInterceptor.Level.BODY)
+            }
+        )
+        .build()
 
     @Provides
     @Singleton
@@ -57,28 +72,31 @@ class NetworkModule {
     @Singleton
     fun provideConverter(json: Json): Converter.Factory = json.asConverterFactory("application/json".toMediaType())
 
-    @Provides
-    @Singleton
-    fun provideRetrofit(
-        okHttpClient: OkHttpClient,
-        convertFactory: Converter.Factory,
-    ): Retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .addConverterFactory(convertFactory)
-        .client(okHttpClient)
-        .build()
+    private fun createRetrofit(convertFactory: Converter.Factory, okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(convertFactory)
+            .client(okHttpClient)
+            .build()
+    }
 
     @Provides
     @Singleton
     fun provideLoginApi(
-        retrofit: Retrofit,
-    ): LoginApi = retrofit.create(LoginApi::class.java)
+        @OK_HTTP_CLIENT_NO_AUTH okHttpClient: OkHttpClient,
+        convertFactory: Converter.Factory,
+    ): LoginApi {
+        return createRetrofit(convertFactory, okHttpClient).create(LoginApi::class.java)
+    }
 
     @Provides
     @Singleton
     fun provideTeamApi(
-        retrofit: Retrofit
-    ): TeamApi = retrofit.create(TeamApi::class.java)
+        @OK_HTTP_CLIENT okHttpClient: OkHttpClient,
+        convertFactory: Converter.Factory,
+    ): TeamApi {
+        return createRetrofit(convertFactory, okHttpClient).create(TeamApi::class.java)
+    }
 
     companion object {
         private const val BASE_URL = "https://dev.meeron.net/"

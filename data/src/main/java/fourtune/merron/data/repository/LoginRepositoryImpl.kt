@@ -19,9 +19,11 @@ class LoginRepositoryImpl @Inject constructor(
     private val userDao: UserDao,
     private val preference: MeeronPreference
 ) : LoginRepository {
-    override suspend fun login(loginUser: LoginUser): Unit = withContext(dispatcher) {
-        val token = loginApi.login(LoginUserDto.from(loginUser))
-        updateToken(loginUser, token)
+    override suspend fun login(loginUser: LoginUser) {
+        withContext(dispatcher) {
+            val token = loginApi.login(LoginUserDto.from(loginUser))
+            updateToken(loginUser, token)
+        }
     }
 
     private suspend fun updateToken(

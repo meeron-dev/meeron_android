@@ -8,6 +8,9 @@ plugins {
 
 android {
     compileSdk = Versions.compileSdk
+    defaultConfig {
+        minSdk = Versions.minSdk
+    }
 }
 
 dependencies {

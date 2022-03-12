@@ -5,6 +5,6 @@ data class Time(
     val hourOfDay: String = ""
 ) {
     override fun toString(): String {
-        return "$time$hourOfDay"
+        return "$time $hourOfDay"
     }
 }

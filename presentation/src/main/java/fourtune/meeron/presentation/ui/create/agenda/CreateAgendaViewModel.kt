@@ -1,17 +1,15 @@
 package fourtune.meeron.presentation.ui.create.agenda
 
-import android.content.Context
 import android.net.Uri
-import android.provider.OpenableColumns
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import forutune.meeron.domain.Const
-import forutune.meeron.domain.model.File
+import forutune.meeron.domain.FileProvider
+import forutune.meeron.domain.model.FileInfo
 import forutune.meeron.domain.model.Issue
 import forutune.meeron.domain.model.Meeting
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,12 +21,12 @@ import javax.inject.Inject
 data class AgendaState(
     val name: String = "",
     val issue: SnapshotStateList<String> = mutableStateListOf(""),
-    val file: SnapshotStateList<String> = mutableStateListOf()
+    val file: SnapshotStateList<FileInfo> = mutableStateListOf()
 )
 
 @HiltViewModel
 class CreateAgendaViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    private val fileProvider: FileProvider,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -76,17 +74,12 @@ class CreateAgendaViewModel @Inject constructor(
     }
 
     fun addFile(uri: Uri) {
-        context.contentResolver.query(uri, null, null, null, null, null).use { cursor ->
-            if (cursor != null && cursor.moveToFirst()) {
-                val index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                val result = cursor.getString(index)
-                agendas[uiState.value.selectedAgenda].file.add(result)
-            }
-        }
+        val fileName = fileProvider.getFileName(uri.toString())
+        agendas[uiState.value.selectedAgenda].file.add(FileInfo(uri.toString(), fileName))
     }
 
     fun deleteFile(selected: Int, selectedFile: Int) {
-        if (agendas[selected].file.size > 1) {
+        if (agendas[selected].file.size >= 1) {
             agendas[selected].file.removeAt(selectedFile)
         }
     }
@@ -103,11 +96,12 @@ class CreateAgendaViewModel @Inject constructor(
 
     fun saveSnapShot(): Meeting {
         return uiState.value.meeting.copy(
-            agenda = agendas.map { agenda ->
+            agenda = agendas.mapIndexed { index, agenda ->
                 forutune.meeron.domain.model.Agenda(
+                    order = index.toLong(),
                     name = agenda.name,
                     issues = agenda.issue.map(::Issue),
-                    files = agenda.file.map(::File)
+                    fileInfos = agenda.file
                 )
             }
         )
@@ -131,7 +125,7 @@ class CreateAgendaViewModel @Inject constructor(
         class OnChangedIssue(val selectedAgenda: Int, val selectedIssue: Int, val text: String) : Event
         class DeleteIssue(val selectedAgenda: Int, val selectedIssue: Int) : Event
 
-        class AddFile(val selectedAgenda: Int) : Event
+        object AddFile : Event
         class DeleteFile(val selectedAgenda: Int, val selectedFile: Int) : Event
 
         class AgendaSelected(val selected: Int) : Event

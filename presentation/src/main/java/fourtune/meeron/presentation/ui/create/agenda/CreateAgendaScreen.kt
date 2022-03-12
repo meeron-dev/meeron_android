@@ -52,9 +52,7 @@ fun CreateAgendaScreen(
     val uiState by viewModel.uiState.collectAsState()
     val pickPictureLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
-            uri?.let {
-                viewModel.addFile(uri)
-            }
+            uri?.let(viewModel::addFile)
         }
 
     val storagePermission = rememberPermissionState(READ_EXTERNAL_STORAGE)
@@ -79,7 +77,7 @@ fun CreateAgendaScreen(
                     event.selectedAgenda,
                     event.selectedIssue
                 )
-                is CreateAgendaViewModel.Event.AddFile -> {
+                CreateAgendaViewModel.Event.AddFile -> {
                     when (val status = storagePermission.status) {
                         PermissionStatus.Granted -> {
                             pickPictureLauncher.launch("*/*")
@@ -304,12 +302,12 @@ private fun Files(
         factory = null,
         title = stringResource(id = R.string.add_file),
         showIcon = true,
-        onClick = { event(CreateAgendaViewModel.Event.AddFile(selected)) }
+        onClick = { event(CreateAgendaViewModel.Event.AddFile) }
     )
-    agendaStates[selected].file.forEachIndexed { index, fileName ->
+    agendaStates[selected].file.forEachIndexed { index, fileInfo ->
         Spacer(modifier = Modifier.padding(10.dp))
         ContentFactory.ActionField(
-            text = fileName,
+            text = fileInfo.fileName,
             onClick = { /* Do Nothing */ },
             easyDelete = true,
             useUnderLine = false,

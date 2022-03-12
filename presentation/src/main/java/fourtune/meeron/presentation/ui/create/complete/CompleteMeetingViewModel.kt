@@ -10,6 +10,7 @@ import forutune.meeron.domain.usecase.CreateMeetingUseCase
 import forutune.meeron.domain.usecase.GetUserUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,6 +44,7 @@ class CompleteMeetingViewModel @Inject constructor(
             runCatching {
                 createMeetingUseCase(_uiState.value.meeting)
             }.onFailure {
+                Timber.tag("🔥zero:createMeeting").e("$it")
                 _toast.emit("회의 생성에 실패했습니다. ${it.message}")
             }.onSuccess {
                 onComplete()

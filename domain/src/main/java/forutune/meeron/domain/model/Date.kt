@@ -7,7 +7,7 @@ data class Date(
     val year: Int = 0,
     val month: Int = 0,
     val hourOfDay: Int = 0
-) {
+) : java.io.Serializable {
     fun formattedString(): String {
         return "${year}/${month}/${hourOfDay}"
     }

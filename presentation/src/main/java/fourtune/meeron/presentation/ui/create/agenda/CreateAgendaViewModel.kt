@@ -1,11 +1,15 @@
 package fourtune.meeron.presentation.ui.create.agenda
 
+import android.content.Context
+import android.net.Uri
+import android.provider.OpenableColumns
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.File
 import forutune.meeron.domain.model.Issue
@@ -19,11 +23,12 @@ import javax.inject.Inject
 data class AgendaState(
     val name: String = "",
     val issue: SnapshotStateList<String> = mutableStateListOf(""),
-    val file: SnapshotStateList<String> = mutableStateListOf("")
+    val file: SnapshotStateList<String> = mutableStateListOf()
 )
 
 @HiltViewModel
 class CreateAgendaViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -70,8 +75,14 @@ class CreateAgendaViewModel @Inject constructor(
         }
     }
 
-    fun addFile(selectedAgenda: Int) {
-        agendas[selectedAgenda].file.add("")//todo 선택된 파일명 집어넣어주기
+    fun addFile(uri: Uri) {
+        context.contentResolver.query(uri, null, null, null, null, null).use { cursor ->
+            if (cursor != null && cursor.moveToFirst()) {
+                val index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                val result = cursor.getString(index)
+                agendas[uiState.value.selectedAgenda].file.add(result)
+            }
+        }
     }
 
     fun deleteFile(selected: Int, selectedFile: Int) {
@@ -94,7 +105,7 @@ class CreateAgendaViewModel @Inject constructor(
         return uiState.value.meeting.copy(
             agenda = agendas.map { agenda ->
                 forutune.meeron.domain.model.Agenda(
-                    agenda = agenda.name,
+                    name = agenda.name,
                     issues = agenda.issue.map(::Issue),
                     files = agenda.file.map(::File)
                 )

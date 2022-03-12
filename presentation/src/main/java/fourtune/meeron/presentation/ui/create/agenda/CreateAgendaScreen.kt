@@ -1,5 +1,8 @@
 package fourtune.meeron.presentation.ui.create.agenda
 
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,6 +26,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionStatus
+import com.google.accompanist.permissions.rememberPermissionState
 import forutune.meeron.domain.model.Meeting
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
@@ -35,6 +41,7 @@ import fourtune.meeron.presentation.ui.create.agenda.CreateAgendaViewModel.Compa
 import fourtune.meeron.presentation.ui.create.agenda.CreateAgendaViewModel.Companion.MIN_AGENDA_SIZE
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CreateAgendaScreen(
     viewModel: CreateAgendaViewModel = hiltViewModel(),
@@ -43,6 +50,14 @@ fun CreateAgendaScreen(
     onPrevious: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val pickPictureLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+            uri?.let {
+                viewModel.addFile(uri)
+            }
+        }
+
+    val storagePermission = rememberPermissionState(READ_EXTERNAL_STORAGE)
 
     CreateAgendaScreen(
         uiState = uiState,
@@ -65,7 +80,20 @@ fun CreateAgendaScreen(
                     event.selectedIssue
                 )
                 is CreateAgendaViewModel.Event.AddFile -> {
-                    viewModel.addFile(event.selectedAgenda)
+                    when (val status = storagePermission.status) {
+                        PermissionStatus.Granted -> {
+                            pickPictureLauncher.launch("*/*")
+                        }
+                        is PermissionStatus.Denied -> {
+                            if (status.shouldShowRationale) {
+                                //일반취소
+                            } else {
+                                //거절 눌렀을 경우...
+                                // ACTION_APPLICATION_DETAILS_SETTINGS 리다이렉트
+                            }
+                            storagePermission.launchPermissionRequest()
+                        }
+                    }
                 }
                 is CreateAgendaViewModel.Event.DeleteFile -> viewModel.deleteFile(
                     event.selectedAgenda,
@@ -272,26 +300,21 @@ private fun Files(
     event: (CreateAgendaViewModel.Event) -> Unit
 ) {
     Spacer(modifier = Modifier.padding(15.dp))
-    agendaStates[selected].file.forEachIndexed { index, s ->
+    MeeronActionBox(
+        factory = null,
+        title = stringResource(id = R.string.add_file),
+        showIcon = true,
+        onClick = { event(CreateAgendaViewModel.Event.AddFile(selected)) }
+    )
+    agendaStates[selected].file.forEachIndexed { index, fileName ->
         Spacer(modifier = Modifier.padding(10.dp))
-        if (index == 0) {
-            MeeronActionBox(factory = ContentFactory.ActionField(
-                text = s,
-                onClick = { /* Do Nothing */ },
-                easyDelete = true,
-                onClickDelete = { CreateAgendaViewModel.Event.DeleteFile(selected, index) }
-            ), title = stringResource(id = R.string.add_file),
-                showIcon = true,
-                onClick = { event(CreateAgendaViewModel.Event.AddFile(selected)) }
-            )
-        } else {
-            ContentFactory.ActionField(
-                text = s,
-                onClick = { /* Do Nothing */ },
-                easyDelete = true,
-                onClickDelete = { CreateAgendaViewModel.Event.DeleteFile(selected, index) }
-            ).Create()
-        }
+        ContentFactory.ActionField(
+            text = fileName,
+            onClick = { /* Do Nothing */ },
+            easyDelete = true,
+            useUnderLine = false,
+            onClickDelete = { event(CreateAgendaViewModel.Event.DeleteFile(selected, index)) }
+        ).Create()
     }
 }
 

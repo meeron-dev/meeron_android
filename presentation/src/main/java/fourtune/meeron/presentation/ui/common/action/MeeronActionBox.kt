@@ -45,6 +45,7 @@ sealed interface ContentFactory {
                         limit = limit,
                         easyDelete = easyDelete,
                         onClickDelete = onClickDelete,
+                        useUnderLine = true,
                         contents = innerTextField
                     )
                 }
@@ -57,6 +58,7 @@ sealed interface ContentFactory {
         private val text: String,
         private val isEssential: Boolean = false,
         private val easyDelete: Boolean = false,
+        private val useUnderLine: Boolean = true,
         private val onClick: () -> Unit = {},
         private val onClickDelete: () -> Unit = {}
     ) : ContentFactory {
@@ -73,10 +75,10 @@ sealed interface ContentFactory {
                     limit = 0,
                     easyDelete = easyDelete,
                     onClickDelete = onClickDelete,
-                    contents = {
-                        Text(text = text, fontSize = 16.sp, color = colorResource(id = R.color.dark_gray))
-                    },
-                )
+                    useUnderLine = useUnderLine,
+                ) {
+                    Text(text = text, fontSize = 16.sp, color = colorResource(id = R.color.dark_gray))
+                }
             }
         }
     }
@@ -84,7 +86,7 @@ sealed interface ContentFactory {
 
 @Composable
 fun MeeronActionBox(
-    factory: ContentFactory,
+    factory: ContentFactory?,
     title: String,
     onClick: () -> Unit = {},
     showIcon: Boolean = false,
@@ -103,7 +105,7 @@ fun MeeronActionBox(
             }
         }
         Spacer(modifier = Modifier.padding(6.dp))
-        factory.Create()
+        factory?.Create()
     }
 }
 
@@ -114,6 +116,7 @@ private fun ActionBody(
     limit: Int,
     easyDelete: Boolean = false,
     onClickDelete: () -> Unit = {},
+    useUnderLine: Boolean,
     contents: @Composable () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -151,7 +154,7 @@ private fun ActionBody(
                 )
             }
         }
-        Divider(Modifier.padding(top = 1.dp))
+        if (useUnderLine) Divider(Modifier.padding(top = 1.dp))
     }
 }
 

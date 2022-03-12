@@ -8,9 +8,7 @@ import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.usecase.CreateMeetingUseCase
 import forutune.meeron.domain.usecase.GetUserUseCase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,6 +20,9 @@ class CompleteMeetingViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState(requireNotNull(savedStateHandle[Const.Meeting])))
     val uiState = _uiState.asStateFlow()
+
+    private val _toast = MutableSharedFlow<String>()
+    val toast = _toast.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -37,9 +38,15 @@ class CompleteMeetingViewModel @Inject constructor(
         }
     }
 
-    fun createMeeting() {
+    fun createMeeting(onComplete: () -> Unit = {}) {
         viewModelScope.launch {
-            createMeetingUseCase(_uiState.value.meeting)
+            runCatching {
+                createMeetingUseCase(_uiState.value.meeting)
+            }.onFailure {
+                _toast.emit("회의 생성에 실패했습니다. ${it.message}")
+            }.onSuccess {
+                onComplete()
+            }
         }
     }
 

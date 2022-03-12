@@ -38,6 +38,7 @@ dependencies {
 
     implementation(Dep.Accompanist.pager)
     implementation(Dep.Accompanist.navigationAnimation)
+    implementation(Dep.Accompanist.permission)
 
     implementation(Dep.AndroidX.material)
     implementation(Dep.AndroidX.Lifecycle.composeViewModel)

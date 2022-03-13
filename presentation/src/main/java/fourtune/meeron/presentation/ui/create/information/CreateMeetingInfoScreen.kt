@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import forutune.meeron.domain.model.Meeting
+import forutune.meeron.domain.model.WorkspaceUser
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
@@ -48,6 +49,14 @@ fun CreateMeetingInfoScreen(
         initialValue = ModalBottomSheetValue.Hidden,
         confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded }
     )
+    var searchOwnerText by remember {
+        mutableStateOf("")
+    }
+
+    val selectedOwners = remember {
+        mutableStateListOf<WorkspaceUser>()
+    }
+
     BackHandler {
         if (bottomSheetState.isVisible) {
             scope.launch { bottomSheetState.hide() }
@@ -60,14 +69,21 @@ fun CreateMeetingInfoScreen(
         sheetState = bottomSheetState,
         sheetContent = {
             when (currentBottomSheet) {
-                CreateMeetingInfoViewModel.BottomSheetState.Owner -> OwnersSelectScreen(
-                    onSearch = viewModel::onSearch,
-                    owners = uiState.searchedUsers,
-                    onComplete = {selectedOwners->
-                        scope.launch { bottomSheetState.hide() }
-                        viewModel.selectOwner(selectedOwners)
-                    }
-                )
+                CreateMeetingInfoViewModel.BottomSheetState.Owner -> {
+                    OwnersSelectScreen(
+                        owners = uiState.searchedUsers,
+                        onSearch = {
+                            searchOwnerText = it
+                            viewModel.onSearch(it)
+                        },
+                        onComplete = { selectedOwners ->
+                            scope.launch { bottomSheetState.hide() }
+                            viewModel.selectOwner(selectedOwners)
+                        },
+                        selectedUsers = selectedOwners,
+                        searchText = searchOwnerText
+                    )
+                }
                 CreateMeetingInfoViewModel.BottomSheetState.Team -> TeamSelectScreen(
                     teams = uiState.teams,
                     onSelectTeam = { selectedTeamId ->
@@ -98,6 +114,11 @@ fun CreateMeetingInfoScreen(
                 },
                 bottomSheetEvent = { event ->
                     currentBottomSheet = event
+                    if (event == CreateMeetingInfoViewModel.BottomSheetState.Owner) {
+                        viewModel.clearOwner()
+                        searchOwnerText = ""
+                        selectedOwners.clear()
+                    }
                     scope.launch { bottomSheetState.animateTo(ModalBottomSheetValue.Expanded) }
                 },
                 listState = viewModel.listState

@@ -37,7 +37,7 @@ sealed interface ContentFactory {
             BasicTextField(
                 modifier = modifier,
                 value = text,
-                onValueChange = onValueChange,
+                onValueChange = { if (limit == 0 || it.length < limit) onValueChange(it) },
                 decorationBox = { innerTextField ->
                     ActionBody(
                         isEssential = isEssential,

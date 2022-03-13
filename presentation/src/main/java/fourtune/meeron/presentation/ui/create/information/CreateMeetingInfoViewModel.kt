@@ -103,6 +103,16 @@ class CreateMeetingInfoViewModel @Inject constructor(
         }
     }
 
+    fun clearOwner() {
+        listState[Info.Owners] = ""
+        _uiState.update {
+            it.copy(
+                meeting = uiState().value.meeting.copy(ownerIds = emptyList()),
+                searchedUsers = emptyList()
+            )
+        }
+    }
+
     data class UiState(
         val meeting: Meeting,
         val isVerify: Boolean = false,

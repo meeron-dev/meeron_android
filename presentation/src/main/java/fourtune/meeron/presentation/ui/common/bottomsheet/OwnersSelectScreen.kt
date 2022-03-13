@@ -7,7 +7,10 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -25,15 +28,12 @@ import fourtune.meeron.presentation.ui.common.UserGrids
 fun OwnersSelectScreen(
     owners: List<WorkspaceUser> = emptyList(),
     onSearch: (String) -> Unit = {},
-    onComplete: (List<WorkspaceUser>) -> Unit = {}
+    onComplete: (List<WorkspaceUser>) -> Unit = {},
+    selectedUsers: SnapshotStateList<WorkspaceUser> = remember {
+        mutableStateListOf()
+    },
+    searchText: String = ""
 ) {
-    var text by remember {
-        mutableStateOf("")
-    }
-    val selectedUsers = remember {
-        mutableStateListOf<WorkspaceUser>()
-    }
-
 
     Column(
         modifier = Modifier
@@ -60,8 +60,8 @@ fun OwnersSelectScreen(
                 )
                 Spacer(modifier = Modifier.padding(40.dp))
                 BasicTextField(
-                    value = text,
-                    onValueChange = { text = it.also(onSearch) },
+                    value = searchText,
+                    onValueChange = onSearch,
                     singleLine = true,
                     decorationBox = { innerTextField ->
                         Column(modifier = Modifier.fillMaxWidth()) {
@@ -76,7 +76,10 @@ fun OwnersSelectScreen(
                     }
                 )
                 Spacer(modifier = Modifier.padding(20.dp))
-                UserGrids(owners, selectedUsers)
+                UserGrids(
+                    users = owners,
+                    selectedUsers = selectedUsers,
+                )
             }
         }
     }
@@ -85,5 +88,9 @@ fun OwnersSelectScreen(
 @Preview
 @Composable
 private fun Preview() {
-    OwnersSelectScreen()
+    OwnersSelectScreen(
+        selectedUsers = remember {
+            mutableStateListOf()
+        },
+    )
 }

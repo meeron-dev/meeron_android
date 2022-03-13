@@ -110,8 +110,10 @@ private fun CreateMeetingParticipantsScreen(
                     onSelectTeam = { event(CreateMeetingParticipantsViewModel.Event.SelectTeam(it)) }
                 )
                 Spacer(modifier = Modifier.padding(10.dp))
-                UserGrids(users = uiState.teamMembers, selectedUsers = selectedUsers)
-
+                UserGrids(
+                    users = uiState.teamMembers,
+                    selectedUsers = selectedUsers,
+                )
             }
         }
     }

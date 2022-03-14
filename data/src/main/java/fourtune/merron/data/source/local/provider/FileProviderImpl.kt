@@ -1,4 +1,4 @@
-package fourtune.merron.data.source.local
+package fourtune.merron.data.source.local.provider
 
 import android.content.ContentUris
 import android.content.Context
@@ -9,7 +9,7 @@ import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import dagger.hilt.android.qualifiers.ApplicationContext
-import forutune.meeron.domain.FileProvider
+import forutune.meeron.domain.provider.FileProvider
 import javax.inject.Inject
 
 class FileProviderImpl @Inject constructor(

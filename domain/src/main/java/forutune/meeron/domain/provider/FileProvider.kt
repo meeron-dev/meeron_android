@@ -1,4 +1,4 @@
-package forutune.meeron.domain
+package forutune.meeron.domain.provider
 
 interface FileProvider {
     fun getFileName(uriString: String): String

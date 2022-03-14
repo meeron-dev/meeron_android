@@ -2,8 +2,8 @@ package fourtune.merron.data.source.local.preference
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
-import forutune.meeron.domain.MeeronPreference
 import forutune.meeron.domain.model.Token
+import forutune.meeron.domain.preference.MeeronPreference
 import javax.inject.Inject
 
 class Preference @Inject constructor(@ApplicationContext context: Context) : MeeronPreference {
@@ -25,9 +25,21 @@ class Preference @Inject constructor(@ApplicationContext context: Context) : Mee
         }
     }
 
+    override fun saveMyId(id: Long) {
+        with(preference.edit()) {
+            putLong(MY_ID, id)
+            commit()
+        }
+    }
+
+    override fun getMyId(): Long {
+        return preference.getLong(MY_ID, -1)
+    }
+
     companion object {
         const val MEERON_PREF = "meeron_pref"
         const val ACCESS_TOKEN = "access_token"
         const val REFRESH_TOKEN = "refresh_token"
+        const val MY_ID = "my_id"
     }
 }

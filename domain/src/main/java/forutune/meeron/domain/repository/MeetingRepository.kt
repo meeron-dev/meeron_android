@@ -4,5 +4,5 @@ import forutune.meeron.domain.model.Meeting
 
 interface MeetingRepository {
     suspend fun createMeeting(meeting: Meeting)
-    suspend fun getMeeting(meetingId: Long): Meeting
+    suspend fun getTodayMeetings(workSpaceId: Long, workSpaceUserId: Long): List<Meeting>
 }

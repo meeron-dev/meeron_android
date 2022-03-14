@@ -4,7 +4,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import forutune.meeron.domain.MeeronPreference
+import forutune.meeron.domain.preference.MeeronPreference
 import fourtune.merron.data.source.local.preference.Preference
 import javax.inject.Singleton
 

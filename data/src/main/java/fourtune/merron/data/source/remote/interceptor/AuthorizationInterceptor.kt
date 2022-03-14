@@ -1,6 +1,6 @@
-package fourtune.merron.data.source.remote
+package fourtune.merron.data.source.remote.interceptor
 
-import forutune.meeron.domain.MeeronPreference
+import forutune.meeron.domain.preference.MeeronPreference
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject

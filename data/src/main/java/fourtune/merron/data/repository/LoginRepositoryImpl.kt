@@ -1,11 +1,11 @@
 package fourtune.merron.data.repository
 
-import forutune.meeron.domain.MeeronPreference
 import forutune.meeron.domain.di.IoDispatcher
 import forutune.meeron.domain.model.LoginUser
 import forutune.meeron.domain.model.Token
+import forutune.meeron.domain.preference.MeeronPreference
 import forutune.meeron.domain.repository.LoginRepository
-import fourtune.merron.data.model.dto.LoginUserDto
+import fourtune.merron.data.model.dto.LoginUserRequest
 import fourtune.merron.data.model.entity.UserEntity
 import fourtune.merron.data.source.local.dao.UserDao
 import fourtune.merron.data.source.remote.LoginApi
@@ -21,7 +21,7 @@ class LoginRepositoryImpl @Inject constructor(
 ) : LoginRepository {
     override suspend fun login(loginUser: LoginUser) {
         withContext(dispatcher) {
-            val token = loginApi.login(LoginUserDto.from(loginUser))
+            val token = loginApi.login(LoginUserRequest.from(loginUser))
             updateToken(loginUser, token)
         }
     }

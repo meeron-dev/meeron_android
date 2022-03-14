@@ -1,12 +1,13 @@
 package fourtune.merron.data.repository
 
-import forutune.meeron.domain.FileProvider
+import forutune.meeron.domain.model.Date
 import forutune.meeron.domain.model.Meeting
+import forutune.meeron.domain.model.Team
+import forutune.meeron.domain.provider.FileProvider
 import forutune.meeron.domain.repository.MeetingRepository
-import fourtune.merron.data.model.dto.AgendaDto
 import fourtune.merron.data.model.dto.MeetingDto
-import fourtune.merron.data.model.dto.request.WorkSpaceUserIds
-import fourtune.merron.data.source.local.dao.MeetingDao
+import fourtune.merron.data.model.dto.request.AgendaRequest
+import fourtune.merron.data.model.dto.request.WorkSpaceUserIdsRequest
 import fourtune.merron.data.source.remote.MeetingApi
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -16,9 +17,8 @@ import java.io.IOException
 import javax.inject.Inject
 
 class MeetingRepositoryImpl @Inject constructor(
-    private val meetingDao: MeetingDao,
     private val meetingApi: MeetingApi,
-    private val fileProvider: FileProvider
+    private val fileProvider: FileProvider,
 ) : MeetingRepository {
     override suspend fun createMeeting(meeting: Meeting) {
         val (start, end) = meeting.time.split("~")
@@ -36,9 +36,9 @@ class MeetingRepositoryImpl @Inject constructor(
         val meetingId = response.body()?.meetingId ?: throw IOException(response.message())
         meetingApi.addParticipants(
             meetingId = meetingId,
-            workspaceUserIds = WorkSpaceUserIds(meeting.participants.map { it.workspaceUserId })
+            workspaceUserIds = WorkSpaceUserIdsRequest(meeting.participants.map { it.workspaceUserId })
         )
-        val agendaResponse = meetingApi.addAgendas(meetingId = meetingId, AgendaDto(meeting.agenda))
+        val agendaResponse = meetingApi.addAgendas(meetingId = meetingId, AgendaRequest(meeting.agenda))
         meeting.agenda.forEachIndexed { index, agenda ->
             agenda.fileInfos.forEach { fileInfo ->
                 val pathname = fileProvider.getPath(fileInfo.uriString)
@@ -54,8 +54,17 @@ class MeetingRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMeeting(meetingId: Long): Meeting {
-        return meetingDao.getMeeting(meetingId).toMeeting()
+    override suspend fun getTodayMeetings(workSpaceId: Long, workSpaceUserId: Long): List<Meeting> {
+        return meetingApi.getMeeting(1, workSpaceUserId).meetings.map {
+            val (year, month, day) = it.meetingDate.split("/")
+            Meeting(
+                title = it.meetingName,
+                date = Date(year.toInt(), month.toInt(), day.toInt()),
+                time = "${it.startTime} ~ ${it.endTime}",
+                team = Team(it.operationTeamId, it.operationTeamName),
+
+            )
+        }
     }
 
 }

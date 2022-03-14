@@ -5,10 +5,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import forutune.meeron.domain.MeeronPreference
 import forutune.meeron.domain.di.OK_HTTP_CLIENT
 import forutune.meeron.domain.di.OK_HTTP_CLIENT_NO_AUTH
-import fourtune.merron.data.source.remote.*
+import forutune.meeron.domain.preference.MeeronPreference
+import fourtune.merron.data.source.remote.LoginApi
+import fourtune.merron.data.source.remote.MeetingApi
+import fourtune.merron.data.source.remote.TeamApi
+import fourtune.merron.data.source.remote.UserApi
+import fourtune.merron.data.source.remote.interceptor.AuthorizationInterceptor
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor

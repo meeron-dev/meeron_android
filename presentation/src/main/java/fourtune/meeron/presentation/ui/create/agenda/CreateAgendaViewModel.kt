@@ -8,10 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
-import forutune.meeron.domain.FileProvider
 import forutune.meeron.domain.model.FileInfo
 import forutune.meeron.domain.model.Issue
 import forutune.meeron.domain.model.Meeting
+import forutune.meeron.domain.provider.FileProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

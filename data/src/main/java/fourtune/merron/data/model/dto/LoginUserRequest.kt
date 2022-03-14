@@ -5,14 +5,14 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoginUserDto(
+data class LoginUserRequest(
     @SerialName("email") val email: String,
     @SerialName("nickname") val nickname: String,
     @SerialName("profileImageUrl") val profileImageUrl: String? = null,
     @SerialName("provider") val provider: String
 ) {
     companion object {
-        fun from(loginUser: LoginUser): LoginUserDto =
-            with(loginUser) { LoginUserDto(email, nickname, profileImageUrl, provider) }
+        fun from(loginUser: LoginUser): LoginUserRequest =
+            with(loginUser) { LoginUserRequest(email, nickname, profileImageUrl, provider) }
     }
 }

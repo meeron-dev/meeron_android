@@ -1,5 +1,6 @@
 package fourtune.merron.data.repository
 
+import forutune.meeron.domain.model.User
 import forutune.meeron.domain.model.WorkspaceUser
 import forutune.meeron.domain.repository.UserRepository
 import fourtune.merron.data.source.remote.UserApi
@@ -18,6 +19,10 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getUser(workspaceUserId: Long): WorkspaceUser {
         return userApi.getWorkspaceUser(workspaceUserId)
+    }
+
+    override suspend fun getMe(): User {
+        return userApi.getMe()
     }
 
 

@@ -4,8 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import forutune.meeron.domain.FileProvider
-import fourtune.merron.data.source.local.FileProviderImpl
+import forutune.meeron.domain.provider.FileProvider
+import fourtune.merron.data.source.local.provider.FileProviderImpl
 import javax.inject.Singleton
 
 @Module

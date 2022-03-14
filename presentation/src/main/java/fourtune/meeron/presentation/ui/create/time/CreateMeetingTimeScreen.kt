@@ -86,15 +86,17 @@ private fun CreateMeetingTimeScreen(
 
 private fun showTimePickerDialog(
     context: Context,
+    time: Time,
     onChangeTime: (hour: Int, minute: Int) -> Unit
 ) {
+    val hour = time.time.split(":").first().toInt() + if (time.hourOfDay == "PM") 12 else 0
     TimePickerDialog(
         context,
         R.style.TimePickerStyle,
         { _, hourOfDay, minute ->
             onChangeTime(hourOfDay, minute)
         },
-        0,
+        hour,
         0,
         false
     ).show()
@@ -113,12 +115,12 @@ private fun TimeScreen(
                 TimeField(text = it.key, time = it.value) { context: Context ->
                     showTimePickerDialog(
                         context = context,
-                        onChangeTime = { hour: Int, minute: Int ->
-                            createMeetingTimeEvent(
-                                CreateMeetingTimeViewModel.Event.ChangeTime(it.key, hour, minute)
-                            )
-                        }
-                    )
+                        time = it.value
+                    ) { hour: Int, minute: Int ->
+                        createMeetingTimeEvent(
+                            CreateMeetingTimeViewModel.Event.ChangeTime(it.key, hour, minute)
+                        )
+                    }
                 }
             }
         }

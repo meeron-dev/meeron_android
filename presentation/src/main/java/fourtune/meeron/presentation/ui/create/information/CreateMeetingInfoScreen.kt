@@ -71,7 +71,7 @@ fun CreateMeetingInfoScreen(
             when (currentBottomSheet) {
                 CreateMeetingInfoViewModel.BottomSheetState.Owner -> {
                     OwnersSelectScreen(
-                        owners = uiState.searchedUsers,
+                        users = uiState.searchedUsers,
                         onSearch = {
                             searchOwnerText = it
                             viewModel.onSearch(it)
@@ -81,7 +81,8 @@ fun CreateMeetingInfoScreen(
                             viewModel.selectOwner(selectedOwners)
                         },
                         selectedUsers = selectedOwners,
-                        searchText = searchOwnerText
+                        searchText = searchOwnerText,
+                        ownerIds = uiState.meeting.ownerIds
                     )
                 }
                 CreateMeetingInfoViewModel.BottomSheetState.Team -> TeamSelectScreen(

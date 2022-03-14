@@ -26,13 +26,14 @@ import fourtune.meeron.presentation.ui.common.UserGrids
 
 @Composable
 fun OwnersSelectScreen(
-    owners: List<WorkspaceUser> = emptyList(),
+    users: List<WorkspaceUser> = emptyList(),
     onSearch: (String) -> Unit = {},
     onComplete: (List<WorkspaceUser>) -> Unit = {},
     selectedUsers: SnapshotStateList<WorkspaceUser> = remember {
         mutableStateListOf()
     },
-    searchText: String = ""
+    searchText: String = "",
+    ownerIds: List<Long> = emptyList()
 ) {
 
     Column(
@@ -77,8 +78,9 @@ fun OwnersSelectScreen(
                 )
                 Spacer(modifier = Modifier.padding(20.dp))
                 UserGrids(
-                    users = owners,
+                    users = users,
                     selectedUsers = selectedUsers,
+                    ownerIds = ownerIds
                 )
             }
         }

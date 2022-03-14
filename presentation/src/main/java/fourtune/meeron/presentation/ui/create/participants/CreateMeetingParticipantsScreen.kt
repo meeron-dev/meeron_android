@@ -113,6 +113,7 @@ private fun CreateMeetingParticipantsScreen(
                 UserGrids(
                     users = uiState.teamMembers,
                     selectedUsers = selectedUsers,
+                    ownerIds = uiState.meeting.ownerIds
                 )
             }
         }

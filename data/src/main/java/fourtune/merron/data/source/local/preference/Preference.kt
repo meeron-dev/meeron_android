@@ -36,10 +36,34 @@ class Preference @Inject constructor(@ApplicationContext context: Context) : Mee
         return preference.getLong(MY_ID, -1)
     }
 
+    override fun setCurrentWorkSpace(workSpaceId: Long) {
+        with(preference.edit()) {
+            putLong(WORKSPACE_ID, workSpaceId)
+            commit()
+        }
+    }
+
+    override fun getCurrentWorkSpace(): Long {
+        return preference.getLong(WORKSPACE_ID, -1)
+    }
+
+    override fun setCurrentWorkSpaceUserId(workSpaceUserId: Long) {
+        with(preference.edit()) {
+            putLong(WORKSPACE_USER_ID, workSpaceUserId)
+            commit()
+        }
+    }
+
+    override fun getCurrentWorkSpaceUserId(): Long {
+        return preference.getLong(WORKSPACE_USER_ID, -1)
+    }
+
     companion object {
         const val MEERON_PREF = "meeron_pref"
         const val ACCESS_TOKEN = "access_token"
         const val REFRESH_TOKEN = "refresh_token"
         const val MY_ID = "my_id"
+        const val WORKSPACE_USER_ID = "workspace_user_id"
+        const val WORKSPACE_ID = "workspace_id"
     }
 }

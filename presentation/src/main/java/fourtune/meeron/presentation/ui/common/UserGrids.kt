@@ -25,15 +25,16 @@ fun UserGrids(
         } else {
             selectedUsers.add(user)
         }
-    }
+    },
+    ownerIds: List<Long> = emptyList(),
 ) {
     LazyVerticalGrid(cells = GridCells.Fixed(4)) {
         items(items = users, key = { it.workspaceUserId }) { user ->
             UserItem(
                 modifier = Modifier.clickable { onSelectUser(user) },
                 user = user,
-                selected = selectedUsers.contains(user),
-                admin = false
+                selected = selectedUsers.contains(user) || ownerIds.any { it == user.workspaceUserId },
+                admin = ownerIds.any { it == user.workspaceUserId }
             )
         }
     }

@@ -9,4 +9,10 @@ interface MeeronPreference {
 
     fun saveMyId(id: Long)
     fun getMyId(): Long
+
+    fun setCurrentWorkSpace(workSpaceId: Long)
+    fun getCurrentWorkSpace(): Long
+
+    fun setCurrentWorkSpaceUserId(workSpaceUserId: Long)
+    fun getCurrentWorkSpaceUserId(): Long
 }

@@ -12,6 +12,7 @@ import forutune.meeron.domain.model.Team
 import forutune.meeron.domain.model.WorkspaceUser
 import forutune.meeron.domain.usecase.GetUserUseCase
 import forutune.meeron.domain.usecase.GetWorkSpaceTeamUseCase
+import forutune.meeron.domain.usecase.me.GetMyWorkSpaceUserUseCase
 import fourtune.meeron.presentation.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -25,6 +26,7 @@ import javax.inject.Inject
 class CreateMeetingInfoViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
     getWorkSpaceTeamUseCase: GetWorkSpaceTeamUseCase,
+    getMyWorkSpaceUserUseCase: GetMyWorkSpaceUserUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
@@ -33,24 +35,33 @@ class CreateMeetingInfoViewModel @Inject constructor(
         )
     )
 
-    init {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    teams = getWorkSpaceTeamUseCase()
-                )
-            }
-        }
-    }
-
+    private lateinit var myWorkspaceUser: WorkspaceUser
     private var searchJob: Job? = null
-    fun uiState() = _uiState.asStateFlow()
 
+    fun uiState() = _uiState.asStateFlow()
     val listState = Info.values()
         .associate { info ->
             info to ""
         }.toList()
         .toMutableStateMap()
+
+    private var defaultOwnerString = ""
+
+    init {
+        viewModelScope.launch {
+            myWorkspaceUser = getMyWorkSpaceUserUseCase()
+            defaultOwnerString = myWorkspaceUser.nickname
+            listState[Info.Owners] = defaultOwnerString
+
+            _uiState.update {
+                it.copy(
+                    meeting = it.meeting.copy(ownerIds = listOf(myWorkspaceUser.workspaceUserId)),
+                    teams = getWorkSpaceTeamUseCase()
+                )
+            }
+
+        }
+    }
 
     fun updateText(info: Info, input: String) {
         listState[info] = input
@@ -97,17 +108,17 @@ class CreateMeetingInfoViewModel @Inject constructor(
     }
 
     fun selectOwner(owners: List<WorkspaceUser>) {
-        listState[Info.Owners] = owners.joinToString { it.nickname }
+        listState[Info.Owners] += ", " + owners.joinToString { it.nickname }
         _uiState.update {
             it.copy(meeting = uiState().value.meeting.copy(ownerIds = owners.map { it.workspaceUserId }))
         }
     }
 
     fun clearOwner() {
-        listState[Info.Owners] = ""
+        listState[Info.Owners] = defaultOwnerString
         _uiState.update {
             it.copy(
-                meeting = uiState().value.meeting.copy(ownerIds = emptyList()),
+                meeting = uiState().value.meeting.copy(ownerIds = listOf(myWorkspaceUser.workspaceUserId)),
                 searchedUsers = emptyList()
             )
         }
@@ -142,7 +153,7 @@ class CreateMeetingInfoViewModel @Inject constructor(
     ) {
         Title(R.string.meeting_title, true, 30, false),
         Purpose(R.string.meeting_purpose, true, 10, false),
-        Owners(R.string.public_owners, isEssential = false, limit = 0, true),
+        Owners(R.string.owners, isEssential = false, limit = 0, true),
         Team(R.string.charged_team, isEssential = true, limit = 0, true)
     }
 

@@ -20,13 +20,13 @@
     <string name="not_found_meeting">예정된 회의가 없습니다.</string>
     <string name="meeting_title">회의명</string>
     <string name="meeting_purpose">회의 성격</string>
-    <string name="public_owners">공동 관리자</string>
+    <string name="owners">관리자</string>
     <string name="charged_team">담당 팀</string>
     <string name="info_essential">필수 입력정보입니다.</string>
     <string name="info_limit">공백 포함 %d자</string>
     <string name="info_title">회의의 기본 정보를\n입력해 주세요.</string>
     <string name="load">불러오기</string>
-    <string name="owner_select_title">공동 관리자 선택하기</string>
+    <string name="owner_select_title">관리자 추가하기</string>
     <string name="team_select_title">담당 팀 선택하기</string>
     <string name="agenda">아젠다</string>
     <string name="core_agenda">핵심 아젠다</string>

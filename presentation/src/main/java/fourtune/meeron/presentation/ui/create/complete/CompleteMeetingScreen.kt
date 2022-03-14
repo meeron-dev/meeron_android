@@ -79,7 +79,7 @@ private fun Content(meeting: Meeting, owners: String, agendaSize: Int, participa
         Spacer(modifier = Modifier.padding(8.dp))
         MeetingItem("회의 날짜", meeting.date.displayString())
         MeetingItem("회의 성격", meeting.purpose)
-        if (meeting.ownerIds.isNotEmpty()) MeetingItem("공동 관리자", owners)
+        if (meeting.ownerIds.isNotEmpty()) MeetingItem(stringResource(id = R.string.owners), owners)
         MeetingItem("담당 팀", meeting.team.name)
         MeetingItem("아젠다", String.format("%d개", agendaSize))
         MeetingItem("참가자", String.format("%d명", participants))

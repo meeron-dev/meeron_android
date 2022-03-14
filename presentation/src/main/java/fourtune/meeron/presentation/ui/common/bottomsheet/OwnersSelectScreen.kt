@@ -78,7 +78,7 @@ fun OwnersSelectScreen(
                 )
                 Spacer(modifier = Modifier.padding(20.dp))
                 UserGrids(
-                    users = users,
+                    displayUsers = users,
                     selectedUsers = selectedUsers,
                     ownerIds = ownerIds
                 )

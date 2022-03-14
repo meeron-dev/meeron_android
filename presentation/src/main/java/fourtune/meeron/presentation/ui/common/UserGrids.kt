@@ -15,21 +15,27 @@ import forutune.meeron.domain.model.WorkspaceUser
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun UserGrids(
-    users: List<WorkspaceUser>,
+    displayUsers: List<WorkspaceUser>,
     selectedUsers: SnapshotStateList<WorkspaceUser> = remember {
         mutableStateListOf()
     },
     onSelectUser: (WorkspaceUser) -> Unit = { user ->
-        if (selectedUsers.contains(user)) {
-            selectedUsers.remove(user)
-        } else {
-            selectedUsers.add(user)
+        when {
+            ownerIds.any { it == user.workspaceUserId } -> {
+                //do nothing
+            }
+            selectedUsers.contains(user) -> {
+                selectedUsers.remove(user)
+            }
+            else -> {
+                selectedUsers.add(user)
+            }
         }
     },
     ownerIds: List<Long> = emptyList(),
 ) {
     LazyVerticalGrid(cells = GridCells.Fixed(4)) {
-        items(items = users, key = { it.workspaceUserId }) { user ->
+        items(items = displayUsers, key = { it.workspaceUserId }) { user ->
             UserItem(
                 modifier = Modifier.clickable { onSelectUser(user) },
                 user = user,

@@ -8,6 +8,6 @@ class GetWorkSpaceTeamUseCase @Inject constructor(
     private val teamRepository: TeamRepository
 ) {
     suspend operator fun invoke(): List<Team> {
-        return teamRepository.getTeams(1).teams
+        return teamRepository.getTeams(1).teams//todo workspaceId
     }
 }

@@ -20,9 +20,10 @@ class MeetingRepositoryImpl @Inject constructor(
     private val meetingApi: MeetingApi,
     private val fileProvider: FileProvider,
 ) : MeetingRepository {
-    override suspend fun createMeeting(meeting: Meeting) {
+    override suspend fun createMeeting(workSpaceId: Long, meeting: Meeting) {
         val (start, end) = meeting.time.split("~")
         val meetingDto = MeetingDto(
+            workspaceId = workSpaceId,
             meetingDate = meeting.date.formattedString(),
             startTime = start.trim(),
             endTime = end.trim(),
@@ -62,7 +63,6 @@ class MeetingRepositoryImpl @Inject constructor(
                 date = Date(year.toInt(), month.toInt(), day.toInt()),
                 time = "${it.startTime} ~ ${it.endTime}",
                 team = Team(it.operationTeamId, it.operationTeamName),
-
             )
         }
     }

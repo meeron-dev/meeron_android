@@ -40,7 +40,6 @@ fun CreateMeetingParticipantsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     CreateMeetingParticipantsScreen(
-        uiState = uiState,
         event = { event ->
             when (event) {
                 CreateMeetingParticipantsViewModel.Event.Action -> onAction()
@@ -50,17 +49,28 @@ fun CreateMeetingParticipantsScreen(
                 CreateMeetingParticipantsViewModel.Event.Previous -> onPrevious()
                 is CreateMeetingParticipantsViewModel.Event.SelectTeam -> viewModel.getTeamMembers(event.id)
             }
-        }
+        },
+        meeting = uiState.meeting,
+        fixedOwners = uiState.fixedOwner,
+        teams = uiState.teams,
+        teamMembers = uiState.teamMembers,
     )
 }
 
 @Composable
 private fun CreateMeetingParticipantsScreen(
-    uiState: CreateMeetingParticipantsViewModel.UiState,
-    event: (CreateMeetingParticipantsViewModel.Event) -> Unit = {}
+    event: (CreateMeetingParticipantsViewModel.Event) -> Unit = {},
+    meeting: Meeting,
+    fixedOwners: List<WorkspaceUser>,
+    teams: List<Team>,
+    teamMembers: List<WorkspaceUser>
 ) {
     val selectedUsers = remember {
         mutableStateListOf<WorkspaceUser>()
+    }
+
+    LaunchedEffect(fixedOwners.size) {
+        selectedUsers.addAll(fixedOwners)
     }
 
     Scaffold(topBar = {
@@ -83,10 +93,10 @@ private fun CreateMeetingParticipantsScreen(
             Column {
                 CreateTitle(
                     title = R.string.create_participants,
-                    selectedTime = uiState.meeting.time,
-                    selectedDate = uiState.meeting.date.displayString(),
+                    selectedTime = meeting.time,
+                    selectedDate = meeting.date.displayString(),
                     extraContents = {
-                        CreateText(text = uiState.meeting.title)
+                        CreateText(text = meeting.title)
                     }
                 )
                 Spacer(modifier = Modifier.padding(10.dp))
@@ -106,14 +116,14 @@ private fun CreateMeetingParticipantsScreen(
 
                 Spacer(modifier = Modifier.padding(4.dp))
                 TeamExpandItem(
-                    teams = uiState.teams,
+                    teams = teams,
                     onSelectTeam = { event(CreateMeetingParticipantsViewModel.Event.SelectTeam(it)) }
                 )
                 Spacer(modifier = Modifier.padding(10.dp))
                 UserGrids(
-                    users = uiState.teamMembers,
+                    displayUsers = teamMembers,
                     selectedUsers = selectedUsers,
-                    ownerIds = uiState.meeting.ownerIds
+                    ownerIds = meeting.ownerIds
                 )
             }
         }
@@ -197,5 +207,5 @@ private fun TeamExpandItem(teams: List<Team>, onSelectTeam: (Long) -> Unit = {})
 @Preview
 @Composable
 private fun Preview() {
-    CreateMeetingParticipantsScreen(CreateMeetingParticipantsViewModel.UiState(Meeting()))
+    CreateMeetingParticipantsScreen(onAction = {}, onPrevious = {}, onNext = {})
 }

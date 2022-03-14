@@ -8,6 +8,6 @@ class CreateMeetingUseCase @Inject constructor(
     private val meetingRepository: MeetingRepository
 ) {
     suspend operator fun invoke(meeting: Meeting) {
-        meetingRepository.createMeeting(meeting)
+        meetingRepository.createMeeting(1, meeting)//todo workspaceId
     }
 }

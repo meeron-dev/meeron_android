@@ -29,10 +29,12 @@ class CreateMeetingParticipantsViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 val teams = getWorkSpaceTeamUseCase()
+                val meeting: Meeting = requireNotNull(savedStateHandle[Const.Meeting])
                 it.copy(
-                    meeting = requireNotNull(savedStateHandle[Const.Meeting]),
+                    meeting = meeting,
                     teams = teams,
-                    teamMembers = getUserUseCase(teams.first().id)
+                    teamMembers = getUserUseCase(teamId = teams.first().id),
+                    fixedOwner = getUserUseCase(workspaceUserIds = meeting.ownerIds.toLongArray())
                 )
             }
         }
@@ -52,7 +54,8 @@ class CreateMeetingParticipantsViewModel @Inject constructor(
     data class UiState(
         val meeting: Meeting = Meeting(),
         val teams: List<Team> = emptyList(),
-        val teamMembers: List<WorkspaceUser> = emptyList()
+        val teamMembers: List<WorkspaceUser> = emptyList(),
+        val fixedOwner: List<WorkspaceUser> = emptyList()
     )
 
     sealed interface Event {

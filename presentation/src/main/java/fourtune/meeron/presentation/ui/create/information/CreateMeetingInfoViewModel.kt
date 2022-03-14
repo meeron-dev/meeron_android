@@ -73,7 +73,7 @@ class CreateMeetingInfoViewModel @Inject constructor(
         searchJob = viewModelScope.launch {
             delay(500)
             _uiState.update {
-                it.copy(searchedUsers = getUserUseCase.invoke(text))
+                it.copy(searchedUsers = getUserUseCase.invoke(text = text))
             }
         }
     }
@@ -87,10 +87,13 @@ class CreateMeetingInfoViewModel @Inject constructor(
 
     fun createMeeting(onCreate: (Meeting) -> Unit) {
         viewModelScope.launch {
+            val ownerIds = uiState().value.meeting.ownerIds.toLongArray()
+            val fixedParticipants = getUserUseCase(*ownerIds)
             onCreate(
                 uiState().value.meeting.copy(
                     title = listState[Info.Title].orEmpty(),
                     purpose = listState[Info.Purpose].orEmpty(),
+                    participants = fixedParticipants
                 )
             )
         }
@@ -110,7 +113,8 @@ class CreateMeetingInfoViewModel @Inject constructor(
     fun selectOwner(owners: List<WorkspaceUser>) {
         listState[Info.Owners] += ", " + owners.joinToString { it.nickname }
         _uiState.update {
-            it.copy(meeting = uiState().value.meeting.copy(ownerIds = owners.map { it.workspaceUserId }))
+            val meeting = uiState().value.meeting
+            it.copy(meeting = meeting.copy(ownerIds = meeting.ownerIds + owners.map { it.workspaceUserId }))
         }
     }
 

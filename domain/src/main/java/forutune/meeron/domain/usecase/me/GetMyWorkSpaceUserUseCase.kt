@@ -8,5 +8,6 @@ class GetMyWorkSpaceUserUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(): WorkspaceUser {
         return WorkspaceUser(workspaceUserId = 3, workspaceId = 1, nickname = "제로", position = "Android")
+        //todo workspaceId 가져오면 작업하기
     }
 }

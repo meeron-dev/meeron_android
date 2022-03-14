@@ -11,17 +11,26 @@ on:
 
 jobs:
   build:
-   runs-on: ubuntu-latest
-   steps:
-    - name : checkout
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
       uses: actions/checkout@v2
-      
-    - name : set up JDK
-      uses: actions/setup-java@v2
-      with:
-        distribution : 'temurin'
-        java-version: 11
-        cache : 'gradle'
-          
-    - name: build APK
-      run: ./gradlew assemble
+
+        - name: set up JDK
+          uses: actions/setup-java@v2
+          with:
+            distribution: 'temurin'
+            java-version: 11
+            cache: 'gradle'
+
+        - name: build APK
+          run: ./gradlew assemble
+
+        - name: action-slack
+          uses: 8398a7/action-slack@v2.6.0
+            with:
+              status: ${{job.status}}
+              author_name: android
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

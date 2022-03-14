@@ -7,25 +7,28 @@ on:
 
 jobs:
   build:
-   name : APK Send to Slack
-   runs-on: ubuntu-latest
-   steps:
-    - name : checkout
-      uses: actions/checkout@v2
-      
-    - name : set up JDK
-      uses: actions/setup-java@v2
-      with:
-        distribution : 'adopt'
-        java-version: 11
-        cache : 'gradle'
+    name: APK Send to Slack
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
 
-    - name: build APK
-      run: ./gradlew assembleDebug --stacktrace
+      - name: set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: 11
+          cache: 'gradle'
 
-    - name : Upload Slack
-      uses : MeilCli/slack-upload-file@v1
-      with:
+      - name: key
+        run: keytool -exportcert -alias androiddebugkey -keystore ~/.android/debug.keystore -storepass android -keypass android | openssl sha1 -binary | openssl base64
+
+      - name: build APK
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Upload Slack
+        uses: MeilCli/slack-upload-file@v1
+        with:
           slack_token: ${{ secrets.SLACK_READ_WRITE_TOKEN }}
           channels: ${{ secrets.SLACK_CHANNEL_ID }}
           file_path: 'app/build/outputs/apk/debug/app-debug.apk'
@@ -33,9 +36,9 @@ jobs:
           file_type: 'apk'
           initial_comment: '${{ github.ref }} 슬랙 배포 성공'
 
-    - name: apk 업로드
-      uses: actions/upload-artifact@v2
-      with:
-        name: meeron.apk
-        path: app/build/outputs/apk/debug/app-debug.apk
+      - name: apk 업로드
+        uses: actions/upload-artifact@v2
+        with:
+          name: meeron.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
 

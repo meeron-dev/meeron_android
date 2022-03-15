@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -20,13 +23,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import forutune.meeron.domain.model.YearCount
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.Dot
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ShowAllScreen(viewModel: ShowAllViewModel = hiltViewModel(), onAction: () -> Unit = {}) {
+    val uiState by viewModel.uiState.collectAsState()
+
     Scaffold(topBar = {
         Box {
             Column(
@@ -49,25 +54,31 @@ fun ShowAllScreen(viewModel: ShowAllViewModel = hiltViewModel(), onAction: () ->
             }
         }
     }) {
-        Row {
-            Column {
-                LazyColumn(contentPadding = PaddingValues(vertical = 25.dp)) {
-                    item { YearItem(year = "2022년", count = 50) }
-                    item { YearItem(year = "2023년", count = 50) }
-                    item { YearItem(year = "2024년", count = 50) }
-                }
+        ShowAllScreen(uiState.yearCounts)
+    }
+}
 
-            }
-            LazyVerticalGrid(
-                modifier = Modifier
-                    .background(color = colorResource(id = R.color.light_gray_white))
-                    .fillMaxHeight(),
-                cells = GridCells.Fixed(2),
-                contentPadding = PaddingValues(vertical = 15.dp)
-            ) {
-                (0 until 12).forEach {
-                    item { MonthItem(isNew = true, month = it) }
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun ShowAllScreen(yearCounts: List<YearCount>) {
+    Row {
+        Column {
+            LazyColumn(contentPadding = PaddingValues(vertical = 25.dp)) {
+                items(items = yearCounts) {
+                    YearItem(year = "${it.year}년", count = it.count)
                 }
+            }
+
+        }
+        LazyVerticalGrid(
+            modifier = Modifier
+                .background(color = colorResource(id = R.color.light_gray_white))
+                .fillMaxHeight(),
+            cells = GridCells.Fixed(2),
+            contentPadding = PaddingValues(vertical = 15.dp)
+        ) {
+            (0 until 12).forEach {
+                item { MonthItem(isNew = true, month = it) }
             }
         }
     }

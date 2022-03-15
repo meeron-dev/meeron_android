@@ -1,9 +1,6 @@
 package fourtune.merron.data.repository
 
-import forutune.meeron.domain.model.Date
-import forutune.meeron.domain.model.Meeting
-import forutune.meeron.domain.model.MeetingStatus
-import forutune.meeron.domain.model.Team
+import forutune.meeron.domain.model.*
 import forutune.meeron.domain.provider.FileProvider
 import forutune.meeron.domain.repository.MeetingRepository
 import fourtune.merron.data.model.dto.request.AgendaRequest
@@ -68,6 +65,10 @@ class MeetingRepositoryImpl @Inject constructor(
                 status = MeetingStatus.getStatus(it.meetingStatus)
             )
         }
+    }
+
+    override suspend fun getYearMeetingCount(type: CalendarType, id: Long): List<YearCount> {
+        return meetingApi.getYearMeetingCount(type.name, id).yearCountResponses.map { YearCount(it.year, it.count) }
     }
 
 }

@@ -35,3 +35,14 @@ data class AgendaResponse(
     @SerialName("agendaNumber") val agendaNumber: Long,
     @SerialName("createdAgendaId") val createdAgendaId: Long,
 )
+
+@Serializable
+data class YearCountsResponse(
+    @SerialName("yearCounts") val yearCountResponses: List<YearCountResponse>
+)
+
+@Serializable
+data class YearCountResponse(
+    @SerialName("year") val year: Int,
+    @SerialName("count") val count: Int
+)

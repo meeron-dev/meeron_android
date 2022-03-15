@@ -5,10 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -28,7 +25,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
-import forutune.meeron.domain.model.Meeting
+import forutune.meeron.domain.model.Date
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.calendar.decorator.EventDecorator
 import fourtune.meeron.presentation.ui.calendar.decorator.SelectionDecorator
@@ -64,10 +61,8 @@ fun CalendarScreen(viewModel: CalendarViewModel = hiltViewModel(), onBack: () ->
         }
     ) {
         val uiState by viewModel.uiState.collectAsState()
-        val currentDay by viewModel.currentDay().collectAsState()
 
         CalendarScreen(
-            currentDay = currentDay,
             uiState = uiState,
             topBarEvent = viewModel.topBarEvent,
             event = { event ->
@@ -77,14 +72,13 @@ fun CalendarScreen(viewModel: CalendarViewModel = hiltViewModel(), onBack: () ->
                     is CalendarViewModel.Event.Change -> viewModel.changeDay(event.day)
                     CalendarViewModel.Event.ShowAll -> showAll()
                 }
-            },
+            }
         )
     }
 }
 
 @Composable
 private fun CalendarScreen(
-    currentDay: CalendarDay,
     uiState: CalendarViewModel.UiState,
     topBarEvent: SharedFlow<CalendarViewModel.TopBarEvent>,
     event: (CalendarViewModel.Event) -> Unit = {}
@@ -98,7 +92,7 @@ private fun CalendarScreen(
     ) {
         Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
             CalendarTitle(
-                currentDay = currentDay,
+                selectedDay = uiState.selectedDay,
                 previousEvent = { event(CalendarViewModel.Event.Previous) },
                 nextEvent = { event(CalendarViewModel.Event.Next) }
             )
@@ -116,20 +110,26 @@ private fun CalendarScreen(
             fontSize = 13.sp,
             color = colorResource(id = R.color.dark_primary)
         )
-        Calendar(uiState.todayMeetings, currentDay, event, topBarEvent)
+        Calendar(uiState.selectedDay, uiState.days, topBarEvent, event)
         Divider(color = colorResource(id = R.color.white))
     }
 }
 
 @Composable
 private fun Calendar(
-    todayMeetings: List<Meeting>,
-    currentDay: CalendarDay,
-    event: (CalendarViewModel.Event) -> Unit,
+    selectedDay: Date,
+    days: List<Int>,
     topBarEvent: SharedFlow<CalendarViewModel.TopBarEvent>,
+    event: (CalendarViewModel.Event) -> Unit,
 ) {
+
     val scope = rememberCoroutineScope()
+    val decorators = remember {
+        mutableListOf<DayViewDecorator>()
+    }
     AndroidView(factory = { context ->
+        val selectionDecor by lazy { SelectionDecorator(context) }
+
         MaterialCalendarView(context).apply {
             scope.launch {
                 topBarEvent.collectLatest {
@@ -139,45 +139,47 @@ private fun Calendar(
                     }
                 }
             }
-            val selectionDecor by lazy { SelectionDecorator(context) }
+
             topbarVisible = false
             setDateTextAppearance(R.style.CalendarTextAppearance)
             setWeekDayTextAppearance(R.style.CalendarWeekAppearance)
             setBackgroundColor(ContextCompat.getColor(context, R.color.background))
 
-
-            val decorators = mutableListOf<DayViewDecorator>().apply {
-                if (todayMeetings.isNotEmpty()) {
-                    add(
-                        EventDecorator(
-                            context,
-                            CalendarDay.from(
-                                currentDay.year,
-                                currentDay.month,
-                                currentDay.day
-                            )
-                        )
-                    )
-                }
-                add(selectionDecor)
-            }
-            addDecorators(decorators)
-
+            addDecorators(selectionDecor)
             setOnDateChangedListener { widget, date, selected ->
                 selectionDecor.setDate(date)
                 widget.invalidateDecorators()
             }
             setOnMonthChangedListener { _, date ->
-                event(CalendarViewModel.Event.Change(date))
+                event(CalendarViewModel.Event.Change(Date(date.year, date.month, date.day)))
             }
 
         }
+    }, update = { calendarView ->
+        decorators.forEach(calendarView::removeDecorator)
+        decorators.clear()
+
+        if (days.isNotEmpty()) {
+            days.forEach {
+                decorators.add(
+                    EventDecorator(
+                        calendarView.context,
+                        CalendarDay.from(
+                            selectedDay.year,
+                            selectedDay.month,
+                            it
+                        )
+                    )
+                )
+            }
+        }
+        calendarView.addDecorators(decorators)
     })
 }
 
 @Composable
 private fun CalendarTitle(
-    currentDay: CalendarDay,
+    selectedDay: Date,
     previousEvent: () -> Unit,
     nextEvent: () -> Unit
 ) {
@@ -189,12 +191,12 @@ private fun CalendarTitle(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "${currentDay.year}",
+            text = "${selectedDay.year}",
             fontSize = 16.sp,
             color = colorResource(id = R.color.dark_gray)
         )
         Text(
-            text = String.format(stringResource(id = R.string.calendar_month), currentDay.month),
+            text = String.format(stringResource(id = R.string.calendar_month), selectedDay.month),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = colorResource(id = R.color.black)

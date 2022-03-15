@@ -57,3 +57,8 @@ data class MonthCountsResponse(
         @SerialName("count") val count: Int
     )
 }
+
+@Serializable
+data class DaysResponse(
+    @SerialName("days") val days: List<Int>
+)

@@ -3,10 +3,7 @@ package fourtune.merron.data.source.remote
 import fourtune.merron.data.model.dto.request.AgendaRequest
 import fourtune.merron.data.model.dto.request.MeetingRequest
 import fourtune.merron.data.model.dto.request.WorkSpaceUserIdsRequest
-import fourtune.merron.data.model.dto.response.AgendaResponses
-import fourtune.merron.data.model.dto.response.MeetingsResponse
-import fourtune.merron.data.model.dto.response.MonthCountsResponse
-import fourtune.merron.data.model.dto.response.YearCountsResponse
+import fourtune.merron.data.model.dto.response.*
 import okhttp3.MultipartBody
 import retrofit2.http.*
 
@@ -52,4 +49,11 @@ interface MeetingApi {
         @Query("id") id: Long,
         @Query("year") year: Int
     ): MonthCountsResponse
+
+    @GET("/api/meetings/days")
+    suspend fun getDateMeetingCounts(
+        @Query("type") type: String,
+        @Query("id") id: Long,
+        @Query("date") date: String
+    ): DaysResponse
 }

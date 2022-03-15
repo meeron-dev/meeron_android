@@ -79,4 +79,8 @@ class MeetingRepositoryImpl @Inject constructor(
             .map { MonthCount(it.month, it.count) }
     }
 
+    override suspend fun getDateMeetingCount(type: CalendarType, myWorkspaceUserId: Long, date: Date): List<Int> {
+        return meetingApi.getDateMeetingCounts(type.name, myWorkspaceUserId, "${date.year}/${date.month}").days
+    }
+
 }

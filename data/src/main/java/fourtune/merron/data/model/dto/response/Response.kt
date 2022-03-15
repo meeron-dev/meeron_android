@@ -9,14 +9,16 @@ data class MeetingsResponse(
 ) {
     @Serializable
     data class MeetingResponse(
-        @SerialName("meetingId") val meetingId: Long,
-        @SerialName("meetingName") val meetingName: String,
-        @SerialName("meetingDate") val meetingDate: String,
-        @SerialName("startTime") val startTime: String,
-        @SerialName("endTime") val endTime: String,
-        @SerialName("operationTeamId") val operationTeamId: Long,
-        @SerialName("operationTeamName") val operationTeamName: String,
-        @SerialName("meetingStatus") val meetingStatus: String,
+        @SerialName("meetingId") val meetingId: Long = -1,
+        @SerialName("meetingName") val meetingName: String = "",
+        @SerialName("meetingDate") val meetingDate: String = "",
+        @SerialName("startTime") val startTime: String = "",
+        @SerialName("endTime") val endTime: String = "",
+        @SerialName("operationTeamId") val operationTeamId: Long = -1,
+        @SerialName("operationTeamName") val operationTeamName: String = "",
+        @SerialName("meetingStatus") val meetingStatus: String = "",
+        @SerialName("workspaceId") val workspaceId: Long? = null,
+        @SerialName("workspaceName") val workspaceName: String? = null,
     )
 }
 

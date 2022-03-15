@@ -56,4 +56,11 @@ interface MeetingApi {
         @Query("id") id: Long,
         @Query("date") date: String
     ): DaysResponse
+
+    @GET("/api/meetings/day")
+    suspend fun getDateMeeting(
+        @Query("type") type: String,
+        @Query("id") id: Long,
+        @Query("date") date: String
+    ): MeetingsResponse
 }

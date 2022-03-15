@@ -79,8 +79,29 @@ class MeetingRepositoryImpl @Inject constructor(
             .map { MonthCount(it.month, it.count) }
     }
 
-    override suspend fun getDateMeetingCount(type: CalendarType, myWorkspaceUserId: Long, date: Date): List<Int> {
-        return meetingApi.getDateMeetingCounts(type.name, myWorkspaceUserId, "${date.year}/${date.month}").days
+    override suspend fun getDateMeetingCount(type: CalendarType, id: Long, date: Date): List<Int> {
+        return meetingApi.getDateMeetingCounts(type.name, id, "${date.year}/${date.month}").days
     }
 
+    override suspend fun getDateMeeting(type: CalendarType, id: Long, date: Date): List<Pair<Meeting, WorkSpaceInfo?>> {
+        return meetingApi.getDateMeeting(
+            type.name,
+            id,
+            "${date.year}/${date.month}/${date.hourOfDay}"
+        ).meetings
+            .map { resp ->
+                with(resp) {
+                    val meeting = Meeting(
+                        meetingId = id,
+                        title = meetingName,
+                        time = "$startTime ~ $endTime",
+                    )
+                    val workSpaceInfo = if (workspaceId != null && workspaceName != null) WorkSpaceInfo(
+                        workspaceId,
+                        workspaceName
+                    ) else null
+                    meeting to workSpaceInfo
+                }
+            }
+    }
 }

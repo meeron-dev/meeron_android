@@ -3,8 +3,12 @@ package fourtune.meeron.presentation.ui.calendar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,14 +30,18 @@ import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.DayViewDecorator
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import forutune.meeron.domain.model.Date
+import forutune.meeron.domain.model.Meeting
+import forutune.meeron.domain.model.WorkSpaceInfo
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.calendar.decorator.EventDecorator
 import fourtune.meeron.presentation.ui.calendar.decorator.SelectionDecorator
 import fourtune.meeron.presentation.ui.common.CircleBackgroundText
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -69,8 +77,12 @@ fun CalendarScreen(viewModel: CalendarViewModel = hiltViewModel(), onBack: () ->
                 when (event) {
                     CalendarViewModel.Event.Next -> viewModel.goToNext()
                     CalendarViewModel.Event.Previous -> viewModel.goToPrevious()
-                    is CalendarViewModel.Event.Change -> viewModel.changeDay(event.day)
+                    is CalendarViewModel.Event.ChangeMonth -> viewModel.changeMonth(event.date)
+                    is CalendarViewModel.Event.ChangeDay -> viewModel.changeDay(event.date)
                     CalendarViewModel.Event.ShowAll -> showAll()
+                    is CalendarViewModel.Event.SelectMeeting -> {
+                        Timber.tag("🔥zero:CalendarScreen").d("click")
+                    }
                 }
             }
         )
@@ -79,20 +91,44 @@ fun CalendarScreen(viewModel: CalendarViewModel = hiltViewModel(), onBack: () ->
 
 @Composable
 private fun CalendarScreen(
-    uiState: CalendarViewModel.UiState,
-    topBarEvent: SharedFlow<CalendarViewModel.TopBarEvent>,
+    uiState: CalendarViewModel.UiState = CalendarViewModel.UiState(),
+    topBarEvent: SharedFlow<CalendarViewModel.TopBarEvent> = MutableSharedFlow(),
     event: (CalendarViewModel.Event) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
             .background(colorResource(id = R.color.background))
+            .fillMaxSize()
             .padding(top = 36.dp),
-        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        CalendarContents(
+            selectedDay = uiState.selectedDay,
+            days = uiState.days,
+            topBarEvent = topBarEvent,
+            event = event
+        )
+        Divider(color = colorResource(id = R.color.white), thickness = 14.dp)
+        SelectedMeetings(
+            selectedDay = uiState.selectedDay,
+            selectedMeetings = uiState.selectedMeetings,
+            myWorkSpaceId = uiState.myWorkSpaceId,
+            event = event
+        )
+    }
+}
+
+@Composable
+fun CalendarContents(
+    selectedDay: Date,
+    days: List<Int>,
+    topBarEvent: SharedFlow<CalendarViewModel.TopBarEvent>,
+    event: (CalendarViewModel.Event) -> Unit
+) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Row(horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
             CalendarTitle(
-                selectedDay = uiState.selectedDay,
+                selectedDay = selectedDay,
                 previousEvent = { event(CalendarViewModel.Event.Previous) },
                 nextEvent = { event(CalendarViewModel.Event.Next) }
             )
@@ -110,9 +146,48 @@ private fun CalendarScreen(
             fontSize = 13.sp,
             color = colorResource(id = R.color.dark_primary)
         )
-        Calendar(uiState.selectedDay, uiState.days, topBarEvent, event)
-        Divider(color = colorResource(id = R.color.white))
+        Calendar(selectedDay, days, topBarEvent, event)
     }
+}
+
+@Composable
+fun SelectedMeetings(
+    selectedDay: Date,
+    selectedMeetings: List<Pair<Meeting, WorkSpaceInfo?>>,
+    myWorkSpaceId: Long,
+    event: (CalendarViewModel.Event) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 20.dp)
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(
+            text = "${selectedDay.month}월 ${selectedDay.hourOfDay}일",
+            fontSize = 19.sp,
+            color = colorResource(id = R.color.black)
+        )
+        Spacer(modifier = Modifier.padding(2.dp))
+        Text(
+            text = "${selectedMeetings.size}개의 회의가 존재합니다.",
+            fontSize = 13.sp,
+            color = colorResource(id = R.color.dark_gray)
+        )
+        Spacer(modifier = Modifier.padding(18.dp))
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(11.dp)) {
+            itemsIndexed(selectedMeetings) { index, (meeting, info) ->
+                CalendarDetail(
+                    index = index,
+                    meeting = meeting,
+                    info = info,
+                    myWorkSpaceId = myWorkSpaceId,
+                    event = event
+                )
+            }
+        }
+    }
+
 }
 
 @Composable
@@ -148,10 +223,11 @@ private fun Calendar(
             addDecorators(selectionDecor)
             setOnDateChangedListener { widget, date, selected ->
                 selectionDecor.setDate(date)
+                event(CalendarViewModel.Event.ChangeDay(Date(date.year, date.month, date.day)))
                 widget.invalidateDecorators()
             }
             setOnMonthChangedListener { _, date ->
-                event(CalendarViewModel.Event.Change(Date(date.year, date.month, date.day)))
+                event(CalendarViewModel.Event.ChangeMonth(Date(date.year, date.month, date.day)))
             }
 
         }
@@ -208,8 +284,23 @@ private fun CalendarTitle(
 }
 
 @Composable
-fun CalendarDetail(index: Int = 0, isMyCalendar: Boolean = false) {
-    Row {
+fun CalendarDetail(
+    index: Int = 0,
+    meeting: Meeting,
+    info: WorkSpaceInfo? = null,
+    myWorkSpaceId: Long = -1,
+    event: (CalendarViewModel.Event) -> Unit = {}
+) {
+    Row(
+        modifier = Modifier.clickable(
+            interactionSource = MutableInteractionSource(),
+            indication = rememberRipple(color = colorResource(id = R.color.primary)),
+            onClick = {
+                event(CalendarViewModel.Event.SelectMeeting(meeting))
+            },
+            enabled = myWorkSpaceId == info?.workSpaceId
+        )
+    ) {
         CircleBackgroundText(
             modifier = Modifier
                 .background(colorResource(id = R.color.primary))
@@ -219,17 +310,21 @@ fun CalendarDetail(index: Int = 0, isMyCalendar: Boolean = false) {
         )
         Column(modifier = Modifier.padding(horizontal = 20.dp)) {
             Text(
-                text = "title 입니다.",
+                text = meeting.title,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = colorResource(id = R.color.dark_primary)
             )
             Spacer(modifier = Modifier.padding(8.dp))
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(text = "AM 10:00~ AM 11:30", fontSize = 12.sp, color = colorResource(id = R.color.medium_primary))
-                if (isMyCalendar) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = meeting.time, fontSize = 12.sp, color = colorResource(id = R.color.medium_primary))
+                if (myWorkSpaceId != info?.workSpaceId) {
                     Text(
-                        text = "Team name",
+                        text = info?.workSpaceName.orEmpty(),
                         fontSize = 12.sp,
                         color = colorResource(id = R.color.medium_primary),
                     )
@@ -246,8 +341,8 @@ fun CalendarDetail(index: Int = 0, isMyCalendar: Boolean = false) {
 private fun CalendarDetailPrev() {
     MeeronTheme {
         Column {
-            CalendarDetail(isMyCalendar = true)
-            CalendarDetail(isMyCalendar = false)
+            CalendarDetail(meeting = Meeting(), info = WorkSpaceInfo(-1, "meeron"))
+            CalendarDetail(meeting = Meeting())
         }
     }
 }
@@ -256,6 +351,6 @@ private fun CalendarDetailPrev() {
 @Composable
 private fun CalendarPrev() {
     MeeronTheme {
-        CalendarScreen()
+        CalendarScreen(uiState = CalendarViewModel.UiState())
     }
 }

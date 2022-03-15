@@ -3,6 +3,7 @@ package fourtune.meeron.presentation.ui.calendar.all
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import forutune.meeron.domain.model.MonthCount
 import forutune.meeron.domain.model.YearCount
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.Dot
@@ -54,18 +56,30 @@ fun ShowAllScreen(viewModel: ShowAllViewModel = hiltViewModel(), onAction: () ->
             }
         }
     }) {
-        ShowAllScreen(uiState.yearCounts)
+        ShowAllScreen(
+            yearCounts = uiState.yearCounts,
+            monthCounts = uiState.monthCounts,
+            event = { event ->
+                when (event) {
+                    is ShowAllViewModel.Event.ClickYear -> viewModel.loadMonthCounts(event.year)
+                }
+            }
+        )
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun ShowAllScreen(yearCounts: List<YearCount>) {
+private fun ShowAllScreen(
+    yearCounts: List<YearCount>,
+    monthCounts: List<MonthCount>,
+    event: (ShowAllViewModel.Event) -> Unit = {}
+) {
     Row {
         Column {
             LazyColumn(contentPadding = PaddingValues(vertical = 25.dp)) {
                 items(items = yearCounts) {
-                    YearItem(year = "${it.year}년", count = it.count)
+                    YearItem(year = it.year, count = it.count, event = event)
                 }
             }
 
@@ -77,29 +91,30 @@ private fun ShowAllScreen(yearCounts: List<YearCount>) {
             cells = GridCells.Fixed(2),
             contentPadding = PaddingValues(vertical = 15.dp)
         ) {
-            (0 until 12).forEach {
-                item { MonthItem(isNew = true, month = it) }
+            items(monthCounts) {
+                MonthItem(month = it.month, count = it.count, isNew = true)
             }
         }
     }
 }
 
 @Composable
-private fun YearItem(modifier: Modifier = Modifier, year: String, count: Int) {
-    val detail = "${count}개의 회의"
+private fun YearItem(modifier: Modifier = Modifier, year: Int, count: Int, event: (ShowAllViewModel.Event) -> Unit) {
     Column(
-        modifier = modifier.padding(vertical = 25.dp, horizontal = 33.dp),
+        modifier = modifier
+            .clickable { event(ShowAllViewModel.Event.ClickYear(year)) }
+            .padding(vertical = 25.dp, horizontal = 33.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = year,
+            text = "${year}년",
             color = colorResource(id = R.color.primary),
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.padding(3.dp))
         Text(
-            text = detail,
+            text = "${count}개의 회의",
             color = colorResource(id = R.color.dark_gray),
             fontSize = 12.sp
         )
@@ -107,14 +122,14 @@ private fun YearItem(modifier: Modifier = Modifier, year: String, count: Int) {
 }
 
 @Composable
-private fun MonthItem(modifier: Modifier = Modifier, month: Int = 0, isNew: Boolean = false) {
+private fun MonthItem(modifier: Modifier = Modifier, month: Int = 0, count: Int = 0, isNew: Boolean = false) {
     Column(
         modifier = modifier.padding(vertical = 15.dp, horizontal = 25.dp),
         verticalArrangement = Arrangement.Center
     ) {
         Row {
             Text(
-                text = "${month + 1}월",
+                text = "${month}월",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = colorResource(id = R.color.dark_gray)
@@ -122,7 +137,7 @@ private fun MonthItem(modifier: Modifier = Modifier, month: Int = 0, isNew: Bool
             if (isNew) Dot(color = colorResource(id = R.color.primary), size = 6.dp)
         }
         Spacer(modifier = Modifier.padding(10.dp))
-        Text(text = "10개의 회의", fontSize = 12.sp, color = colorResource(id = R.color.gray))
+        Text(text = "${count}개의 회의", fontSize = 12.sp, color = colorResource(id = R.color.gray))
     }
 }
 
@@ -138,7 +153,7 @@ private fun MonthItemPrev() {
 @Composable
 private fun YearItemPrev() {
     MeeronTheme {
-        YearItem(year = "2022년", count = 50)
+        YearItem(year = 2022, count = 50, event = {})
     }
 }
 

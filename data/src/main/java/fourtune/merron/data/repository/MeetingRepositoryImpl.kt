@@ -68,7 +68,15 @@ class MeetingRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getYearMeetingCount(type: CalendarType, id: Long): List<YearCount> {
-        return meetingApi.getYearMeetingCount(type.name, id).yearCountResponses.map { YearCount(it.year, it.count) }
+        return meetingApi.getYearMeetingCount(type.name, id)
+            .yearCountResponses
+            .map { YearCount(it.year, it.count) }
+    }
+
+    override suspend fun getMonthMeetingCount(type: CalendarType, id: Long, year: Int): List<MonthCount> {
+        return meetingApi.getMonthMeetingCount(type.name, id, year)
+            .monthCountResponses
+            .map { MonthCount(it.month, it.count) }
     }
 
 }

@@ -1,10 +1,14 @@
 package fourtune.meeron.presentation.ui.calendar.all
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.CalendarType
+import forutune.meeron.domain.model.MonthCount
 import forutune.meeron.domain.model.YearCount
+import forutune.meeron.domain.usecase.meeting.GetMonthMeetingCountUseCase
 import forutune.meeron.domain.usecase.meeting.GetYearMeetingCountUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,22 +19,43 @@ import javax.inject.Inject
 @HiltViewModel
 class ShowAllViewModel @Inject constructor(
     private val getYearMeetingCountUseCase: GetYearMeetingCountUseCase,
+    private val getMonthMeetingCountUseCase: GetMonthMeetingCountUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
 
+    private val calendarType: CalendarType = savedStateHandle[Const.CalendarType] ?: CalendarType.WORKSPACE_USER
+
     init {
+        viewModelScope.launch {
+            val yearCounts = getYearMeetingCountUseCase(calendarType)
+            val monthCounts = getMonthMeetingCountUseCase(calendarType, yearCounts.first().year)
+            _uiState.update {
+                it.copy(
+                    yearCounts = yearCounts,
+                    monthCounts = monthCounts
+                )
+            }
+        }
+    }
+
+    fun loadMonthCounts(year: Int) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    yearCounts = getYearMeetingCountUseCase(CalendarType.WORKSPACE_USER)
+                    monthCounts = getMonthMeetingCountUseCase(calendarType, year)
                 )
             }
         }
     }
 
     data class UiState(
-        val yearCounts: List<YearCount> = emptyList()
+        val yearCounts: List<YearCount> = emptyList(),
+        val monthCounts: List<MonthCount> = emptyList(),
     )
+
+    sealed interface Event {
+        class ClickYear(val year: Int) : Event
+    }
 }

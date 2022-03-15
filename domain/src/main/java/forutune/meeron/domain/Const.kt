@@ -5,4 +5,5 @@ object Const {
     const val Time = "time"
 
     const val Meeting = "meeting"
+    const val CalendarType = "calendar_type"
 }

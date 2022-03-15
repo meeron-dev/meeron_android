@@ -25,6 +25,9 @@ class CalendarViewModel @Inject constructor(
     private val _event = MutableSharedFlow<Event>()
     fun event() = _event.asSharedFlow()
 
+    private val _topBarEvent = MutableSharedFlow<TopBarEvent>()
+    val topBarEvent = _topBarEvent.asSharedFlow()
+
     init {
         viewModelScope.launch {
             _uiState.update {
@@ -42,13 +45,13 @@ class CalendarViewModel @Inject constructor(
 
     fun goToPrevious() {
         viewModelScope.launch {
-            _event.emit(Event.Previous)
+            _topBarEvent.emit(TopBarEvent.Previous)
         }
     }
 
     fun goToNext() {
         viewModelScope.launch {
-            _event.emit(Event.Next)
+            _topBarEvent.emit(TopBarEvent.Next)
         }
     }
 
@@ -61,6 +64,11 @@ class CalendarViewModel @Inject constructor(
         object Next : Event
         class Change(val day: CalendarDay) : Event
         object ShowAll : Event
+    }
+
+    sealed interface TopBarEvent {
+        object Previous : TopBarEvent
+        object Next : TopBarEvent
     }
 
 }

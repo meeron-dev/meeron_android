@@ -8,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -33,6 +34,9 @@ import fourtune.meeron.presentation.ui.calendar.decorator.EventDecorator
 import fourtune.meeron.presentation.ui.calendar.decorator.SelectionDecorator
 import fourtune.meeron.presentation.ui.common.CircleBackgroundText
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -64,15 +68,17 @@ fun CalendarScreen(viewModel: CalendarViewModel = hiltViewModel(), onBack: () ->
 
         CalendarScreen(
             currentDay = currentDay,
-            uiState = uiState
-        ) { event ->
-            when (event) {
-                CalendarViewModel.Event.Next -> viewModel.goToNext()
-                CalendarViewModel.Event.Previous -> viewModel.goToPrevious()
-                is CalendarViewModel.Event.Change -> viewModel.changeDay(event.day)
-                CalendarViewModel.Event.ShowAll -> showAll()
-            }
-        }
+            uiState = uiState,
+            topBarEvent = viewModel.topBarEvent,
+            event = { event ->
+                when (event) {
+                    CalendarViewModel.Event.Next -> viewModel.goToNext()
+                    CalendarViewModel.Event.Previous -> viewModel.goToPrevious()
+                    is CalendarViewModel.Event.Change -> viewModel.changeDay(event.day)
+                    CalendarViewModel.Event.ShowAll -> showAll()
+                }
+            },
+        )
     }
 }
 
@@ -80,6 +86,7 @@ fun CalendarScreen(viewModel: CalendarViewModel = hiltViewModel(), onBack: () ->
 private fun CalendarScreen(
     currentDay: CalendarDay,
     uiState: CalendarViewModel.UiState,
+    topBarEvent: SharedFlow<CalendarViewModel.TopBarEvent>,
     event: (CalendarViewModel.Event) -> Unit = {}
 ) {
     Column(
@@ -109,7 +116,7 @@ private fun CalendarScreen(
             fontSize = 13.sp,
             color = colorResource(id = R.color.dark_primary)
         )
-        Calendar(uiState.todayMeetings, currentDay, event)
+        Calendar(uiState.todayMeetings, currentDay, event, topBarEvent)
         Divider(color = colorResource(id = R.color.white))
     }
 }
@@ -118,10 +125,20 @@ private fun CalendarScreen(
 private fun Calendar(
     todayMeetings: List<Meeting>,
     currentDay: CalendarDay,
-    event: (CalendarViewModel.Event) -> Unit = {}
+    event: (CalendarViewModel.Event) -> Unit,
+    topBarEvent: SharedFlow<CalendarViewModel.TopBarEvent>,
 ) {
+    val scope = rememberCoroutineScope()
     AndroidView(factory = { context ->
         MaterialCalendarView(context).apply {
+            scope.launch {
+                topBarEvent.collectLatest {
+                    when (it) {
+                        CalendarViewModel.TopBarEvent.Next -> goToNext()
+                        CalendarViewModel.TopBarEvent.Previous -> goToPrevious()
+                    }
+                }
+            }
             val selectionDecor by lazy { SelectionDecorator(context) }
             topbarVisible = false
             setDateTextAppearance(R.style.CalendarTextAppearance)

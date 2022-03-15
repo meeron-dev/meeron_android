@@ -4,6 +4,7 @@ import java.io.Serializable
 
 @kotlinx.serialization.Serializable
 data class Meeting(
+    val meetingId: Long = -1,
     val title: String = "",
     val date: Date = Date(),
     val time: String = "",
@@ -11,5 +12,16 @@ data class Meeting(
     val ownerIds: List<Long> = emptyList(),
     val team: Team = Team(),
     val agenda: List<Agenda> = emptyList(),
-    val participants: List<WorkspaceUser> = emptyList()
+    val participants: List<WorkspaceUser> = emptyList(),
+    val status: MeetingStatus = MeetingStatus.CREATING
 ) : Serializable
+
+enum class MeetingStatus {
+    CREATING, EXPECT, END;
+
+    companion object {
+        fun getStatus(value: String): MeetingStatus {
+            return valueOf(value)
+        }
+    }
+}

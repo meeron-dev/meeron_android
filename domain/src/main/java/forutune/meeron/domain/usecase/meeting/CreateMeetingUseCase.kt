@@ -1,4 +1,4 @@
-package forutune.meeron.domain.usecase
+package forutune.meeron.domain.usecase.meeting
 
 import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.repository.MeetingRepository

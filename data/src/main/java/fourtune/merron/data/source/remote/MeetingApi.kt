@@ -1,7 +1,7 @@
 package fourtune.merron.data.source.remote
 
-import fourtune.merron.data.model.dto.MeetingDto
 import fourtune.merron.data.model.dto.request.AgendaRequest
+import fourtune.merron.data.model.dto.request.MeetingRequest
 import fourtune.merron.data.model.dto.request.WorkSpaceUserIdsRequest
 import fourtune.merron.data.model.dto.response.AgendaResponses
 import fourtune.merron.data.model.dto.response.MeetingsResponse
@@ -11,7 +11,7 @@ import retrofit2.http.*
 
 interface MeetingApi {
     @POST("/api/meetings")
-    suspend fun createMeeting(@Body meetingDto: MeetingDto): retrofit2.Response<fourtune.merron.data.model.dto.response.MeetingIdResponse>
+    suspend fun createMeeting(@Body meetingRequest: MeetingRequest): retrofit2.Response<fourtune.merron.data.model.dto.response.MeetingIdResponse>
 
     @POST("/api/meetings/{meetingId}/attendees")
     suspend fun addParticipants(
@@ -33,7 +33,7 @@ interface MeetingApi {
     )
 
     @GET("/api/meetings/today")
-    suspend fun getMeeting(
+    suspend fun getTodayMeeting(
         @Query("workspaceId") workspaceId: Long,
         @Query("workspaceUserId") workspaceUserId: Long,
     ): MeetingsResponse

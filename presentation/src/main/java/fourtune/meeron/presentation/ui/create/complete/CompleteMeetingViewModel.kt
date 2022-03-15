@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.Meeting
-import forutune.meeron.domain.usecase.CreateMeetingUseCase
 import forutune.meeron.domain.usecase.me.GetMyWorkSpaceUserUseCase
+import forutune.meeron.domain.usecase.meeting.CreateMeetingUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber

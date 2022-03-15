@@ -35,4 +35,3 @@ data class AgendaResponse(
     @SerialName("agendaNumber") val agendaNumber: Long,
     @SerialName("createdAgendaId") val createdAgendaId: Long,
 )
-

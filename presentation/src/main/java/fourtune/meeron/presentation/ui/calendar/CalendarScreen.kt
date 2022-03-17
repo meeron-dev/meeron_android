@@ -45,7 +45,11 @@ import timber.log.Timber
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun CalendarScreen(viewModel: CalendarViewModel = hiltViewModel(), onBack: () -> Unit = {}, showAll: () -> Unit = {}) {
+fun CalendarScreen(
+    viewModel: CalendarViewModel = hiltViewModel(),
+    onBack: () -> Unit = {},
+    showAll: (Date) -> Unit = {}
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -79,7 +83,7 @@ fun CalendarScreen(viewModel: CalendarViewModel = hiltViewModel(), onBack: () ->
                     CalendarViewModel.Event.Previous -> viewModel.goToPrevious()
                     is CalendarViewModel.Event.ChangeMonth -> viewModel.changeMonth(event.date)
                     is CalendarViewModel.Event.ChangeDay -> viewModel.changeDay(event.date)
-                    CalendarViewModel.Event.ShowAll -> showAll()
+                    is CalendarViewModel.Event.ShowAll -> showAll(event.date)
                     is CalendarViewModel.Event.SelectMeeting -> {
                         Timber.tag("🔥zero:CalendarScreen").d("click")
                     }
@@ -135,7 +139,7 @@ fun CalendarContents(
         }
         Text(
             modifier = Modifier
-                .clickable(onClick = { event(CalendarViewModel.Event.ShowAll) })
+                .clickable(onClick = { event(CalendarViewModel.Event.ShowAll(selectedDay)) })
                 .align(Alignment.End)
                 .padding(horizontal = 20.dp, vertical = 10.dp),
             text = buildAnnotatedString {
@@ -174,8 +178,10 @@ fun SelectedMeetings(
             fontSize = 13.sp,
             color = colorResource(id = R.color.dark_gray)
         )
-        Spacer(modifier = Modifier.padding(18.dp))
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(11.dp)) {
+        LazyColumn(
+            contentPadding = PaddingValues(vertical = 18.dp),
+            verticalArrangement = Arrangement.spacedBy(11.dp)
+        ) {
             itemsIndexed(selectedMeetings) { index, (meeting, info) ->
                 CalendarDetail(
                     index = index,

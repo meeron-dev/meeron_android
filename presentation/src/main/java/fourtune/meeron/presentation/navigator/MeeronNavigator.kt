@@ -12,6 +12,7 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import forutune.meeron.domain.Const
 import fourtune.meeron.presentation.R
+import fourtune.meeron.presentation.navigator.ext.DateType
 import fourtune.meeron.presentation.navigator.ext.encodeJson
 import fourtune.meeron.presentation.ui.calendar.CalendarScreen
 import fourtune.meeron.presentation.ui.calendar.all.ShowAllScreen
@@ -97,11 +98,16 @@ fun MeeronNavigator() {
         ) {
             CalendarScreen(
                 onBack = { navController.navigateUp() },
-                showAll = { navController.navigate(Navigate.ShowAll.route()) }
+                showAll = { date ->
+                    navController.navigate(Navigate.ShowAll.route(date.encodeJson()))
+                }
             )
         }
 
-        composable(Navigate.ShowAll.route()) {
+        composable(
+            route = Navigate.ShowAll.destination(Const.Date),
+            arguments = listOf(element = navArgument(Const.Date) { type = DateType() })
+        ) {
             ShowAllScreen(onAction = { navController.navigateUp() })
         }
 

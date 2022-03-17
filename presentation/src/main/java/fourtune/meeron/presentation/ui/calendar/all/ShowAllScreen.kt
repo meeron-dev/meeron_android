@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import forutune.meeron.domain.model.Date
 import forutune.meeron.domain.model.MonthCount
 import forutune.meeron.domain.model.YearCount
 import fourtune.meeron.presentation.R
@@ -59,12 +60,13 @@ fun ShowAllScreen(viewModel: ShowAllViewModel = hiltViewModel(), onAction: () ->
         ShowAllScreen(
             yearCounts = uiState.yearCounts,
             monthCounts = uiState.monthCounts,
-            event = { event ->
-                when (event) {
-                    is ShowAllViewModel.Event.ClickYear -> viewModel.loadMonthCounts(event.year)
-                }
+            selectedDate = uiState.selectedDate
+        ) { event ->
+            when (event) {
+                is ShowAllViewModel.Event.ClickYear -> viewModel.loadMonthCounts(event.year)
+                is ShowAllViewModel.Event.ClickMonth -> viewModel.selectMonth(event.month)
             }
-        )
+        }
     }
 }
 
@@ -73,13 +75,14 @@ fun ShowAllScreen(viewModel: ShowAllViewModel = hiltViewModel(), onAction: () ->
 private fun ShowAllScreen(
     yearCounts: List<YearCount>,
     monthCounts: List<MonthCount>,
+    selectedDate: Date,
     event: (ShowAllViewModel.Event) -> Unit = {}
 ) {
     Row {
         Column {
             LazyColumn(contentPadding = PaddingValues(vertical = 25.dp)) {
                 items(items = yearCounts) {
-                    YearItem(year = it.year, count = it.count, event = event)
+                    YearItem(year = it.year, count = it.count, selectedYear = selectedDate.year, event = event)
                 }
             }
 
@@ -91,15 +94,27 @@ private fun ShowAllScreen(
             cells = GridCells.Fixed(2),
             contentPadding = PaddingValues(vertical = 15.dp)
         ) {
-            items(monthCounts) {
-                MonthItem(month = it.month, count = it.count, isNew = true)
+            items(items = monthCounts, key = { "${it.month}:${it.count}" }) {
+                MonthItem(
+                    modifier = Modifier.clickable { event(ShowAllViewModel.Event.ClickMonth(it.month)) },
+                    month = it.month,
+                    count = it.count,
+                    isNew = true,
+                    selectedMonth = selectedDate.month
+                )
             }
         }
     }
 }
 
 @Composable
-private fun YearItem(modifier: Modifier = Modifier, year: Int, count: Int, event: (ShowAllViewModel.Event) -> Unit) {
+private fun YearItem(
+    modifier: Modifier = Modifier,
+    year: Int,
+    count: Int,
+    selectedYear: Int = 0,
+    event: (ShowAllViewModel.Event) -> Unit
+) {
     Column(
         modifier = modifier
             .clickable { event(ShowAllViewModel.Event.ClickYear(year)) }
@@ -108,7 +123,7 @@ private fun YearItem(modifier: Modifier = Modifier, year: Int, count: Int, event
     ) {
         Text(
             text = "${year}년",
-            color = colorResource(id = R.color.primary),
+            color = colorResource(id = if (selectedYear == year) R.color.primary else R.color.dark_gray),
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold
         )
@@ -122,7 +137,13 @@ private fun YearItem(modifier: Modifier = Modifier, year: Int, count: Int, event
 }
 
 @Composable
-private fun MonthItem(modifier: Modifier = Modifier, month: Int = 0, count: Int = 0, isNew: Boolean = false) {
+private fun MonthItem(
+    modifier: Modifier = Modifier,
+    month: Int = 0,
+    count: Int = 0,
+    isNew: Boolean = false,
+    selectedMonth: Int = 0
+) {
     Column(
         modifier = modifier.padding(vertical = 15.dp, horizontal = 25.dp),
         verticalArrangement = Arrangement.Center
@@ -132,12 +153,16 @@ private fun MonthItem(modifier: Modifier = Modifier, month: Int = 0, count: Int 
                 text = "${month}월",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = colorResource(id = R.color.dark_gray)
+                color = colorResource(id = if (selectedMonth == month) R.color.primary else R.color.dark_gray)
             )
             if (isNew) Dot(color = colorResource(id = R.color.primary), size = 6.dp)
         }
         Spacer(modifier = Modifier.padding(10.dp))
-        Text(text = "${count}개의 회의", fontSize = 12.sp, color = colorResource(id = R.color.gray))
+        Text(
+            text = "${count}개의 회의",
+            fontSize = 12.sp,
+            color = colorResource(id = if (selectedMonth == month) R.color.primary else R.color.dark_gray)
+        )
     }
 }
 
@@ -153,7 +178,7 @@ private fun MonthItemPrev() {
 @Composable
 private fun YearItemPrev() {
     MeeronTheme {
-        YearItem(year = 2022, count = 50, event = {})
+        YearItem(year = 2022, count = 50) {}
     }
 }
 

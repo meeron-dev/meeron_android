@@ -101,8 +101,8 @@ class CalendarViewModel @Inject constructor(
         object Next : Event
         class ChangeMonth(val date: Date) : Event
         class ChangeDay(val date: Date) : Event
-        object ShowAll : Event
-        class SelectMeeting(val meeting: Meeting) :Event
+        class ShowAll(val date: Date) : Event
+        class SelectMeeting(val meeting: Meeting) : Event
     }
 
     sealed interface TopBarEvent {

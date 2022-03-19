@@ -1,5 +1,7 @@
 package fourtune.meeron.presentation
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.activity.ComponentActivity
@@ -28,6 +30,12 @@ class MainActivity : ComponentActivity() {
                 LinearLayout.LayoutParams.MATCH_PARENT
             )
         )
+
+        if (intent.action == Intent.ACTION_VIEW) {
+            val workSpaceId = intent.data?.getQueryParameter("id")
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://meeron?id=$workSpaceId")))
+        }
+
         viewModel.event.onEach {
             isReady = true
         }.launchIn(lifecycleScope)

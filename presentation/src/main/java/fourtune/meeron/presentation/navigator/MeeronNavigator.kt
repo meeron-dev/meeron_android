@@ -27,8 +27,10 @@ import fourtune.meeron.presentation.ui.login.LoginScreen
 
 sealed interface Navigate {
     fun route() = requireNotNull(this::class.qualifiedName)
-    fun destination(vararg path: Any) = route() + path.joinToString("") { "/{$it}" }
     fun route(vararg argument: Any) = route() + argument.joinToString("") { "/$it" }
+    fun deepLink(vararg argument: Any) = HOST + queries(argument)
+
+    fun destination(vararg path: Any) = route() + path.joinToString("") { "/{$it}" }
 
     object Login : Navigate
     object Calendar : Navigate
@@ -48,6 +50,16 @@ sealed interface Navigate {
         object Participants : CreateMeeting
         object Complete : CreateMeeting
     }
+
+    private fun queries(vararg argument: Any) = argument.mapIndexed { index, arg ->
+        val prefix = if (index == 0) "?"
+        else "&"
+        "$prefix$arg={$arg}"
+    }.joinToString("")
+
+    companion object {
+        const val HOST = "meeron"
+    }
 }
 
 
@@ -60,7 +72,6 @@ fun MeeronNavigator() {
 //        startDestination = Navigate.BottomNavi.Home.route()
         startDestination = Navigate.Login.route()
     ) {
-
         composable(route = Navigate.Login.route()) {
             LoginScreen(isLoginSuccess = {
                 navController.popBackStack()

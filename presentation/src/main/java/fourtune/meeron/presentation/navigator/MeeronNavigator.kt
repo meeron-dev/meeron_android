@@ -13,6 +13,7 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import forutune.meeron.domain.Const
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.navigator.ext.encodeJson
+import fourtune.meeron.presentation.ui.TOSScreen
 import fourtune.meeron.presentation.ui.calendar.CalendarScreen
 import fourtune.meeron.presentation.ui.calendar.all.ShowAllScreen
 import fourtune.meeron.presentation.ui.create.agenda.CreateAgendaScreen
@@ -34,6 +35,8 @@ sealed interface Navigate {
     object Login : Navigate
     object Calendar : Navigate
     object ShowAll : Navigate
+
+    object TOS : Navigate
 
     sealed class BottomNavi(@DrawableRes val image: Int, @StringRes val text: Int) : Navigate {
         object Home : BottomNavi(R.drawable.ic_navi_home, R.string.home)
@@ -57,7 +60,7 @@ sealed interface Navigate {
     }.joinToString("")
 
     companion object {
-        const val HOST = "meeron"
+        private const val HOST = "meeron"
     }
 }
 
@@ -68,14 +71,20 @@ fun MeeronNavigator() {
     val navController = rememberAnimatedNavController()
     AnimatedNavHost(
         navController = navController,
-//        startDestination = Navigate.BottomNavi.Home.route()
-        startDestination = Navigate.Login.route()
+        startDestination = Navigate.TOS.route()
+//        startDestination = Navigate.Login.route()
     ) {
         composable(route = Navigate.Login.route()) {
             LoginScreen(isLoginSuccess = {
                 navController.popBackStack()
                 navController.navigate(Navigate.BottomNavi.Home.route())
             })
+        }
+
+        composable(route = Navigate.TOS.route()) {
+            TOSScreen(
+                onNext = {}
+            )
         }
 
         composable(route = Navigate.BottomNavi.Home.route()) {

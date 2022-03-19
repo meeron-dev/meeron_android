@@ -41,6 +41,7 @@ dependencies {
     implementation(Dep.Accompanist.permission)
 
     implementation(Dep.AndroidX.material)
+    implementation(Dep.AndroidX.splashScreen)
     implementation(Dep.AndroidX.Lifecycle.composeViewModel)
     implementation(Dep.AndroidX.Lifecycle.viewModel)
 

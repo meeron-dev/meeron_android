@@ -18,7 +18,7 @@ object Dep {
     object AndroidX {
         const val startUp = "androidx.startup:startup-runtime:1.1.0"
         const val material = "com.google.android.material:material:1.6.0-alpha02"
-
+        const val splashScreen = "androidx.core:core-splashscreen:1.0.0-beta01"
         object Activity {
             const val activity = "androidx.activity:activity-ktx:1.4.0"
             const val compose = "androidx.activity:activity-compose:1.4.0"

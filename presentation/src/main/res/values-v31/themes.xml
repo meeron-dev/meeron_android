@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Meeron" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:timePickerDialogTheme">@style/TimePickerStyle</item>
+        <item name="android:datePickerDialogTheme">@style/DatePickerStyle</item>
+    </style>
+
+    <style name="Theme.Splash" parent="Theme.SplashScreen">
+        <item name="android:windowSplashScreenBackground">@color/white</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_meeron</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/black</item>
+        <item name="postSplashScreenTheme">@style/Theme.Meeron</item>
+    </style>
+
+</resources>

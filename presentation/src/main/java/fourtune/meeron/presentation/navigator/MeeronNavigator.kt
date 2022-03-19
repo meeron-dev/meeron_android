@@ -12,7 +12,6 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import forutune.meeron.domain.Const
 import fourtune.meeron.presentation.R
-import fourtune.meeron.presentation.navigator.ext.DateType
 import fourtune.meeron.presentation.navigator.ext.encodeJson
 import fourtune.meeron.presentation.ui.calendar.CalendarScreen
 import fourtune.meeron.presentation.ui.calendar.all.ShowAllScreen

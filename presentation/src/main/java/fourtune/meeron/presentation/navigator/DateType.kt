@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.navigator.ext
+package fourtune.meeron.presentation.navigator
 
 import android.os.Bundle
 import androidx.navigation.NavType

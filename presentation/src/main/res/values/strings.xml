@@ -36,4 +36,5 @@
     <string name="create_participants">회의의 참가자를\n선택해주세요.</string>
     <string name="complete_create">회의가\n생성되었습니다.</string>
     <string name="meeron">meeron</string>
+    <string name="participant_select_title">회의 참가자 선택하기</string>
 </resources>

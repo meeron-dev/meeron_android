@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,7 +24,8 @@ import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
 import fourtune.meeron.presentation.ui.common.UserGrids
 
 @Composable
-fun OwnersSelectScreen(
+fun UserSelectScreen(
+    title: String,
     users: List<WorkspaceUser> = emptyList(),
     onSearch: (String) -> Unit = {},
     onComplete: (List<WorkspaceUser>) -> Unit = {},
@@ -55,7 +55,7 @@ fun OwnersSelectScreen(
             ) {
                 Text(
                     modifier = Modifier.padding(top = 46.dp),
-                    text = stringResource(R.string.owner_select_title),
+                    text = title,
                     fontSize = 18.sp,
                     color = colorResource(id = R.color.dark_gray)
                 )
@@ -90,7 +90,8 @@ fun OwnersSelectScreen(
 @Preview
 @Composable
 private fun Preview() {
-    OwnersSelectScreen(
+    UserSelectScreen(
+        title = "제목입니다.",
         selectedUsers = remember {
             mutableStateListOf()
         },

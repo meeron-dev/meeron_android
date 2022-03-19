@@ -25,8 +25,8 @@ import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
 import fourtune.meeron.presentation.ui.common.action.ContentFactory
 import fourtune.meeron.presentation.ui.common.action.MeeronActionBox
 import fourtune.meeron.presentation.ui.common.bottomsheet.NoneScreen
-import fourtune.meeron.presentation.ui.common.bottomsheet.OwnersSelectScreen
 import fourtune.meeron.presentation.ui.common.bottomsheet.TeamSelectScreen
+import fourtune.meeron.presentation.ui.common.bottomsheet.UserSelectScreen
 import fourtune.meeron.presentation.ui.create.CreateTitle
 import kotlinx.coroutines.launch
 
@@ -70,7 +70,8 @@ fun CreateMeetingInfoScreen(
         sheetContent = {
             when (currentBottomSheet) {
                 CreateMeetingInfoViewModel.BottomSheetState.Owner -> {
-                    OwnersSelectScreen(
+                    UserSelectScreen(
+                        title = stringResource(R.string.owner_select_title),
                         users = uiState.searchedUsers,
                         onSearch = {
                             searchOwnerText = it

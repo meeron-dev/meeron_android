@@ -10,6 +10,8 @@ import forutune.meeron.domain.model.Team
 import forutune.meeron.domain.model.WorkspaceUser
 import forutune.meeron.domain.usecase.GetUserUseCase
 import forutune.meeron.domain.usecase.GetWorkSpaceTeamUseCase
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -23,8 +25,10 @@ class CreateMeetingParticipantsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
-
     val uiState = _uiState.asStateFlow()
+
+    private var searchJob: Job? = null
+
     init {
         viewModelScope.launch {
             _uiState.update {
@@ -50,12 +54,22 @@ class CreateMeetingParticipantsViewModel @Inject constructor(
         }
     }
 
+    fun onSearch(text: String) {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(500)
+            _uiState.update {
+                it.copy(searchedUsers = getUserUseCase.invoke(text = text))
+            }
+        }
+    }
 
     data class UiState(
         val meeting: Meeting = Meeting(),
         val teams: List<Team> = emptyList(),
         val teamMembers: List<WorkspaceUser> = emptyList(),
-        val fixedOwner: List<WorkspaceUser> = emptyList()
+        val fixedOwner: List<WorkspaceUser> = emptyList(),
+        val searchedUsers: List<WorkspaceUser> = emptyList()
     )
 
     sealed interface Event {

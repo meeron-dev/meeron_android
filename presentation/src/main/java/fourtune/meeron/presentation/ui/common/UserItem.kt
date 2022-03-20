@@ -44,7 +44,13 @@ fun UserItem(modifier: Modifier = Modifier, user: WorkspaceUser, selected: Boole
             }
             Image(
                 modifier = Modifier.clip(CircleShape),
-                painter = rememberImagePainter(data = user.profileImageUrl),
+                painter = rememberImagePainter(
+                    data = user.profileImageUrl,
+                    builder = {
+                        placeholder(R.drawable.ic_person_24)
+                        error(R.drawable.ic_person_24)
+                    }
+                ),
                 contentDescription = null
             )
         }

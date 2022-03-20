@@ -13,6 +13,7 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import forutune.meeron.domain.Const
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.navigator.ext.encodeJson
+import fourtune.meeron.presentation.ui.NameInitScreen
 import fourtune.meeron.presentation.ui.TOSScreen
 import fourtune.meeron.presentation.ui.calendar.CalendarScreen
 import fourtune.meeron.presentation.ui.calendar.all.ShowAllScreen
@@ -37,6 +38,7 @@ sealed interface Navigate {
     object ShowAll : Navigate
 
     object TOS : Navigate
+    object NameInit : Navigate
 
     sealed class BottomNavi(@DrawableRes val image: Int, @StringRes val text: Int) : Navigate {
         object Home : BottomNavi(R.drawable.ic_navi_home, R.string.home)
@@ -71,8 +73,8 @@ fun MeeronNavigator() {
     val navController = rememberAnimatedNavController()
     AnimatedNavHost(
         navController = navController,
-        startDestination = Navigate.TOS.route()
-//        startDestination = Navigate.Login.route()
+//        startDestination = Navigate.TOS.route()
+        startDestination = Navigate.Login.route()
     ) {
         composable(route = Navigate.Login.route()) {
             LoginScreen(isLoginSuccess = {
@@ -85,6 +87,10 @@ fun MeeronNavigator() {
             TOSScreen(
                 onNext = {}
             )
+        }
+
+        composable(route = Navigate.NameInit.route()) {
+            NameInitScreen()
         }
 
         composable(route = Navigate.BottomNavi.Home.route()) {

@@ -1,6 +1,7 @@
 package fourtune.meeron.presentation.ui.common
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Surface
@@ -71,25 +72,33 @@ fun MeeronSingleButtonBackGround(
             .fillMaxSize(),
     ) {
         contents()
-        Button(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            onClick = onClick,
-            colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.primary)),
-            contentPadding = PaddingValues(vertical = 16.dp),
-            enabled = enable
-        ) {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = text,
-                fontSize = 16.sp,
-                color = colorResource(id = if (enable) R.color.white else R.color.light_gray),
-                maxLines = 1,
-                textAlign = TextAlign.Center,
-            )
-        }
+        MeeronSingleButton(modifier = Modifier.align(Alignment.BottomCenter), onClick = onClick, enable = enable)
     }
 }
 
+
+@Composable
+fun MeeronSingleButton(modifier: Modifier = Modifier, onClick: () -> Unit, enable: Boolean) {
+    Button(
+        modifier = modifier
+            .fillMaxWidth(),
+        onClick = onClick,
+        enabled = enable,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = colorResource(id = R.color.primary),
+        ),
+        contentPadding = PaddingValues(vertical = 18.dp),
+        shape = RoundedCornerShape(7.dp)
+    ) {
+        Text(
+            text = stringResource(id = R.string.next),
+            fontSize = 18.sp,
+            color = colorResource(id = if (enable) R.color.white else R.color.light_gray),
+            maxLines = 1,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
 
 @Composable
 fun MeeronButton(

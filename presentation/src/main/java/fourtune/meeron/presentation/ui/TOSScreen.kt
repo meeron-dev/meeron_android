@@ -6,21 +6,21 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.Divider
+import androidx.compose.material.IconToggleButton
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fourtune.meeron.presentation.R
+import fourtune.meeron.presentation.ui.common.MeeronLogoText
+import fourtune.meeron.presentation.ui.common.MeeronSingleButton
 
 @Composable
 fun TOSScreen(onNext: () -> Unit = {}) {
@@ -35,24 +35,7 @@ fun TOSScreen(onNext: () -> Unit = {}) {
             Spacer(modifier = Modifier.padding(55.dp))
             TOSOptions(context) { allAgree = it }
         }
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 50.dp, start = 38.dp, end = 38.dp),
-            onClick = onNext,
-            enabled = allAgree,
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = colorResource(id = R.color.primary),
-            ),
-            contentPadding = PaddingValues(vertical = 18.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.next),
-                fontSize = 18.sp,
-                color = colorResource(id = if (allAgree) R.color.white else R.color.light_gray)
-            )
-        }
-
+        MeeronSingleButton(Modifier.padding(bottom = 50.dp, start = 38.dp, end = 38.dp), onNext, allAgree)
     }
 }
 
@@ -111,24 +94,6 @@ private fun TOSOptions(
         onDetail = {
             context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://www.naver.com")))
         }
-    )
-}
-
-@Composable
-private fun MeeronLogoText(text: String) {
-    Image(
-        modifier = Modifier.padding(top = 90.dp, start = 20.dp, end = 20.dp, bottom = 20.dp),
-        painter = painterResource(id = R.drawable.ic_meeron_symbol_logo),
-        contentDescription = null
-    )
-    Text(
-        modifier = Modifier.padding(horizontal = 20.dp),
-        text = buildAnnotatedString {
-            append(text)
-            addStyle(SpanStyle(fontWeight = FontWeight.Bold), 0, 2)
-        },
-        fontSize = 24.sp,
-        color = colorResource(id = R.color.black),
     )
 }
 

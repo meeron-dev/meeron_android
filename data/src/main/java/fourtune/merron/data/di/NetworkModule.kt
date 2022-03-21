@@ -7,7 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import forutune.meeron.domain.di.OK_HTTP_CLIENT
 import forutune.meeron.domain.di.OK_HTTP_CLIENT_NO_AUTH
-import forutune.meeron.domain.preference.MeeronPreference
+import forutune.meeron.domain.repository.TokenRepository
 import fourtune.merron.data.source.remote.LoginApi
 import fourtune.merron.data.source.remote.MeetingApi
 import fourtune.merron.data.source.remote.TeamApi
@@ -30,10 +30,9 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideAuthorizationInterceptor(
-        meeronPreference: MeeronPreference
-    ): Interceptor {
-        return AuthorizationInterceptor(meeronPreference)
-    }
+        tokenRepository: TokenRepository
+    ): Interceptor = AuthorizationInterceptor(tokenRepository)
+
 
     @Provides
     @Singleton

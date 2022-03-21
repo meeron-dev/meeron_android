@@ -1,17 +1,23 @@
 package fourtune.merron.data.di
 
-import dagger.Binds
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import forutune.meeron.domain.preference.MeeronPreference
-import fourtune.merron.data.source.local.preference.Preference
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface PreferenceModule {
-    @Binds
+class PreferenceModule {
+    private val Context.dataStore by preferencesDataStore("meeronDataStore")
+
+    @Provides
     @Singleton
-    fun bindsPreference(preference: Preference): MeeronPreference
+    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> = context.dataStore
+
 }

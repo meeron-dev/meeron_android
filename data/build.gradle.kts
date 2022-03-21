@@ -18,6 +18,7 @@ dependencies {
     implementation(Dep.Dagger.hiltAndroid)
     kapt(Dep.Dagger.hiltCompiler)
 
+    implementation(Dep.AndroidX.datastore)
 
     implementation(Dep.Kotlin.coroutineCore)
     implementation(Dep.Kotlin.serialization)

@@ -3,8 +3,8 @@ package fourtune.merron.data.repository
 import forutune.meeron.domain.di.IoDispatcher
 import forutune.meeron.domain.model.LoginUser
 import forutune.meeron.domain.model.Token
-import forutune.meeron.domain.preference.MeeronPreference
 import forutune.meeron.domain.repository.LoginRepository
+import forutune.meeron.domain.repository.TokenRepository
 import fourtune.merron.data.model.dto.LoginUserRequest
 import fourtune.merron.data.model.entity.UserEntity
 import fourtune.merron.data.source.local.dao.UserDao
@@ -17,7 +17,7 @@ class LoginRepositoryImpl @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val loginApi: LoginApi,
     private val userDao: UserDao,
-    private val preference: MeeronPreference
+    private val tokenRepository: TokenRepository,
 ) : LoginRepository {
     override suspend fun login(loginUser: LoginUser) {
         withContext(dispatcher) {
@@ -43,7 +43,7 @@ class LoginRepositoryImpl @Inject constructor(
         } else {
             userDao.updateToken(user.id, token)
         }
-        preference.saveToken(token)
+        tokenRepository.saveToken(token)
     }
 
 

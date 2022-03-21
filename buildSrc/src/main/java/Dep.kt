@@ -19,10 +19,8 @@ object Dep {
         const val startUp = "androidx.startup:startup-runtime:1.1.0"
         const val material = "com.google.android.material:material:1.6.0-alpha02"
         const val splashScreen = "androidx.core:core-splashscreen:1.0.0-beta01"
-        object Activity {
-            const val activity = "androidx.activity:activity-ktx:1.4.0"
-            const val compose = "androidx.activity:activity-compose:1.4.0"
-        }
+
+        const val datastore = "androidx.datastore:datastore-preferences:1.0.0"
 
         object Lifecycle {
             const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
@@ -49,7 +47,6 @@ object Dep {
     }
 
     object Accompanist {
-        const val swipeRefresh = "com.google.accompanist:accompanist-swiperefresh:0.24.1-alpha"
         const val pager = "com.google.accompanist:accompanist-pager:0.24.2-alpha"
         const val navigationAnimation = "com.google.accompanist:accompanist-navigation-animation:0.24.3-alpha"
         const val permission = "com.google.accompanist:accompanist-permissions:0.24.3-alpha"

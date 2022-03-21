@@ -8,6 +8,6 @@ class GetMeUseCase @Inject constructor(
     private val userRepository: UserRepository,
 ) {
     suspend operator fun invoke(): User {
-        return userRepository.getMe()
+        return userRepository.getUser()
     }
 }

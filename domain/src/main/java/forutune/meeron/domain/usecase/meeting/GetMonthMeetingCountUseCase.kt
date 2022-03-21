@@ -10,7 +10,6 @@ class GetMonthMeetingCountUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(type: CalendarType, year: Int): List<MonthCount> {
         val myWorkspaceUserId = 3L
-//            meeronPreference.getCurrentWorkSpaceUserId()
         return meetingRepository.getMonthMeetingCount(type, myWorkspaceUserId, year)
     }
 }

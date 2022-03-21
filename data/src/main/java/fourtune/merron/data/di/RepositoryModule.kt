@@ -24,5 +24,8 @@ interface RepositoryModule {
     fun bindUserRepository(userRepository: UserRepositoryImpl): UserRepository
 
     @Binds
-    fun tokenRepository(tokenRepository: TokenRepositoryImpl) : TokenRepository
+    fun tokenRepository(tokenRepository: TokenRepositoryImpl): TokenRepository
+
+    @Binds
+    fun accountRepository(accountRepository: AccountRepositoryImpl): AccountRepository
 }

@@ -47,7 +47,10 @@ class CreateWorkspaceProfileViewModel @Inject constructor(
 
     fun addImage(uri: Uri) {
         _uiState.update {
-            it.copy(fileName = uri.toString())
+            it.copy(
+                fileName = uri.toString(),
+                workSpace = it.workSpace.copy(image = uri.toString())
+            )
         }
     }
 

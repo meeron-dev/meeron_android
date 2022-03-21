@@ -9,5 +9,6 @@ data class WorkSpace(
     val nickname: String = "",
     val position: String = "",
     val email: String = "",
-    val phone: String = ""
+    val phone: String = "",
+    val image: String = ""
 ) : java.io.Serializable

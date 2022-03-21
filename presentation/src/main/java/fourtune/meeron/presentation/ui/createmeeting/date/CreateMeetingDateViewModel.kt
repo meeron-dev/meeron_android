@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.create.date
+package fourtune.meeron.presentation.ui.createmeeting.date
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

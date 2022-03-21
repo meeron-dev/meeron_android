@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.create.information
+package fourtune.meeron.presentation.ui.createmeeting.information
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.toMutableStateMap

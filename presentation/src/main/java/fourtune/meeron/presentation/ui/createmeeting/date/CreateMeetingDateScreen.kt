@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.create.date
+package fourtune.meeron.presentation.ui.createmeeting.date
 
 import android.app.DatePickerDialog
 import android.content.Context
@@ -27,7 +27,7 @@ import forutune.meeron.domain.model.Meeting
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
-import fourtune.meeron.presentation.ui.create.CreateTitle
+import fourtune.meeron.presentation.ui.createmeeting.CreateTitle
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
 

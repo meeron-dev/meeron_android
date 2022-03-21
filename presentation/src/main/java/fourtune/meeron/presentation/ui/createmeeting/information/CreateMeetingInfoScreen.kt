@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.create.information
+package fourtune.meeron.presentation.ui.createmeeting.information
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
@@ -27,7 +27,7 @@ import fourtune.meeron.presentation.ui.common.action.MeeronActionBox
 import fourtune.meeron.presentation.ui.common.bottomsheet.NoneScreen
 import fourtune.meeron.presentation.ui.common.bottomsheet.TeamSelectScreen
 import fourtune.meeron.presentation.ui.common.bottomsheet.UserSelectScreen
-import fourtune.meeron.presentation.ui.create.CreateTitle
+import fourtune.meeron.presentation.ui.createmeeting.CreateTitle
 import kotlinx.coroutines.launch
 
 

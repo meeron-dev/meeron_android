@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.create.participants
+package fourtune.meeron.presentation.ui.createmeeting.participants
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

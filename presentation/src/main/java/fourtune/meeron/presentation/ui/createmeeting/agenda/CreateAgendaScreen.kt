@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.create.agenda
+package fourtune.meeron.presentation.ui.createmeeting.agenda
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -35,10 +35,10 @@ import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
 import fourtune.meeron.presentation.ui.common.action.ContentFactory
 import fourtune.meeron.presentation.ui.common.action.MeeronActionBox
-import fourtune.meeron.presentation.ui.create.CreateText
-import fourtune.meeron.presentation.ui.create.CreateTitle
-import fourtune.meeron.presentation.ui.create.agenda.CreateAgendaViewModel.Companion.MAX_AGENDA_SIZE
-import fourtune.meeron.presentation.ui.create.agenda.CreateAgendaViewModel.Companion.MIN_AGENDA_SIZE
+import fourtune.meeron.presentation.ui.createmeeting.CreateText
+import fourtune.meeron.presentation.ui.createmeeting.CreateTitle
+import fourtune.meeron.presentation.ui.createmeeting.agenda.CreateAgendaViewModel.Companion.MAX_AGENDA_SIZE
+import fourtune.meeron.presentation.ui.createmeeting.agenda.CreateAgendaViewModel.Companion.MIN_AGENDA_SIZE
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
 @OptIn(ExperimentalPermissionsApi::class)

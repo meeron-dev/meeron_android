@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.create.time
+package fourtune.meeron.presentation.ui.createmeeting.time
 
 import android.app.TimePickerDialog
 import android.content.Context
@@ -24,7 +24,7 @@ import forutune.meeron.domain.model.Time
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
-import fourtune.meeron.presentation.ui.create.CreateTitle
+import fourtune.meeron.presentation.ui.createmeeting.CreateTitle
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
 

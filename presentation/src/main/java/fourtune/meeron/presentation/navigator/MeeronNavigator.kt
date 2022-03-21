@@ -17,12 +17,13 @@ import fourtune.meeron.presentation.ui.NameInitScreen
 import fourtune.meeron.presentation.ui.TOSScreen
 import fourtune.meeron.presentation.ui.calendar.CalendarScreen
 import fourtune.meeron.presentation.ui.calendar.all.ShowAllScreen
-import fourtune.meeron.presentation.ui.create.agenda.CreateAgendaScreen
-import fourtune.meeron.presentation.ui.create.complete.CompleteMeetingScreen
-import fourtune.meeron.presentation.ui.create.date.CreateMeetingDateScreen
-import fourtune.meeron.presentation.ui.create.information.CreateMeetingInfoScreen
-import fourtune.meeron.presentation.ui.create.participants.CreateMeetingParticipantsScreen
-import fourtune.meeron.presentation.ui.create.time.CreateMeetingTimeScreen
+import fourtune.meeron.presentation.ui.createmeeting.agenda.CreateAgendaScreen
+import fourtune.meeron.presentation.ui.createmeeting.complete.CompleteMeetingScreen
+import fourtune.meeron.presentation.ui.createmeeting.date.CreateMeetingDateScreen
+import fourtune.meeron.presentation.ui.createmeeting.information.CreateMeetingInfoScreen
+import fourtune.meeron.presentation.ui.createmeeting.participants.CreateMeetingParticipantsScreen
+import fourtune.meeron.presentation.ui.createmeeting.time.CreateMeetingTimeScreen
+import fourtune.meeron.presentation.ui.createworkspace.CreateOrJoinScreen
 import fourtune.meeron.presentation.ui.home.HomeScreen
 import fourtune.meeron.presentation.ui.login.LoginScreen
 
@@ -37,10 +38,19 @@ sealed interface Navigate {
     object Calendar : Navigate
     object ShowAll : Navigate
 
-    object TOS : Navigate
-    object NameInit : Navigate
 
-    object CreateOrJoin : Navigate
+    sealed interface SignIn : Navigate {
+        object TOS : SignIn
+        object NameInit : SignIn
+    }
+
+    sealed interface CreateWorkspace : Navigate {
+        object CreateOrJoin : CreateWorkspace
+        object Join : CreateWorkspace
+        object Profile : CreateWorkspace
+        object Team : CreateWorkspace
+        object Complete : CreateWorkspace
+    }
 
     sealed class BottomNavi(@DrawableRes val image: Int, @StringRes val text: Int) : Navigate {
         object Home : BottomNavi(R.drawable.ic_navi_home, R.string.home)
@@ -75,8 +85,8 @@ fun MeeronNavigator() {
     val navController = rememberAnimatedNavController()
     AnimatedNavHost(
         navController = navController,
-//        startDestination = Navigate.TOS.route()
-        startDestination = Navigate.Login.route()
+        startDestination = Navigate.CreateWorkspace.CreateOrJoin.route()
+//        startDestination = Navigate.Login.route()
     ) {
         composable(route = Navigate.Login.route()) {
             LoginScreen(isLoginSuccess = {
@@ -85,18 +95,18 @@ fun MeeronNavigator() {
             })
         }
 
-        composable(route = Navigate.TOS.route()) {
+        composable(route = Navigate.SignIn.TOS.route()) {
             TOSScreen(
                 onNext = {}
             )
         }
 
-        composable(route = Navigate.NameInit.route()) {
+        composable(route = Navigate.SignIn.NameInit.route()) {
             NameInitScreen()
         }
 
-        composable(route = Navigate.CreateOrJoin.route()) {
-
+        composable(route = Navigate.CreateWorkspace.CreateOrJoin.route()) {
+            CreateOrJoinScreen()
         }
 
         composable(route = Navigate.BottomNavi.Home.route()) {

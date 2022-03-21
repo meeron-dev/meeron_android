@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.create
+package fourtune.meeron.presentation.ui.createmeeting
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text

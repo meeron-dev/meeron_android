@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.create.time
+package fourtune.meeron.presentation.ui.createmeeting.time
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

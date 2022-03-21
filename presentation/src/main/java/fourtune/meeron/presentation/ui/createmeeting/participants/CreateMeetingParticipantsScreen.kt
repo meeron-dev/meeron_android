@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.create.participants
+package fourtune.meeron.presentation.ui.createmeeting.participants
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -30,8 +30,8 @@ import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
 import fourtune.meeron.presentation.ui.common.UserGrids
 import fourtune.meeron.presentation.ui.common.bottomsheet.UserSelectScreen
-import fourtune.meeron.presentation.ui.create.CreateText
-import fourtune.meeron.presentation.ui.create.CreateTitle
+import fourtune.meeron.presentation.ui.createmeeting.CreateText
+import fourtune.meeron.presentation.ui.createmeeting.CreateTitle
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)

@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.create.agenda
+package fourtune.meeron.presentation.ui.createmeeting.agenda
 
 import android.net.Uri
 import androidx.compose.runtime.mutableStateListOf

@@ -24,6 +24,7 @@ import fourtune.meeron.presentation.ui.createmeeting.information.CreateMeetingIn
 import fourtune.meeron.presentation.ui.createmeeting.participants.CreateMeetingParticipantsScreen
 import fourtune.meeron.presentation.ui.createmeeting.time.CreateMeetingTimeScreen
 import fourtune.meeron.presentation.ui.createworkspace.CreateOrJoinScreen
+import fourtune.meeron.presentation.ui.createworkspace.JoinScreen
 import fourtune.meeron.presentation.ui.home.HomeScreen
 import fourtune.meeron.presentation.ui.login.LoginScreen
 
@@ -47,6 +48,7 @@ sealed interface Navigate {
     sealed interface CreateWorkspace : Navigate {
         object CreateOrJoin : CreateWorkspace
         object Join : CreateWorkspace
+        object Name : CreateWorkspace
         object Profile : CreateWorkspace
         object Team : CreateWorkspace
         object Complete : CreateWorkspace
@@ -106,7 +108,14 @@ fun MeeronNavigator() {
         }
 
         composable(route = Navigate.CreateWorkspace.CreateOrJoin.route()) {
-            CreateOrJoinScreen()
+            CreateOrJoinScreen(
+                onCreate = {},
+                onJoin = { navController.navigate(Navigate.CreateWorkspace.Join.route()) }
+            )
+        }
+
+        composable(route = Navigate.CreateWorkspace.Join.route()) {
+            JoinScreen(close = { navController.navigateUp() })
         }
 
         composable(route = Navigate.BottomNavi.Home.route()) {

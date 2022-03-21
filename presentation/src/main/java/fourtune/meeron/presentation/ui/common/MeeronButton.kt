@@ -72,13 +72,23 @@ fun MeeronSingleButtonBackGround(
             .fillMaxSize(),
     ) {
         contents()
-        MeeronSingleButton(modifier = Modifier.align(Alignment.BottomCenter), onClick = onClick, enable = enable)
+        MeeronSingleButton(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            onClick = onClick,
+            enable = enable,
+            text = text
+        )
     }
 }
 
 
 @Composable
-fun MeeronSingleButton(modifier: Modifier = Modifier, onClick: () -> Unit, enable: Boolean) {
+fun MeeronSingleButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    enable: Boolean,
+    text: String = stringResource(id = R.string.next)
+) {
     Button(
         modifier = modifier
             .fillMaxWidth(),
@@ -91,7 +101,7 @@ fun MeeronSingleButton(modifier: Modifier = Modifier, onClick: () -> Unit, enabl
         shape = RoundedCornerShape(7.dp)
     ) {
         Text(
-            text = stringResource(id = R.string.next),
+            text = text,
             fontSize = 18.sp,
             color = colorResource(id = if (enable) R.color.white else R.color.light_gray),
             maxLines = 1,

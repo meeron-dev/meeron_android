@@ -21,6 +21,9 @@ interface RepositoryModule {
     fun bindTeamRepository(teamRepository: TeamRepositoryImpl): TeamRepository
 
     @Binds
+    fun bindWorkspaceUserRepository(userRepository: WorkspaceUserRepositoryImpl): WorkspaceUserRepository
+
+    @Binds
     fun bindUserRepository(userRepository: UserRepositoryImpl): UserRepository
 
     @Binds

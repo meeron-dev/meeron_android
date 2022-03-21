@@ -8,8 +8,8 @@ import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.model.Team
 import forutune.meeron.domain.model.WorkspaceUser
-import forutune.meeron.domain.usecase.GetUserUseCase
 import forutune.meeron.domain.usecase.GetWorkSpaceTeamUseCase
+import forutune.meeron.domain.usecase.user.GetWorkspaceUserUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateMeetingParticipantsViewModel @Inject constructor(
     private val getWorkSpaceTeamUseCase: GetWorkSpaceTeamUseCase,
-    private val getUserUseCase: GetUserUseCase,
+    private val getWorkspaceUserUseCase: GetWorkspaceUserUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
@@ -37,8 +37,8 @@ class CreateMeetingParticipantsViewModel @Inject constructor(
                 it.copy(
                     meeting = meeting,
                     teams = teams,
-                    teamMembers = getUserUseCase(teamId = teams.first().id),
-                    fixedOwner = getUserUseCase(workspaceUserIds = meeting.ownerIds.toLongArray())
+                    teamMembers = getWorkspaceUserUseCase(teamId = teams.first().id),
+                    fixedOwner = getWorkspaceUserUseCase(workspaceUserIds = meeting.ownerIds.toLongArray())
                 )
             }
         }
@@ -48,7 +48,7 @@ class CreateMeetingParticipantsViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    teamMembers = getUserUseCase(teamId = id)
+                    teamMembers = getWorkspaceUserUseCase(teamId = id)
                 )
             }
         }
@@ -59,7 +59,7 @@ class CreateMeetingParticipantsViewModel @Inject constructor(
         searchJob = viewModelScope.launch {
             delay(500)
             _uiState.update {
-                it.copy(searchedUsers = getUserUseCase.invoke(text = text))
+                it.copy(searchedUsers = getWorkspaceUserUseCase.invoke(text = text))
             }
         }
     }

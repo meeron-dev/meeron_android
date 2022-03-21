@@ -40,6 +40,8 @@ sealed interface Navigate {
     object TOS : Navigate
     object NameInit : Navigate
 
+    object CreateOrJoin : Navigate
+
     sealed class BottomNavi(@DrawableRes val image: Int, @StringRes val text: Int) : Navigate {
         object Home : BottomNavi(R.drawable.ic_navi_home, R.string.home)
         object Team : BottomNavi(R.drawable.ic_navi_team, R.string.team)
@@ -91,6 +93,10 @@ fun MeeronNavigator() {
 
         composable(route = Navigate.NameInit.route()) {
             NameInitScreen()
+        }
+
+        composable(route = Navigate.CreateOrJoin.route()) {
+
         }
 
         composable(route = Navigate.BottomNavi.Home.route()) {

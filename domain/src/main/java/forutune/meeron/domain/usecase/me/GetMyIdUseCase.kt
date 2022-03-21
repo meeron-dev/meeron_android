@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 class GetMyIdUseCase @Inject constructor(
-    private val userRepository: UserRepository,
+    private val userRepository: UserRepository
 ) {
     suspend operator fun invoke(): Long {
         var myId = userRepository.getUserId().firstOrNull()

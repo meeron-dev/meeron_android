@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 
 object DataStoreKeys {
-    object Account{
+    object Account {
         val isFirstVisitor = booleanPreferencesKey("isFirstVisitor")
     }
 
@@ -14,8 +14,12 @@ object DataStoreKeys {
         val refreshToken = stringPreferencesKey("refreshToken")
     }
 
+    object WorkspaceUser {
+        val id = longPreferencesKey("workSpaceUserId")
+    }
+
     object User {
         val id = longPreferencesKey("userId")
-        val workSpaceUserId = longPreferencesKey("workSpaceUserId")
+        val name = stringPreferencesKey("userName")
     }
 }

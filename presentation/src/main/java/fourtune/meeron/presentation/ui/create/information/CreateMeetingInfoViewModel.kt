@@ -10,9 +10,9 @@ import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.model.Team
 import forutune.meeron.domain.model.WorkspaceUser
-import forutune.meeron.domain.usecase.GetUserUseCase
 import forutune.meeron.domain.usecase.GetWorkSpaceTeamUseCase
 import forutune.meeron.domain.usecase.me.GetMyWorkSpaceUserUseCase
+import forutune.meeron.domain.usecase.user.GetWorkspaceUserUseCase
 import fourtune.meeron.presentation.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateMeetingInfoViewModel @Inject constructor(
-    private val getUserUseCase: GetUserUseCase,
+    private val getWorkspaceUserUseCase: GetWorkspaceUserUseCase,
     getWorkSpaceTeamUseCase: GetWorkSpaceTeamUseCase,
     getMyWorkSpaceUserUseCase: GetMyWorkSpaceUserUseCase,
     savedStateHandle: SavedStateHandle,
@@ -73,7 +73,7 @@ class CreateMeetingInfoViewModel @Inject constructor(
         searchJob = viewModelScope.launch {
             delay(500)
             _uiState.update {
-                it.copy(searchedUsers = getUserUseCase.invoke(text = text))
+                it.copy(searchedUsers = getWorkspaceUserUseCase.invoke(text = text))
             }
         }
     }
@@ -88,7 +88,7 @@ class CreateMeetingInfoViewModel @Inject constructor(
     fun createMeeting(onCreate: (Meeting) -> Unit) {
         viewModelScope.launch {
             val ownerIds = uiState().value.meeting.ownerIds.toLongArray()
-            val fixedParticipants = getUserUseCase(*ownerIds)
+            val fixedParticipants = getWorkspaceUserUseCase(*ownerIds)
             onCreate(
                 uiState().value.meeting.copy(
                     title = listState[Info.Title].orEmpty(),

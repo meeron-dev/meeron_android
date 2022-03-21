@@ -8,10 +8,7 @@ import dagger.hilt.components.SingletonComponent
 import forutune.meeron.domain.di.OK_HTTP_CLIENT
 import forutune.meeron.domain.di.OK_HTTP_CLIENT_NO_AUTH
 import forutune.meeron.domain.repository.TokenRepository
-import fourtune.merron.data.source.remote.LoginApi
-import fourtune.merron.data.source.remote.MeetingApi
-import fourtune.merron.data.source.remote.TeamApi
-import fourtune.merron.data.source.remote.UserApi
+import fourtune.merron.data.source.remote.*
 import fourtune.merron.data.source.remote.interceptor.AuthorizationInterceptor
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -105,6 +102,13 @@ class NetworkModule {
         @OK_HTTP_CLIENT okHttpClient: OkHttpClient,
         convertFactory: Converter.Factory,
     ): MeetingApi = createRetrofit(convertFactory, okHttpClient).create(MeetingApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideWorkspaceUserApi(
+        @OK_HTTP_CLIENT okHttpClient: OkHttpClient,
+        convertFactory: Converter.Factory,
+    ): WorkspaceUserApi = createRetrofit(convertFactory, okHttpClient).create(WorkspaceUserApi::class.java)
 
     @Provides
     @Singleton

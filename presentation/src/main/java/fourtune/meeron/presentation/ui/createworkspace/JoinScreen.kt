@@ -10,11 +10,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fourtune.meeron.presentation.R
+import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
 
 @Composable
@@ -29,18 +29,7 @@ fun JoinScreen(close: () -> Unit = {}) {
 
     Scaffold(
         topBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 23.dp), contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "워크 스페이스 참여",
-                    fontSize = 18.sp,
-                    color = colorResource(id = R.color.black),
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            CenterTextTopAppBar("워크 스페이스 참여")
         },
         content = {
             MeeronSingleButtonBackGround(

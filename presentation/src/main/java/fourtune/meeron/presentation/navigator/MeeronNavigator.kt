@@ -25,6 +25,7 @@ import fourtune.meeron.presentation.ui.createmeeting.participants.CreateMeetingP
 import fourtune.meeron.presentation.ui.createmeeting.time.CreateMeetingTimeScreen
 import fourtune.meeron.presentation.ui.createworkspace.CreateOrJoinScreen
 import fourtune.meeron.presentation.ui.createworkspace.JoinScreen
+import fourtune.meeron.presentation.ui.createworkspace.WorkSpaceNameScreen
 import fourtune.meeron.presentation.ui.home.HomeScreen
 import fourtune.meeron.presentation.ui.login.LoginScreen
 
@@ -109,13 +110,20 @@ fun MeeronNavigator() {
 
         composable(route = Navigate.CreateWorkspace.CreateOrJoin.route()) {
             CreateOrJoinScreen(
-                onCreate = {},
+                onCreate = { navController.navigate(Navigate.CreateWorkspace.Name.route()) },
                 onJoin = { navController.navigate(Navigate.CreateWorkspace.Join.route()) }
             )
         }
 
         composable(route = Navigate.CreateWorkspace.Join.route()) {
             JoinScreen(close = { navController.navigateUp() })
+        }
+
+        composable(route = Navigate.CreateWorkspace.Name.route()) {
+            WorkSpaceNameScreen(
+                onPrevious = { navController.navigateUp() },
+                onNext = {}
+            )
         }
 
         composable(route = Navigate.BottomNavi.Home.route()) {

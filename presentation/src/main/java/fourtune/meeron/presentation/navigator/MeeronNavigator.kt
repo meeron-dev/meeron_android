@@ -6,6 +6,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -13,6 +14,9 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import forutune.meeron.domain.Const
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.navigator.ext.encodeJson
+import fourtune.meeron.presentation.navigator.type.DateType
+import fourtune.meeron.presentation.navigator.type.MeetingType
+import fourtune.meeron.presentation.navigator.type.WorkSpaceType
 import fourtune.meeron.presentation.ui.NameInitScreen
 import fourtune.meeron.presentation.ui.TOSScreen
 import fourtune.meeron.presentation.ui.calendar.CalendarScreen
@@ -23,9 +27,7 @@ import fourtune.meeron.presentation.ui.createmeeting.date.CreateMeetingDateScree
 import fourtune.meeron.presentation.ui.createmeeting.information.CreateMeetingInfoScreen
 import fourtune.meeron.presentation.ui.createmeeting.participants.CreateMeetingParticipantsScreen
 import fourtune.meeron.presentation.ui.createmeeting.time.CreateMeetingTimeScreen
-import fourtune.meeron.presentation.ui.createworkspace.CreateOrJoinScreen
-import fourtune.meeron.presentation.ui.createworkspace.JoinScreen
-import fourtune.meeron.presentation.ui.createworkspace.WorkSpaceNameScreen
+import fourtune.meeron.presentation.ui.createworkspace.*
 import fourtune.meeron.presentation.ui.home.HomeScreen
 import fourtune.meeron.presentation.ui.login.LoginScreen
 
@@ -120,10 +122,26 @@ fun MeeronNavigator() {
         }
 
         composable(route = Navigate.CreateWorkspace.Name.route()) {
-            WorkSpaceNameScreen(
+            CreateWorkSpaceNameScreen(
                 onPrevious = { navController.navigateUp() },
-                onNext = {}
+                onNext = { navController.navigate(Navigate.CreateWorkspace.Profile.route(it)) }
             )
+        }
+
+        composable(
+            route = Navigate.CreateWorkspace.Profile.destination(Const.WorkspaceName),
+            arguments = listOf(navArgument(Const.WorkspaceName) { type = NavType.StringType })
+        ) {
+            CreateWorkspaceProfileScreen(
+                onNext = { navController.navigate(Navigate.CreateWorkspace.Team.route(it.encodeJson())) }
+            )
+        }
+
+        composable(
+            route = Navigate.CreateWorkspace.Team.destination(Const.WorkSpace),
+            arguments = listOf(element = navArgument(Const.WorkSpace) { type = WorkSpaceType() })
+        ) {
+            CreateTeamScreen()
         }
 
         composable(route = Navigate.BottomNavi.Home.route()) {

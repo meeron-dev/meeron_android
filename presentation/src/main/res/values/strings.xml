@@ -37,4 +37,9 @@
     <string name="complete_create">회의가\n생성되었습니다.</string>
     <string name="meeron">meeron</string>
     <string name="participant_select_title">회의 참가자 선택하기</string>
+
+    <string name="nickname_title">별명(표시 이름)</string>
+    <string name="position">직책</string>
+    <string name="email">이메일</string>
+    <string name="phone_number">전화번호</string>
 </resources>

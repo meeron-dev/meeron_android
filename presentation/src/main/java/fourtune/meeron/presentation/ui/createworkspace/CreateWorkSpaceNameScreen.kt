@@ -18,7 +18,7 @@ import fourtune.meeron.presentation.ui.common.action.ContentFactory
 import fourtune.meeron.presentation.ui.common.action.MeeronActionBox
 
 @Composable
-fun WorkSpaceNameScreen(onPrevious: () -> Unit = {}, onNext: (String) -> Unit = {}) {
+fun CreateWorkSpaceNameScreen(onPrevious: () -> Unit = {}, onNext: (String) -> Unit = {}) {
     var workspaceName by remember {
         mutableStateOf("")
     }
@@ -56,5 +56,5 @@ fun WorkSpaceNameScreen(onPrevious: () -> Unit = {}, onNext: (String) -> Unit = 
 @Preview
 @Composable
 private fun Preview() {
-    WorkSpaceNameScreen()
+    CreateWorkSpaceNameScreen()
 }

@@ -23,12 +23,18 @@ class LoginUseCase @Inject constructor(
     ) = withContext(dispatcher) {
         val me = getMe()
 
-        val token = loginRepository.login(me)
-        updateToken(me, token)
+        kotlin.runCatching {
+            loginRepository.login(me)
+        }.onSuccess { token ->
+            updateToken(me, token)
+        }.onFailure {
+            tokenRepository.clearToken()
+        }
+
     }
 
     private suspend fun updateToken(me: LoginUser, token: Token) {
-        val user = userRepository.getUser(me.email)
+        val user = runCatching { userRepository.getUser(me.email) }.getOrNull()
         if (user == null) {
             userRepository.setUser(
                 User(

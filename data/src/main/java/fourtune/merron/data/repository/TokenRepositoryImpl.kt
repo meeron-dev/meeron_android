@@ -27,4 +27,11 @@ class TokenRepositoryImpl @Inject constructor(
             it[DataStoreKeys.Token.refreshToken] = token.refreshToken
         }
     }
+
+    override suspend fun clearToken() {
+        dataStore.edit {
+            it[DataStoreKeys.Token.accessToken] = ""
+            it[DataStoreKeys.Token.refreshToken] = ""
+        }
+    }
 }

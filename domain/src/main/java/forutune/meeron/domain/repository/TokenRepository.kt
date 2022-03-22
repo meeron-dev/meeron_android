@@ -7,4 +7,5 @@ interface TokenRepository {
     fun getAccessToken(): Flow<String?>
     fun getRefreshToken(): Flow<String?>
     suspend fun saveToken(token: Token)
+    suspend fun clearToken()
 }

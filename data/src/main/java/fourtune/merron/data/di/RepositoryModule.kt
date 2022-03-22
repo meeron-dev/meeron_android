@@ -31,4 +31,7 @@ interface RepositoryModule {
 
     @Binds
     fun accountRepository(accountRepository: AccountRepositoryImpl): AccountRepository
+
+    @Binds
+    fun workspaceRepository(workSpaceRepository: WorkSpaceRepositoryImpl): WorkSpaceRepository
 }

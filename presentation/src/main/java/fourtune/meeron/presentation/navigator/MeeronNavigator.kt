@@ -141,7 +141,14 @@ fun MeeronNavigator() {
             route = Navigate.CreateWorkspace.Team.destination(Const.WorkSpace),
             arguments = listOf(element = navArgument(Const.WorkSpace) { type = WorkSpaceType() })
         ) {
-            CreateTeamScreen()
+            CreateTeamScreen(
+                onPrevious = { navController.navigateUp() },
+                onNext = { navController.navigate(Navigate.CreateWorkspace.Complete.route()) }
+            )
+        }
+
+        composable(route = Navigate.CreateWorkspace.Complete.route()) {
+            CreateCompleteScreen()
         }
 
         composable(route = Navigate.BottomNavi.Home.route()) {

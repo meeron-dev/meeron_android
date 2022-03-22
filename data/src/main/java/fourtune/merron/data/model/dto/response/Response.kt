@@ -64,3 +64,20 @@ data class MonthCountsResponse(
 data class DaysResponse(
     @SerialName("days") val days: List<Int>
 )
+
+@Serializable
+data class MyWorkSpacesResponse(
+    @SerialName("myWorkspaces") val myWorkspaces: List<WorkSpaceResponse>
+)
+
+@Serializable
+data class WorkSpaceResponse(
+    @SerialName("workspaceId") val workspaceId: Long,
+    @SerialName("workspaceName") val workspaceName: String,
+    @SerialName("workspaceLogoUrl") val workspaceLogoUrl: String,
+)
+
+@Serializable
+data class TeamIdResponse(
+    @SerialName("createdTeamId") val createdTeamId: Long
+)

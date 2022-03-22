@@ -1,5 +1,6 @@
 package forutune.meeron.domain.repository
 
+import forutune.meeron.domain.model.WorkSpace
 import forutune.meeron.domain.model.WorkspaceUser
 import kotlinx.coroutines.flow.Flow
 
@@ -10,4 +11,6 @@ interface WorkspaceUserRepository {
 
     suspend fun setCurrentWorkspaceUserId(workspaceUserId: Long)
     fun getCurrentWorkspaceUserId(): Flow<Long?>
+
+    suspend fun createWorkspaceAdmin(workSpace: WorkSpace)
 }

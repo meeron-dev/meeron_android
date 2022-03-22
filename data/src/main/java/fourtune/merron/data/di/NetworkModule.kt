@@ -117,6 +117,13 @@ class NetworkModule {
         convertFactory: Converter.Factory,
     ): UserApi = createRetrofit(convertFactory, okHttpClient).create(UserApi::class.java)
 
+    @Provides
+    @Singleton
+    fun provideWorkSpaceApi(
+        @OK_HTTP_CLIENT okHttpClient: OkHttpClient,
+        convertFactory: Converter.Factory
+    ): WorkSpaceApi = createRetrofit(convertFactory, okHttpClient).create(WorkSpaceApi::class.java)
+
     companion object {
         private const val BASE_URL = "https://dev.meeron.net/"
     }

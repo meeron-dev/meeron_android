@@ -43,7 +43,8 @@ class MeetingRepositoryImpl @Inject constructor(
                 val pathname = fileProvider.getPath(fileInfo.uriString)
                 val mediaType = fileProvider.getMediaType(fileInfo.uriString)
                 meetingApi.addFile(
-                    agendaId = agendaResponse.agendaResponses[index].createdAgendaId, MultipartBody.Part.createFormData(
+                    agendaId = agendaResponse.agendaResponses[index].createdAgendaId,
+                    files = MultipartBody.Part.createFormData(
                         name = "files",
                         filename = fileInfo.fileName,
                         body = File(pathname).asRequestBody("$mediaType/*".toMediaType())

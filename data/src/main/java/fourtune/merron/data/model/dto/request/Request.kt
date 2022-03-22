@@ -11,7 +11,7 @@ data class WorkSpaceUserIdsRequest(
 
 @Serializable
 data class AgendaRequest(
-    val agendas :List<Agenda>
+    val agendas: List<Agenda>
 )
 
 @Serializable
@@ -24,4 +24,19 @@ data class MeetingRequest(
     @SerialName("meetingPurpose") val meetingPurpose: String,
     @SerialName("operationTeamId") val operationTeamId: Long,
     @SerialName("meetingAdminIds") val meetingAdminIds: List<Long>
+)
+
+@Serializable
+data class WorkSpaceRequest(
+    @SerialName("workspaceId") val workspaceId: Long,
+    @SerialName("nickname") val nickname: String,
+    @SerialName("position") val position: String,
+    @SerialName("email") val email: String,
+    @SerialName("phone") val phone: String,
+)
+
+@Serializable
+data class TeamRequest(
+    @SerialName("workspaceId") val workspaceId: Long,
+    @SerialName("teamName") val teamName: String,
 )

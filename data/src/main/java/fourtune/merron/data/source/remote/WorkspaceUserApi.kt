@@ -2,9 +2,8 @@ package fourtune.merron.data.source.remote
 
 import forutune.meeron.domain.model.WorkspaceUser
 import forutune.meeron.domain.model.WorkspaceUsers
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import okhttp3.MultipartBody
+import retrofit2.http.*
 
 interface WorkspaceUserApi {
 
@@ -22,5 +21,12 @@ interface WorkspaceUserApi {
 
     @GET("/api/teams/{teamId}/workspace-users")
     suspend fun getTeamUser(@Path("teamId") teamId: Long): WorkspaceUsers
+
+    @Multipart
+    @POST("/api/workspace-users/admin")
+    suspend fun createWorkSpaceAdmin(
+        @Part files: MultipartBody.Part? = null,
+        @Part request: MultipartBody.Part
+    )
 
 }

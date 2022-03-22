@@ -15,6 +15,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
+import fourtune.meeron.presentation.ui.common.MeeronProgressIndicator
 import fourtune.meeron.presentation.ui.common.action.ContentFactory
 import fourtune.meeron.presentation.ui.common.action.MeeronActionBox
 
@@ -24,9 +25,11 @@ fun CreateTeamScreen(
     onPrevious: () -> Unit = {},
     onNext: () -> Unit = {}
 ) {
+    val showLoading by viewModel.showLoading.collectAsState()
     var teamName by remember {
         mutableStateOf("")
     }
+
 
     Scaffold(
         topBar = { CenterTextTopAppBar(text = "워크 스페이스 생성") },
@@ -36,9 +39,12 @@ fun CreateTeamScreen(
                 leftClick = onPrevious,
                 rightEnable = teamName.isNotEmpty(),
                 rightClick = {
-                    viewModel.createWorkSpace(teamName)
+                    viewModel.createWorkSpace(teamName) {
+                        onNext()
+                    }
                 }
             ) {
+                MeeronProgressIndicator(showLoading)
                 Column {
                     Text(text = "첫번째 팀을\n생성해보세요.", fontSize = 25.sp, color = colorResource(id = R.color.black))
                     Spacer(modifier = Modifier.padding(5.dp))

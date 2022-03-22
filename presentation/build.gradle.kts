@@ -29,6 +29,9 @@ android {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(platform(Dep.Google.firebaseBom))
+    implementation(Dep.Google.firebaseDynamicLinks)
+
     implementation(Dep.Calendar.calendar)
     implementation(Dep.Compose.ui)
     implementation(Dep.Compose.tooling)

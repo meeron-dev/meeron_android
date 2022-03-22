@@ -8,6 +8,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -17,6 +18,7 @@ import fourtune.meeron.presentation.navigator.ext.encodeJson
 import fourtune.meeron.presentation.navigator.type.DateType
 import fourtune.meeron.presentation.navigator.type.MeetingType
 import fourtune.meeron.presentation.navigator.type.WorkSpaceType
+import fourtune.meeron.presentation.ui.DynamicLinkEntryScreen
 import fourtune.meeron.presentation.ui.NameInitScreen
 import fourtune.meeron.presentation.ui.TOSScreen
 import fourtune.meeron.presentation.ui.calendar.CalendarScreen
@@ -34,7 +36,7 @@ import fourtune.meeron.presentation.ui.login.LoginScreen
 sealed interface Navigate {
     fun route() = requireNotNull(this::class.qualifiedName)
     fun route(vararg argument: Any) = route() + argument.joinToString("") { "/$it" }
-    fun deepLink(vararg argument: Any) = HOST + queries(argument)
+    fun deepLink(vararg argument: String): String = SCHEME + queries(argument)
 
     fun destination(vararg path: Any) = route() + path.joinToString("") { "/{$it}" }
 
@@ -42,6 +44,7 @@ sealed interface Navigate {
     object Calendar : Navigate
     object ShowAll : Navigate
 
+    object InviteDynamicLink : Navigate
 
     sealed interface SignIn : Navigate {
         object TOS : SignIn
@@ -72,14 +75,16 @@ sealed interface Navigate {
         object Complete : CreateMeeting
     }
 
-    private fun queries(vararg argument: Any) = argument.mapIndexed { index, arg ->
+    private fun queries(argument: Array<out String>): String = argument.mapIndexed { index, arg ->
         val prefix = if (index == 0) "?"
         else "&"
+
         "$prefix$arg={$arg}"
     }.joinToString("")
 
     companion object {
-        private const val HOST = "meeron"
+        //todo 다이나믹링크 스펙 바뀌면 변경하기...
+        private const val SCHEME = "https://ronmee.page.link"
     }
 }
 
@@ -143,11 +148,14 @@ fun MeeronNavigator() {
         ) {
             CreateTeamScreen(
                 onPrevious = { navController.navigateUp() },
-                onNext = { navController.navigate(Navigate.CreateWorkspace.Complete.route()) }
+                onNext = { workspaceId -> navController.navigate(Navigate.CreateWorkspace.Complete.route(workspaceId)) }
             )
         }
 
-        composable(route = Navigate.CreateWorkspace.Complete.route()) {
+        composable(
+            route = Navigate.CreateWorkspace.Complete.destination(Const.WorkspaceId),
+            arguments = listOf(navArgument(Const.WorkspaceId) { type = NavType.LongType })
+        ) {
             CreateCompleteScreen()
         }
 
@@ -166,7 +174,21 @@ fun MeeronNavigator() {
                 addMeeting = { navController.navigate(Navigate.CreateMeeting.Date.route()) }
             )
         }
-        composable(Navigate.BottomNavi.Team.route()) {
+
+        composable(
+            route = Navigate.InviteDynamicLink.route(),
+            deepLinks = listOf(navDeepLink {
+                //"https://ronmee.page.link?id={id}"
+                uriPattern = Navigate.InviteDynamicLink.deepLink("id")
+            })
+        ) {
+            DynamicLinkEntryScreen()
+        }
+
+
+        composable(
+            route = Navigate.BottomNavi.Team.route(),
+        ) {
 
         }
 

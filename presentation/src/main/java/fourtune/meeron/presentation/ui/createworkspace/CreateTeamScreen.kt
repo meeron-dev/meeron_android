@@ -23,7 +23,7 @@ import fourtune.meeron.presentation.ui.common.action.MeeronActionBox
 fun CreateTeamScreen(
     viewModel: CreateTeamViewModel = hiltViewModel(),
     onPrevious: () -> Unit = {},
-    onNext: () -> Unit = {}
+    onNext: (workspaceId: Long) -> Unit = {}
 ) {
     val showLoading by viewModel.showLoading.collectAsState()
     var teamName by remember {
@@ -39,9 +39,7 @@ fun CreateTeamScreen(
                 leftClick = onPrevious,
                 rightEnable = teamName.isNotEmpty(),
                 rightClick = {
-                    viewModel.createWorkSpace(teamName) {
-                        onNext()
-                    }
+                    viewModel.createWorkSpace(teamName, onNext)
                 }
             ) {
                 MeeronProgressIndicator(showLoading)

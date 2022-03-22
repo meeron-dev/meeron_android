@@ -23,14 +23,14 @@ class CreateTeamViewModel @Inject constructor(
     private val _showLoading = MutableStateFlow(false)
     val showLoading = _showLoading.asStateFlow()
 
-    fun createWorkSpace(teamName: String, onCreate: () -> Unit) {
+    fun createWorkSpace(teamName: String, onCreate: (workspaceId: Long) -> Unit) {
         viewModelScope.launch {
             kotlin.runCatching {
                 _showLoading.emit(true)
                 createWorkSpaceUseCase(workSpace, teamName)
-            }.onSuccess {
+            }.onSuccess { workspaceId ->
                 _showLoading.emit(false)
-                onCreate()
+                onCreate(workspaceId)
             }.onFailure {
                 _showLoading.emit(false)
                 Timber.tag("🔥zero:createWorkSpace").e("$it")

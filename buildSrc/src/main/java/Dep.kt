@@ -15,6 +15,12 @@ object App {
 object Dep {
     const val androidGradlePlugin = "com.android.tools.build:gradle:7.1.0"
 
+    object Google {
+        const val firebase = "com.google.gms:google-services:4.3.10"
+        const val firebaseBom = "com.google.firebase:firebase-bom:29.2.1"
+        const val firebaseDynamicLinks = "com.google.firebase:firebase-dynamic-links-ktx"
+    }
+
     object AndroidX {
         const val startUp = "androidx.startup:startup-runtime:1.1.0"
         const val material = "com.google.android.material:material:1.6.0-alpha02"

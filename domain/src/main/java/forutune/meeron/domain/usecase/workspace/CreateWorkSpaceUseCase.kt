@@ -11,9 +11,10 @@ class CreateWorkSpaceUseCase @Inject constructor(
     private val workspaceUserRepository: WorkspaceUserRepository,
     private val teamRepository: TeamRepository
 ) {
-    suspend operator fun invoke(workSpace: WorkSpace, teamName: String) {
+    suspend operator fun invoke(workSpace: WorkSpace, teamName: String): Long {
         val workspaceInfo = workSpaceRepository.createWorkSpace(workSpace.workspaceName)
         workspaceUserRepository.createWorkspaceAdmin(workSpace.copy(workspaceId = workspaceInfo.workSpaceId))
         teamRepository.createTeam(workspaceInfo.workSpaceId, teamName)
+        return workspaceInfo.workSpaceId
     }
 }

@@ -21,8 +21,14 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="meeron"
+                    android:host="ronmee.page.link"
+                    android:path="/invite"
                     android:scheme="http" />
+
+                <data
+                    android:host="ronmee.page.link"
+                    android:path="/invite"
+                    android:scheme="https" />
             </intent-filter>
 
         </activity>

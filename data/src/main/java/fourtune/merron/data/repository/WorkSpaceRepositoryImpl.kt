@@ -13,4 +13,15 @@ class WorkSpaceRepositoryImpl @Inject constructor(
         return WorkSpaceInfo(res.workspaceId, res.workspaceName, res.workspaceLogoUrl)
     }
 
+    override suspend fun getUserWorkspace(userId: Long): List<WorkSpaceInfo> {
+        return workSpaceApi.getUserWorkspaces(userId).myWorkspaces.map {
+            WorkSpaceInfo(it.workspaceId, it.workspaceName, it.workspaceLogoUrl)
+        }
+    }
+
+    override suspend fun getWorkspace(workspaceId: Long): WorkSpaceInfo {
+        val res = workSpaceApi.getWorkSpace(workspaceId)
+        return WorkSpaceInfo(res.workspaceId, res.workspaceName, res.workspaceLogoUrl)
+    }
+
 }

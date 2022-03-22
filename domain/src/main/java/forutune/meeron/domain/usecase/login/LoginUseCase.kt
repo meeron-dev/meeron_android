@@ -15,7 +15,7 @@ class LoginUseCase @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val loginRepository: LoginRepository,
     private val userRepository: UserRepository,
-    private val tokenRepository: TokenRepository
+    private val tokenRepository: TokenRepository,
 ) {
 
     suspend operator fun invoke(

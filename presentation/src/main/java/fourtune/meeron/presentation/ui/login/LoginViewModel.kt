@@ -18,7 +18,7 @@ import kotlinx.coroutines.rx2.await
 import timber.log.Timber
 import javax.inject.Inject
 
-private fun User.toLoginUser(): LoginUser {
+fun User.toLoginUser(): LoginUser {
     return LoginUser(
         kakaoAccount?.email.orEmpty(),
         kakaoAccount?.profile?.nickname.orEmpty(),

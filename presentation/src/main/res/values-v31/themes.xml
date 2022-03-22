@@ -8,8 +8,7 @@
 
     <style name="Theme.Splash" parent="Theme.SplashScreen">
         <item name="android:windowSplashScreenBackground">@color/white</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_meeron</item>
-        <item name="android:windowSplashScreenIconBackgroundColor">@color/black</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_meeron_symbol_logo</item>
         <item name="postSplashScreenTheme">@style/Theme.Meeron</item>
     </style>
 

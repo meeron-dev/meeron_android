@@ -81,7 +81,12 @@ private fun TOSOptions(
 
         },
         onDetail = {
-            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://www.naver.com")))
+            context.startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://ryuyxxn.notion.site/29115494f9324509ba21416bbb1c7ef1")
+                )
+            )
         }
     )
     MeeronCheckBox(
@@ -92,7 +97,12 @@ private fun TOSOptions(
             allAgree = agrees.all { it }
         },
         onDetail = {
-            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://www.naver.com")))
+            context.startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://ryuyxxn.notion.site/502b6e5487664faab875f7b4e5383a7b")
+                )
+            )
         }
     )
 }

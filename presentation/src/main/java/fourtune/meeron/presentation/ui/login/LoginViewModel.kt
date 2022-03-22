@@ -73,6 +73,7 @@ class LoginViewModel @Inject constructor(
                     _toast.emit(it.message)
                 }
                 .isSuccess
+
             _loginSuccess.emit(isLoginSuccess)
         }
     }

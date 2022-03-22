@@ -95,8 +95,8 @@ fun MeeronNavigator() {
     val navController = rememberAnimatedNavController()
     AnimatedNavHost(
         navController = navController,
-        startDestination = Navigate.CreateWorkspace.CreateOrJoin.route()
-//        startDestination = Navigate.Login.route()
+//        startDestination = Navigate.CreateWorkspace.CreateOrJoin.route()
+        startDestination = Navigate.Login.route()
     ) {
         composable(route = Navigate.Login.route()) {
             LoginScreen(isLoginSuccess = {

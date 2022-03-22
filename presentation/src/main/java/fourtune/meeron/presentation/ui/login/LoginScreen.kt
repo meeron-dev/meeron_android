@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -37,7 +38,7 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel(), isLoginSuccess: () 
             .fillMaxSize()
             .padding(horizontal = 23.dp, vertical = 90.dp),
     ) {
-
+        Text(text = "로그아웃(test)", modifier = Modifier.clickable { viewModel.logout() })
         Image(
             modifier = Modifier.align(Alignment.Center),
             painter = painterResource(id = R.drawable.ic_meeron_symbol),

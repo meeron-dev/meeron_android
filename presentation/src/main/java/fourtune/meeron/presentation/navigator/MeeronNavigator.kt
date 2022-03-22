@@ -91,12 +91,11 @@ sealed interface Navigate {
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun MeeronNavigator() {
+fun MeeronNavigator(startDestination: Navigate) {
     val navController = rememberAnimatedNavController()
     AnimatedNavHost(
         navController = navController,
-//        startDestination = Navigate.CreateWorkspace.CreateOrJoin.route()
-        startDestination = Navigate.Login.route()
+        startDestination = startDestination.route()
     ) {
         composable(route = Navigate.Login.route()) {
             LoginScreen(isLoginSuccess = {

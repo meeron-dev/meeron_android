@@ -1,6 +1,7 @@
 package fourtune.meeron.presentation
 
 import android.os.Bundle
+import android.view.ViewTreeObserver
 import android.widget.LinearLayout
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,6 +10,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import fourtune.meeron.presentation.navigator.MeeronNavigator
+import fourtune.meeron.presentation.navigator.Navigate
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -29,15 +31,33 @@ class MainActivity : ComponentActivity() {
             )
         )
 
-        viewModel.event.onEach {
+        rootView.viewTreeObserver.addOnPreDrawListener(
+            object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    return if (isReady) {
+                        rootView.viewTreeObserver.removeOnPreDrawListener(this)
+                        true
+                    } else {
+                        false
+                    }
+                }
+            }
+        )
+
+        viewModel.event.onEach { event ->
+            val navigate = when (event) {
+                MainViewModel.Event.GoToHome -> Navigate.BottomNavi.Home
+                MainViewModel.Event.GoToLogin -> Navigate.Login
+            }
             isReady = true
+            setContent {
+                MeeronTheme {
+                    MeeronNavigator(navigate)
+                }
+            }
         }.launchIn(lifecycleScope)
 
-        setContent {
-            MeeronTheme {
-                MeeronNavigator()
-            }
-        }
+
     }
 
 }

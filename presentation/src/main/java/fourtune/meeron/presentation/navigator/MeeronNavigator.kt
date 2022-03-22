@@ -106,7 +106,7 @@ fun MeeronNavigator(startDestination: Navigate) {
 
         composable(route = Navigate.SignIn.TOS.route()) {
             TOSScreen(
-                onNext = {}
+                onNext = { navController.navigate(Navigate.SignIn.NameInit.route()) }
             )
         }
 
@@ -155,7 +155,9 @@ fun MeeronNavigator(startDestination: Navigate) {
             route = Navigate.CreateWorkspace.Complete.destination(Const.WorkspaceId),
             arguments = listOf(navArgument(Const.WorkspaceId) { type = NavType.LongType })
         ) {
-            CreateCompleteScreen()
+            CreateCompleteScreen{
+                navController.navigate(Navigate.BottomNavi.Home.route())
+            }
         }
 
         composable(route = Navigate.BottomNavi.Home.route()) {
@@ -170,7 +172,8 @@ fun MeeronNavigator(startDestination: Navigate) {
                         Navigate.BottomNavi.My -> navController.navigate(Navigate.BottomNavi.My.route())
                     }
                 },
-                addMeeting = { navController.navigate(Navigate.CreateMeeting.Date.route()) }
+                addMeeting = { navController.navigate(Navigate.CreateMeeting.Date.route()) },
+                createWorkspace = { navController.navigate(Navigate.CreateWorkspace.CreateOrJoin.route()) }
             )
         }
 

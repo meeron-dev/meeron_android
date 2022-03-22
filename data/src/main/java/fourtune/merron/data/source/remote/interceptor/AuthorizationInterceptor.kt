@@ -13,12 +13,16 @@ class AuthorizationInterceptor @Inject constructor(
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val token = runBlocking { tokenRepository.getAccessToken().firstOrNull() }
-
-        val request = chain.request()
-            .newBuilder()
-            .addHeader(KEY_AUTHORIZATION, "Bearer $token")
-            .build()
-
+        val request = if (token == null) {
+            chain.request()
+                .newBuilder()
+                .build()
+        } else {
+            chain.request()
+                .newBuilder()
+                .addHeader(KEY_AUTHORIZATION, "Bearer $token")
+                .build()
+        }
         return chain.proceed(request)
     }
 

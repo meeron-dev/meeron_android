@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.usecase.user.CreateUserUseCase
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -14,7 +15,11 @@ class NameInitViewModel @Inject constructor(
 
     fun saveName(userName: String) {
         viewModelScope.launch {
-            createUserUseCase(userName)
+            kotlin.runCatching {
+                createUserUseCase(userName)
+            }.onFailure {
+                Timber.tag("🔥zero:saveName").e("$it")
+            }
         }
     }
 

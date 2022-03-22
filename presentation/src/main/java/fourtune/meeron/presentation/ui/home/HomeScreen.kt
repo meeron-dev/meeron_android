@@ -33,6 +33,7 @@ import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.navigator.Navigate
 import fourtune.meeron.presentation.ui.common.Dot
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
+import kotlinx.coroutines.launch
 
 enum class TabItems(@StringRes val text: Int) {
     TODO(R.string.coming_soon), COMPLETE(R.string.complete)
@@ -44,7 +45,8 @@ fun HomeScreen(
     openCalendar: () -> Unit = {},
     onBottomNaviClick: (selected: Navigate.BottomNavi) -> Unit = {},
     addMeeting: () -> Unit = {},
-    homeViewModel: HomeViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = hiltViewModel(),
+    createWorkspace: () -> Unit = {}
 ) {
     val currentDay by homeViewModel.currentDay().collectAsState()
     val pagerState = rememberPagerState(0)
@@ -52,11 +54,21 @@ fun HomeScreen(
     var tabPos by rememberSaveable {
         mutableStateOf(TabItems.TODO.ordinal)
     }
+    val scope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Closed))
     Scaffold(
+        scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { /*TODO OPEN SIDE DRAWER*/ }) {
+                    IconButton(onClick = {
+                        if (scaffoldState.drawerState.isOpen) {
+                            scope.launch { scaffoldState.drawerState.close() }
+                        } else {
+                            scope.launch { scaffoldState.drawerState.open() }
+                        }
+
+                    }) {
                         Image(painter = painterResource(id = R.drawable.ic_home_menu), contentDescription = "title")
                     }
                 },
@@ -81,6 +93,19 @@ fun HomeScreen(
                     .height(bottomBarSize),
                 onClick = onBottomNaviClick
             )
+        },
+        drawerContent = {
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(300.dp)
+            ) {
+                Text(
+                    text = "워크스페이스 추가",
+                    color = colorResource(id = R.color.primary),
+                    modifier = Modifier.clickable(onClick = createWorkspace)
+                )
+            }
         }
     ) {
         Column(

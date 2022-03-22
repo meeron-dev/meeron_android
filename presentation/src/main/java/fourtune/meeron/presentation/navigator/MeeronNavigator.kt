@@ -98,10 +98,16 @@ fun MeeronNavigator(startDestination: Navigate) {
         startDestination = startDestination.route()
     ) {
         composable(route = Navigate.Login.route()) {
-            LoginScreen(isLoginSuccess = {
-                navController.popBackStack()
-                navController.navigate(Navigate.BottomNavi.Home.route())
-            })
+            LoginScreen(
+                goToHome = {
+                    navController.popBackStack()
+                    navController.navigate(Navigate.BottomNavi.Home.route())
+                },
+                goToSignIn = {
+                    navController.popBackStack()
+                    navController.navigate(Navigate.SignIn.TOS.route())
+                }
+            )
         }
 
         composable(route = Navigate.SignIn.TOS.route()) {
@@ -155,7 +161,7 @@ fun MeeronNavigator(startDestination: Navigate) {
             route = Navigate.CreateWorkspace.Complete.destination(Const.WorkspaceId),
             arguments = listOf(navArgument(Const.WorkspaceId) { type = NavType.LongType })
         ) {
-            CreateCompleteScreen{
+            CreateCompleteScreen {
                 navController.navigate(Navigate.BottomNavi.Home.route())
             }
         }

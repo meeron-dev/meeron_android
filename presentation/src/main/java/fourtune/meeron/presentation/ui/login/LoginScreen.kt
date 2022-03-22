@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel = hiltViewModel(), isLoginSuccess: () -> Unit) {
+fun LoginScreen(viewModel: LoginViewModel = hiltViewModel(), goToHome: () -> Unit = {}, goToSignIn: () -> Unit = {}) {
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
         viewModel.toast.collect {
@@ -30,7 +30,10 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel(), isLoginSuccess: () 
     }
     LaunchedEffect(key1 = true) {
         viewModel.loginSuccess().collectLatest { isLoginSuccess ->
-            if (isLoginSuccess) isLoginSuccess()
+            when (isLoginSuccess) {
+                LoginViewModel.Event.HasWorkspace -> goToHome()
+                LoginViewModel.Event.NoWorkspace -> goToSignIn()
+            }
         }
     }
     Box(

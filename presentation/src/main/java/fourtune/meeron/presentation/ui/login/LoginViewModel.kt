@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.model.LoginUser
 import forutune.meeron.domain.usecase.login.LoginUseCase
 import forutune.meeron.domain.usecase.login.LogoutUseCase
+import forutune.meeron.domain.usecase.workspace.GetUserWorkspacesUseCase
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -30,9 +31,10 @@ fun User.toLoginUser(): LoginUser {
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val logoutUseCase: LogoutUseCase,
+    private val getUserWorkspaces: GetUserWorkspacesUseCase,
 ) : ViewModel() {
-    private val _loginSuccess = MutableSharedFlow<Boolean>()
+    private val _loginSuccess = MutableSharedFlow<Event>()
     fun loginSuccess() = _loginSuccess.asSharedFlow()
 
     private val _toast = MutableSharedFlow<String?>()
@@ -45,22 +47,22 @@ class LoginViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(loginContext) {
-            val isLoginSuccess =
-                runCatching {
-                    loginUseCase(getMe = { UserApiClient.rx.me().await().toLoginUser() })
+            runCatching {
+                loginUseCase(getMe = { UserApiClient.rx.me().await().toLoginUser() })
+            }
+                .onFailure {
+                    Timber.tag("🔥zero:initLogin").w("$it")
+                    _toast.emit(it.message)
+                }.onSuccess {
+                    redirectLoginEvent()
                 }
-                    .onFailure {
-                        Timber.tag("🔥zero:initLogin").w("$it")
-                        _toast.emit(it.message)
-                    }
-                    .isSuccess
-            _loginSuccess.emit(isLoginSuccess)
+
         }
     }
 
     fun launchKakaoLogin(context: Context) {
         viewModelScope.launch(loginContext) {
-            val isLoginSuccess = runCatching {
+            runCatching {
                 loginUseCase(
                     kakaoLogin = { UserApiClient.rx.loginWithKakaoTalk(context = context).await() },
                     isKakaoLoginAvailable = { UserApiClient.instance.isKakaoTalkLoginAvailable(context) },
@@ -71,10 +73,22 @@ class LoginViewModel @Inject constructor(
                 .onFailure {
                     Timber.tag("🔥zero:launchKakaoLogin").w("$it")
                     _toast.emit(it.message)
+                }.onSuccess {
+                    redirectLoginEvent()
                 }
-                .isSuccess
 
-            _loginSuccess.emit(isLoginSuccess)
+
+        }
+    }
+
+    private fun redirectLoginEvent() {
+        viewModelScope.launch {
+            val event = if (getUserWorkspaces().isEmpty()) {
+                Event.NoWorkspace
+            } else {
+                Event.HasWorkspace
+            }
+            _loginSuccess.emit(event)
         }
     }
 
@@ -82,5 +96,10 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch(loginContext) {
             logoutUseCase(kakaoLogout = { UserApiClient.rx.unlink().await() })
         }
+    }
+
+    sealed interface Event {
+        object NoWorkspace : Event
+        object HasWorkspace : Event
     }
 }

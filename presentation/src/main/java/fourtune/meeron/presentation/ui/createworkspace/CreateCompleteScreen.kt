@@ -27,7 +27,11 @@ import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
 
 @Composable
-fun CreateCompleteScreen(viewModel: CreateCompleteViewModel = hiltViewModel(), onComplete: () -> Unit = {}) {
+fun CreateCompleteScreen(
+    viewModel: CreateCompleteViewModel = hiltViewModel(),
+    onComplete: () -> Unit = {},
+    showOnBoarding: () -> Unit = {}
+) {
     val clipboardManager = LocalClipboardManager.current
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -40,7 +44,10 @@ fun CreateCompleteScreen(viewModel: CreateCompleteViewModel = hiltViewModel(), o
             MeeronSingleButtonBackGround(
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 50.dp),
                 text = "다음에 하기",
-                onClick = onComplete
+                onClick = {
+                    if (uiState.showOnBoarding) showOnBoarding()
+                    else onComplete()
+                }
             ) {
                 Column {
 

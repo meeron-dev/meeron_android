@@ -53,9 +53,10 @@ object Dep {
     }
 
     object Accompanist {
-        const val pager = "com.google.accompanist:accompanist-pager:0.24.2-alpha"
-        const val navigationAnimation = "com.google.accompanist:accompanist-navigation-animation:0.24.3-alpha"
-        const val permission = "com.google.accompanist:accompanist-permissions:0.24.3-alpha"
+        const val pager = "com.google.accompanist:accompanist-pager:0.24.4-alpha"
+        const val pagerIndicator = "com.google.accompanist:accompanist-pager-indicators:0.24.4-alpha"
+        const val navigationAnimation = "com.google.accompanist:accompanist-navigation-animation:0.24.4-alpha"
+        const val permission = "com.google.accompanist:accompanist-permissions:0.24.4-alpha"
     }
 
     object Kotlin {

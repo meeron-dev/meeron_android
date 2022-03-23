@@ -20,6 +20,7 @@ import fourtune.meeron.presentation.navigator.type.MeetingType
 import fourtune.meeron.presentation.navigator.type.WorkSpaceType
 import fourtune.meeron.presentation.ui.DynamicLinkEntryScreen
 import fourtune.meeron.presentation.ui.NameInitScreen
+import fourtune.meeron.presentation.ui.OnBoardingScreen
 import fourtune.meeron.presentation.ui.TOSScreen
 import fourtune.meeron.presentation.ui.calendar.CalendarScreen
 import fourtune.meeron.presentation.ui.calendar.all.ShowAllScreen
@@ -43,6 +44,8 @@ sealed interface Navigate {
     object Login : Navigate
     object Calendar : Navigate
     object ShowAll : Navigate
+
+    object OnBoarding : Navigate
 
     object InviteDynamicLink : Navigate
 
@@ -96,6 +99,7 @@ fun MeeronNavigator(startDestination: Navigate) {
     AnimatedNavHost(
         navController = navController,
         startDestination = startDestination.route()
+//        startDestination = Navigate.OnBoarding.route()
     ) {
         composable(route = Navigate.Login.route()) {
             LoginScreen(
@@ -106,6 +110,10 @@ fun MeeronNavigator(startDestination: Navigate) {
                 goToSignIn = {
                     navController.popBackStack()
                     navController.navigate(Navigate.SignIn.TOS.route())
+                },
+                showOnBoarding = {
+                    navController.popBackStack()
+                    navController.navigate(Navigate.OnBoarding.route())
                 }
             )
         }
@@ -117,7 +125,7 @@ fun MeeronNavigator(startDestination: Navigate) {
         }
 
         composable(route = Navigate.SignIn.NameInit.route()) {
-            NameInitScreen()
+            NameInitScreen(onNext = { navController.navigate(Navigate.CreateWorkspace.CreateOrJoin.route()) })
         }
 
         composable(route = Navigate.CreateWorkspace.CreateOrJoin.route()) {
@@ -161,9 +169,18 @@ fun MeeronNavigator(startDestination: Navigate) {
             route = Navigate.CreateWorkspace.Complete.destination(Const.WorkspaceId),
             arguments = listOf(navArgument(Const.WorkspaceId) { type = NavType.LongType })
         ) {
-            CreateCompleteScreen {
-                navController.navigate(Navigate.BottomNavi.Home.route())
-            }
+            CreateCompleteScreen(
+                onComplete = {
+                    navController.navigate(Navigate.BottomNavi.Home.route())
+                },
+                showOnBoarding = {
+                    navController.navigate(Navigate.OnBoarding.route())
+                }
+            )
+        }
+
+        composable(route = Navigate.OnBoarding.route()) {
+            OnBoardingScreen(goToHome = { navController.navigate(Navigate.BottomNavi.Home.route()) })
         }
 
         composable(route = Navigate.BottomNavi.Home.route()) {

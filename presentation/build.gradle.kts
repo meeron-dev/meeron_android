@@ -40,6 +40,7 @@ dependencies {
     implementation(Dep.Compose.constraint)
 
     implementation(Dep.Accompanist.pager)
+    implementation(Dep.Accompanist.pagerIndicator)
     implementation(Dep.Accompanist.navigationAnimation)
     implementation(Dep.Accompanist.permission)
 

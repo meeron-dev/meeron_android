@@ -8,6 +8,7 @@ import com.kakao.sdk.user.model.User
 import com.kakao.sdk.user.rx
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.model.LoginUser
+import forutune.meeron.domain.usecase.IsFirstVisitUserUseCase
 import forutune.meeron.domain.usecase.login.LoginUseCase
 import forutune.meeron.domain.usecase.login.LogoutUseCase
 import forutune.meeron.domain.usecase.workspace.GetUserWorkspacesUseCase
@@ -33,6 +34,7 @@ class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val logoutUseCase: LogoutUseCase,
     private val getUserWorkspaces: GetUserWorkspacesUseCase,
+    private val isFirstVisitUser: IsFirstVisitUserUseCase
 ) : ViewModel() {
     private val _loginSuccess = MutableSharedFlow<Event>()
     fun loginSuccess() = _loginSuccess.asSharedFlow()
@@ -83,10 +85,13 @@ class LoginViewModel @Inject constructor(
 
     private fun redirectLoginEvent() {
         viewModelScope.launch {
+            val isFirstVisit = isFirstVisitUser()
             val event = if (getUserWorkspaces().isEmpty()) {
-                Event.NoWorkspace
+                Event.GoToSignIn
             } else {
-                Event.HasWorkspace
+                if (isFirstVisit) Event.ShowOnBoarding
+                else Event.GoToHome
+
             }
             _loginSuccess.emit(event)
         }
@@ -99,7 +104,8 @@ class LoginViewModel @Inject constructor(
     }
 
     sealed interface Event {
-        object NoWorkspace : Event
-        object HasWorkspace : Event
+        object GoToSignIn : Event
+        object GoToHome : Event
+        object ShowOnBoarding : Event
     }
 }

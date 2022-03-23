@@ -2,9 +2,9 @@ package fourtune.meeron.presentation.ui.common
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -34,7 +34,7 @@ fun UserGrids(
     },
     ownerIds: List<Long> = emptyList(),
 ) {
-    LazyVerticalGrid(cells = GridCells.Fixed(4)) {
+    LazyVerticalGrid(columns = GridCells.Fixed(4)) {
         items(items = displayUsers, key = { it.workspaceUserId }) { user ->
             UserItem(
                 modifier = Modifier.clickable { onSelectUser(user) },

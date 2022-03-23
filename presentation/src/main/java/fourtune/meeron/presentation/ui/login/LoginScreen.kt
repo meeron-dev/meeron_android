@@ -17,11 +17,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import fourtune.meeron.presentation.R
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel = hiltViewModel(), goToHome: () -> Unit = {}, goToSignIn: () -> Unit = {}) {
+fun LoginScreen(
+    viewModel: LoginViewModel = hiltViewModel(),
+    goToHome: () -> Unit = {},
+    goToSignIn: () -> Unit = {},
+    showOnBoarding: () -> Unit = {}
+) {
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
         viewModel.toast.collect {
@@ -31,8 +35,9 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel(), goToHome: () -> Uni
     LaunchedEffect(key1 = true) {
         viewModel.loginSuccess().collectLatest { isLoginSuccess ->
             when (isLoginSuccess) {
-                LoginViewModel.Event.HasWorkspace -> goToHome()
-                LoginViewModel.Event.NoWorkspace -> goToSignIn()
+                LoginViewModel.Event.GoToHome -> goToHome()
+                LoginViewModel.Event.GoToSignIn -> goToSignIn()
+                LoginViewModel.Event.ShowOnBoarding -> showOnBoarding()
             }
         }
     }

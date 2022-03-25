@@ -148,16 +148,23 @@ fun MeeronNavigator(startDestination: Navigate) {
 
         composable(
             route = Navigate.CreateWorkspace.Profile.destination(Const.WorkspaceName),
-            arguments = listOf(navArgument(Const.WorkspaceName) { type = NavType.StringType })
+            arguments = listOf(
+                navArgument(Const.WorkspaceName) {
+                    type = NavType.StringType
+                    nullable = true
+                }
+            )
         ) {
             CreateWorkspaceProfileScreen(
-                onNext = { navController.navigate(Navigate.CreateWorkspace.Team.route(it.encodeJson())) }
+                onNext = { workspace ->
+                    navController.navigate(Navigate.CreateWorkspace.Team.route(workspace.encodeJson()))
+                }
             )
         }
 
         composable(
             route = Navigate.CreateWorkspace.Team.destination(Const.WorkSpace),
-            arguments = listOf(element = navArgument(Const.WorkSpace) { type = WorkSpaceType() })
+            arguments = listOf(navArgument(Const.WorkSpace) { type = WorkSpaceType() })
         ) {
             CreateTeamScreen(
                 onPrevious = { navController.navigateUp() },
@@ -191,7 +198,7 @@ fun MeeronNavigator(startDestination: Navigate) {
             })
         }
 
-        composable(route = Navigate.BottomNavi.Home.route()) {
+        composable(route = Navigate.BottomNavi.Home.route()) {//todo 여기에 항상 워크스페이스 ID를 물고 들어오도록 바꿔야 할듯
             HomeScreen(
                 openCalendar = {
                     navController.navigate(Navigate.Calendar.route())
@@ -215,7 +222,21 @@ fun MeeronNavigator(startDestination: Navigate) {
                 uriPattern = Navigate.InviteDynamicLink.deepLink("id")
             })
         ) {
-            DynamicLinkEntryScreen()
+            DynamicLinkEntryScreen(
+                goToTOS = {
+                    navController.navigate(Navigate.SignIn.TOS.route()) {
+                        popUpTo(Navigate.BottomNavi.Home.route()) { inclusive = true }
+                    }
+                },
+                goToLogin = {
+                    navController.navigate(Navigate.Login.route()) {
+                        popUpTo(Navigate.BottomNavi.Home.route()) { inclusive = true }
+                    }
+                },
+                goToHome = {
+                    navController.navigate(Navigate.BottomNavi.Home.route())
+                }
+            )
         }
 
 

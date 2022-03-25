@@ -30,7 +30,6 @@ fun CreateTeamScreen(
         mutableStateOf("")
     }
 
-
     Scaffold(
         topBar = { CenterTextTopAppBar(text = "워크 스페이스 생성") },
         content = {

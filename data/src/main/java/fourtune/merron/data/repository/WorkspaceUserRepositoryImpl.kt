@@ -41,40 +41,52 @@ class WorkspaceUserRepositoryImpl @Inject constructor(
 
     override suspend fun setCurrentWorkspaceUserId(workspaceUserId: Long) {
         dataStore.edit {
-            it[DataStoreKeys.WorkspaceUser.id] = workspaceUserId
+            it[DataStoreKeys.Workspace.userId] = workspaceUserId
         }
     }
 
     override fun getCurrentWorkspaceUserId(): Flow<Long?> {
         return dataStore.data.map {
-            it[DataStoreKeys.WorkspaceUser.id]
+            it[DataStoreKeys.Workspace.userId]
         }
     }
 
     override suspend fun createWorkspaceAdmin(workSpace: WorkSpace) {
-        val files = kotlin.runCatching {
-            val fileName = fileProvider.getFileName(workSpace.image)
-            val pathName = fileProvider.getPath(workSpace.image)
-            if (pathName != null) MultipartBody.Part.createFormData(
-                name = "files",
-                filename = fileName,
-                body = File(pathName).asRequestBody("image/*".toMediaType())
-            ) else null
-        }.onFailure { Timber.tag("🔥zero:fileCreation").e("$it") }.getOrNull()
-
-        val requestBody = Json.encodeToString(
-            WorkSpaceRequest(
-                workspaceId = workSpace.workspaceId,
-                nickname = workSpace.nickname,
-                position = workSpace.position,
-                email = workSpace.email,
-                phone = workSpace.phone
-            )
-        ).toRequestBody("application/json".toMediaType())
+        val files = createFileData(workSpace)
+        val requestBody = createWorkspaceRequestBody(workSpace)
 
         workspaceUserApi.createWorkSpaceAdmin(
             request = MultipartBody.Part.createFormData(name = "request", body = requestBody, filename = "request"),
             files = files
         )
     }
+
+    override suspend fun createWorkspaceUser(workSpace: WorkSpace) {
+        val files = createFileData(workSpace)
+        val requestBody = createWorkspaceRequestBody(workSpace)
+        workspaceUserApi.createWorkSpaceUser(
+            request = MultipartBody.Part.createFormData(name = "request", body = requestBody, filename = "request"),
+            files = files
+        )
+    }
+
+    private fun createWorkspaceRequestBody(workSpace: WorkSpace) = Json.encodeToString(
+        WorkSpaceRequest(
+            workspaceId = workSpace.workspaceId,
+            nickname = workSpace.nickname,
+            position = workSpace.position,
+            email = workSpace.email,
+            phone = workSpace.phone
+        )
+    ).toRequestBody("application/json".toMediaType())
+
+    private fun createFileData(workSpace: WorkSpace) = kotlin.runCatching {
+        val fileName = fileProvider.getFileName(workSpace.image)
+        val pathName = fileProvider.getPath(workSpace.image)
+        if (pathName != null) MultipartBody.Part.createFormData(
+            name = "files",
+            filename = fileName,
+            body = File(pathName).asRequestBody("image/*".toMediaType())
+        ) else null
+    }.onFailure { Timber.tag("🔥zero:fileCreation").e("$it") }.getOrNull()
 }

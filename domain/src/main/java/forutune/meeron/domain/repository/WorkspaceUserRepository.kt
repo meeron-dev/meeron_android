@@ -13,4 +13,5 @@ interface WorkspaceUserRepository {
     fun getCurrentWorkspaceUserId(): Flow<Long?>
 
     suspend fun createWorkspaceAdmin(workSpace: WorkSpace)
+    suspend fun createWorkspaceUser(workSpace: WorkSpace)
 }

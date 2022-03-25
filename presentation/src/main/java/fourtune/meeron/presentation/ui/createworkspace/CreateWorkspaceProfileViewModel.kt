@@ -19,7 +19,7 @@ class CreateWorkspaceProfileViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState =
-        MutableStateFlow(UiState(workSpace = WorkSpace(workspaceName = requireNotNull(savedStateHandle[Const.WorkspaceName]))))
+        MutableStateFlow(UiState(workSpace = WorkSpace(workspaceName = savedStateHandle[Const.WorkspaceName] ?: "")))
     val uiState = _uiState.asStateFlow()
 
     val workspaceInfoMap = Info.values()

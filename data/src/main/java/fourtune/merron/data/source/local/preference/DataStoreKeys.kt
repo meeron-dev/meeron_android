@@ -14,8 +14,9 @@ object DataStoreKeys {
         val refreshToken = stringPreferencesKey("refreshToken")
     }
 
-    object WorkspaceUser {
-        val id = longPreferencesKey("workSpaceUserId")
+    object Workspace {
+        val userId = longPreferencesKey("workSpaceUserId")
+        val id = longPreferencesKey("workSpaceId")
     }
 
     object User {

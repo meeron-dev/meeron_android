@@ -41,7 +41,7 @@ import fourtune.meeron.presentation.ui.common.action.MeeronActionBox
 @Composable
 fun CreateWorkspaceProfileScreen(
     viewModel: CreateWorkspaceProfileViewModel = hiltViewModel(),
-    onNext: (WorkSpace) -> Unit
+    onNext: (WorkSpace) -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -137,7 +137,7 @@ private fun ProfileImage(image: String, onClick: () -> Unit = {}) {
 @Preview
 @Composable
 private fun Preview() {
-    CreateWorkspaceProfileScreen {
+    CreateWorkspaceProfileScreen { _ ->
 
     }
 }

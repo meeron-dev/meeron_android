@@ -5,4 +5,5 @@ import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun DynamicLinkEntryScreen(viewModel: DynamicLinkEntryViewModel = hiltViewModel()) {
+
 }

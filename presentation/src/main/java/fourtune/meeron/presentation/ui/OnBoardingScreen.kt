@@ -49,7 +49,6 @@ fun OnBoardingScreen(viewModel: OnBoardingViewModel = hiltViewModel(), goToHome:
         HorizontalPager(
             count = OnBoard.values().size,
             state = pagerState,
-            userScrollEnabled = false
         ) {
 
             when (pagerState.currentPage) {

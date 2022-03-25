@@ -99,7 +99,7 @@ fun MeeronNavigator(startDestination: Navigate) {
     AnimatedNavHost(
         navController = navController,
         startDestination = startDestination.route()
-//        startDestination = Navigate.OnBoarding.route()
+//        startDestination = Navigate.CreateWorkspace.CreateOrJoin.route()
     ) {
         composable(route = Navigate.Login.route()) {
             LoginScreen(
@@ -171,16 +171,24 @@ fun MeeronNavigator(startDestination: Navigate) {
         ) {
             CreateCompleteScreen(
                 onComplete = {
-                    navController.navigate(Navigate.BottomNavi.Home.route())
+                    navController.navigate(Navigate.BottomNavi.Home.route()) {
+                        popUpTo(Navigate.Login.route()) { inclusive = true }
+                    }
                 },
                 showOnBoarding = {
-                    navController.navigate(Navigate.OnBoarding.route())
+                    navController.navigate(Navigate.OnBoarding.route()) {
+                        popUpTo(Navigate.Login.route()) { inclusive = true }
+                    }
                 }
             )
         }
 
         composable(route = Navigate.OnBoarding.route()) {
-            OnBoardingScreen(goToHome = { navController.navigate(Navigate.BottomNavi.Home.route()) })
+            OnBoardingScreen(goToHome = {
+                navController.navigate(Navigate.BottomNavi.Home.route()) {
+                    popUpTo(Navigate.Login.route()) { inclusive = true }
+                }
+            })
         }
 
         composable(route = Navigate.BottomNavi.Home.route()) {

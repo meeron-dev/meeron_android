@@ -124,8 +124,8 @@ private fun ProfileImage(image: String, onClick: () -> Unit = {}) {
         ) {
             Image(
                 painter = rememberImagePainter(data = image, builder = {
-                    placeholder(R.drawable.ic_create_workspace_plus)
-                    error(R.drawable.ic_create_workspace_plus)
+                    placeholder(R.drawable.ic_profile_non)
+                    error(R.drawable.ic_profile_non)
                 }),
                 contentDescription = null,
                 contentScale = ContentScale.Fit

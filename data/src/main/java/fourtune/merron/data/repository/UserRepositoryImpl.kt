@@ -25,9 +25,16 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getUser(email: String): User {
         val userEntity = userDao.getUser(email)
-        return if (userEntity != null)
-            User(userId = userEntity.id, loginEmail = userEntity.email, name = userEntity.name)
-        else getUser()
+        return if (userEntity != null) {
+            User(
+                userId = userEntity.id,
+                loginEmail = userEntity.email,
+                name = userEntity.name,
+                profileImageUrl = userEntity.profile
+            )
+        } else {
+            getUser()
+        }
     }
 
     override suspend fun setUserId(userId: Long) {
@@ -51,6 +58,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun setUser(user: User, token: Token) {
         userDao.insert(
             UserEntity(
+                id = user.userId,
                 name = user.name.orEmpty(),
                 email = user.loginEmail,
                 profile = user.profileImageUrl.orEmpty(),
@@ -62,7 +70,4 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateToken(user: User, token: Token) {
-        userDao.updateToken(user.userId, token)
-    }
 }

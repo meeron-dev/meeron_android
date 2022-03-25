@@ -34,19 +34,18 @@ class LoginUseCase @Inject constructor(
     }
 
     private suspend fun updateToken(me: LoginUser, token: Token) {
-        val user = runCatching { userRepository.getUser(me.email) }.getOrNull()
-        if (user == null) {
-            userRepository.setUser(
-                User(
-                    loginEmail = me.email,
-                    name = me.nickname,
-                    profileImageUrl = me.profileImageUrl,
-                ), token
-            )
-        } else {
-            userRepository.updateToken(user, token)
-        }
         tokenRepository.saveToken(token)
+        runCatching { userRepository.getUser(me.email) }
+            .onSuccess { user ->
+                userRepository.setUser(
+                    User(
+                        userId = user.userId,
+                        loginEmail = me.email,
+                        name = me.nickname,
+                        profileImageUrl = me.profileImageUrl,
+                    ), token
+                )
+            }
     }
 
 

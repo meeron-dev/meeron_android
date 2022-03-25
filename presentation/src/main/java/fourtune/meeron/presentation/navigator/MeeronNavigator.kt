@@ -198,7 +198,7 @@ fun MeeronNavigator(startDestination: Navigate) {
             })
         }
 
-        composable(route = Navigate.BottomNavi.Home.route()) {//todo 여기에 항상 워크스페이스 ID를 물고 들어오도록 바꿔야 할듯
+        composable(route = Navigate.BottomNavi.Home.route()) {
             HomeScreen(
                 openCalendar = {
                     navController.navigate(Navigate.Calendar.route())

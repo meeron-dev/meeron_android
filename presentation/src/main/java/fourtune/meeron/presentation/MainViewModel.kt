@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.repository.WorkSpaceRepository
-import forutune.meeron.domain.usecase.me.GetMeUseCase
+import forutune.meeron.domain.usecase.workspace.GetLatestWorkspaceIdUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getMeUseCase: GetMeUseCase,
+    private val getLatestWorkspaceId: GetLatestWorkspaceIdUseCase,
     private val workSpaceRepository: WorkSpaceRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
@@ -27,9 +27,8 @@ class MainViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             runCatching {
-                val me = getMeUseCase()
-                val workSpaceInfos = workSpaceRepository.getUserWorkspace(me.userId)
-                workSpaceRepository.setCurrentWorkspaceId(workSpaceInfos.first().workSpaceId)
+                val workspaceId = getLatestWorkspaceId()
+                workSpaceRepository.setCurrentWorkspaceId(workspaceId)
             }.onSuccess {
                 _event.emit(Event.GoToHome)
             }.onFailure {

@@ -49,6 +49,8 @@ fun HomeScreen(
     createWorkspace: () -> Unit = {}
 ) {
     val currentDay by homeViewModel.currentDay().collectAsState()
+    val uiState by homeViewModel.uiState.collectAsState()
+
     val pagerState = rememberPagerState(0)
     val bottomBarSize = 90.dp
     var tabPos by rememberSaveable {
@@ -72,7 +74,7 @@ fun HomeScreen(
                         Image(painter = painterResource(id = R.drawable.ic_home_menu), contentDescription = "title")
                     }
                 },
-                title = { TitleText(Modifier.fillMaxWidth()) },
+                title = { TitleText(Modifier.fillMaxWidth(), uiState.workspaceName) },
                 actions = {
                     Image(
                         modifier = Modifier
@@ -179,13 +181,13 @@ private fun BottomNavigation(modifier: Modifier, onClick: (selected: Navigate.Bo
 }
 
 @Composable
-private fun TitleText(modifier: Modifier) {
+private fun TitleText(modifier: Modifier, title: String) {
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = stringResource(R.string.fourtune),
+            text = title,
             fontSize = 20.sp,
             color = Color.Black,
             fontWeight = FontWeight.Bold

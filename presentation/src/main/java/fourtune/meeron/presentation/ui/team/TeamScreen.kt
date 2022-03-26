@@ -7,11 +7,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,38 +39,59 @@ enum class TeamItems(
 fun TeamScreen(viewModel: TeamViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Scaffold(
-        topBar = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = colorResource(id = R.color.light_gray))
-                    .padding(bottom = 18.dp)
-            ) {
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(vertical = 23.dp),
-                    text = "팀",
-                    fontSize = 18.sp,
-                    color = colorResource(id = R.color.black),
-                    fontWeight = FontWeight.Bold
-                )
-                LazyRow(modifier = Modifier.fillMaxWidth(), contentPadding = PaddingValues(horizontal = 20.dp)) {
-                    itemsIndexed(uiState.teams) { index, team ->
-                        TeamCircleItem(teamItem = TeamItems.values()[index], team = team)
-                    }
-                    item {
-                        TeamCircleItem(teamItem = TeamItems.None, team = null)
-                    }
-                }
-            }
+    var selectedTeam: Team? by remember(uiState.teams) {
+        mutableStateOf(uiState.teams.firstOrNull())
+    }
 
-        },
-        content = {
-
+    Column(modifier = Modifier.fillMaxSize()) {
+        Spacer(modifier = Modifier.padding(7.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 22.dp, horizontal = 20.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = selectedTeam?.name.orEmpty(),
+                fontSize = 21.sp,
+                color = colorResource(id = R.color.black)
+            )
+            Image(imageVector = Icons.Default.DateRange, contentDescription = null)
         }
-    )
+        Column(modifier = Modifier.padding(top = 24.dp, start = 20.dp, end = 20.dp)) {
+            Text(text = "팀원", fontSize = 17.sp, color = colorResource(id = R.color.dark_gray))
+            Spacer(modifier = Modifier.padding(5.dp))
+        }
+    }
+
+}
+
+@Composable
+fun TeamTopBar(teams: List<Team>) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = colorResource(id = R.color.light_gray))
+            .padding(bottom = 18.dp)
+    ) {
+        Text(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(vertical = 23.dp),
+            text = "팀",
+            fontSize = 18.sp,
+            color = colorResource(id = R.color.black),
+            fontWeight = FontWeight.Bold
+        )
+        LazyRow(modifier = Modifier.fillMaxWidth(), contentPadding = PaddingValues(horizontal = 20.dp)) {
+            itemsIndexed(teams) { index, team ->
+                TeamCircleItem(teamItem = TeamItems.values()[index], team = team)
+            }
+            item {
+                TeamCircleItem(teamItem = TeamItems.None, team = null)
+            }
+        }
+    }
 }
 
 @Composable

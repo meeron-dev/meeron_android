@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
 
         viewModel.event.onEach { event ->
             val navigate = when (event) {
-                MainViewModel.Event.GoToHome -> Navigate.BottomNavi.Home
+                MainViewModel.Event.GoToHome -> Navigate.Main
                 MainViewModel.Event.GoToLogin -> Navigate.Login
             }
             isReady = true

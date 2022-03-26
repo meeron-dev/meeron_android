@@ -1,7 +1,5 @@
 package fourtune.meeron.presentation.navigator
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -13,7 +11,6 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import forutune.meeron.domain.Const
-import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.navigator.ext.encodeJson
 import fourtune.meeron.presentation.navigator.type.DateType
 import fourtune.meeron.presentation.navigator.type.MeetingType
@@ -31,9 +28,8 @@ import fourtune.meeron.presentation.ui.createmeeting.information.CreateMeetingIn
 import fourtune.meeron.presentation.ui.createmeeting.participants.CreateMeetingParticipantsScreen
 import fourtune.meeron.presentation.ui.createmeeting.time.CreateMeetingTimeScreen
 import fourtune.meeron.presentation.ui.createworkspace.*
-import fourtune.meeron.presentation.ui.home.HomeScreen
+import fourtune.meeron.presentation.ui.home.MainScreen
 import fourtune.meeron.presentation.ui.login.LoginScreen
-import fourtune.meeron.presentation.ui.team.TeamScreen
 
 sealed interface Navigate {
     fun route() = requireNotNull(this::class.qualifiedName)
@@ -64,11 +60,7 @@ sealed interface Navigate {
         object Complete : CreateWorkspace
     }
 
-    sealed class BottomNavi(@DrawableRes val image: Int, @StringRes val text: Int) : Navigate {
-        object Home : BottomNavi(R.drawable.ic_navi_home, R.string.home)
-        object Team : BottomNavi(R.drawable.ic_navi_team, R.string.team)
-        object My : BottomNavi(R.drawable.ic_navi_door, R.string.my_merron)
-    }
+    object Main : Navigate
 
     sealed interface CreateMeeting : Navigate {
         object Date : CreateMeeting
@@ -90,6 +82,8 @@ sealed interface Navigate {
         //todo 다이나믹링크 스펙 바뀌면 변경하기...
         private const val SCHEME = "https://ronmee.page.link"
     }
+
+
 }
 
 
@@ -106,7 +100,7 @@ fun MeeronNavigator(startDestination: Navigate) {
             LoginScreen(
                 goToHome = {
                     navController.popBackStack()
-                    navController.navigate(Navigate.BottomNavi.Home.route())
+                    navController.navigate(Navigate.Main.route())
                 },
                 goToSignIn = {
                     navController.popBackStack()
@@ -179,7 +173,7 @@ fun MeeronNavigator(startDestination: Navigate) {
         ) {
             CreateCompleteScreen(
                 onComplete = {
-                    navController.navigate(Navigate.BottomNavi.Home.route()) {
+                    navController.navigate(Navigate.Main.route()) {
                         popUpTo(Navigate.Login.route()) { inclusive = true }
                     }
                 },
@@ -193,27 +187,19 @@ fun MeeronNavigator(startDestination: Navigate) {
 
         composable(route = Navigate.OnBoarding.route()) {
             OnBoardingScreen(goToHome = {
-                navController.navigate(Navigate.BottomNavi.Home.route()) {
+                navController.navigate(Navigate.Main.route()) {
                     popUpTo(Navigate.Login.route()) { inclusive = true }
                 }
             })
         }
 
-        composable(route = Navigate.BottomNavi.Home.route()) {
-            HomeScreen(
+        composable(route = Navigate.Main.route()) {
+            MainScreen(
                 openCalendar = {
                     navController.navigate(Navigate.Calendar.route())
                 },
-                onBottomNaviClick = { bottomNavi ->
-                    when (bottomNavi) {
-                        Navigate.BottomNavi.Home -> navController.navigate(Navigate.BottomNavi.Home.route())
-                        Navigate.BottomNavi.Team -> navController.navigate(Navigate.BottomNavi.Team.route())
-                        Navigate.BottomNavi.My -> navController.navigate(Navigate.BottomNavi.My.route())
-                    }
-                },
-                addMeeting = { navController.navigate(Navigate.CreateMeeting.Date.route()) },
-                createWorkspace = { navController.navigate(Navigate.CreateWorkspace.CreateOrJoin.route()) }
-            )
+                addMeeting = { navController.navigate(Navigate.CreateMeeting.Date.route()) }
+            ) { navController.navigate(Navigate.CreateWorkspace.CreateOrJoin.route()) }
         }
 
         composable(
@@ -226,31 +212,20 @@ fun MeeronNavigator(startDestination: Navigate) {
             DynamicLinkEntryScreen(
                 goToTOS = {
                     navController.navigate(Navigate.SignIn.TOS.route()) {
-                        popUpTo(Navigate.BottomNavi.Home.route()) { inclusive = true }
+                        popUpTo(Navigate.Main.route()) { inclusive = true }
                     }
                 },
                 goToLogin = {
                     navController.navigate(Navigate.Login.route()) {
-                        popUpTo(Navigate.BottomNavi.Home.route()) { inclusive = true }
+                        popUpTo(Navigate.Main.route()) { inclusive = true }
                     }
                 },
                 goToHome = {
-                    navController.navigate(Navigate.BottomNavi.Home.route()) {
-                        popUpTo(Navigate.BottomNavi.Home.route()) { inclusive = true }
+                    navController.navigate(Navigate.Main.route()) {
+                        popUpTo(Navigate.Main.route()) { inclusive = true }
                     }
                 }
             )
-        }
-
-
-        composable(
-            route = Navigate.BottomNavi.Team.route(),
-        ) {
-            TeamScreen()
-        }
-
-        composable(Navigate.BottomNavi.My.route()) {
-
         }
 
         composable(
@@ -285,7 +260,7 @@ fun MeeronNavigator(startDestination: Navigate) {
             arguments = listOf(element = navArgument(Const.Meeting) { type = MeetingType() })
         ) {
             CreateMeetingTimeScreen(
-                onAction = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
+                onAction = { navController.popBackStack(route = Navigate.Main.route(), inclusive = false) },
                 onPrevious = { navController.navigateUp() },
                 onNext = { meeting -> navController.navigate(Navigate.CreateMeeting.Information.route(meeting.encodeJson())) }
             )
@@ -315,7 +290,7 @@ fun MeeronNavigator(startDestination: Navigate) {
             )
         ) {
             CreateAgendaScreen(
-                onAction = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
+                onAction = { navController.popBackStack(route = Navigate.Main.route(), inclusive = false) },
                 onPrevious = { navController.navigateUp() },
                 onNext = { meeting ->
                     navController.navigate(
@@ -332,7 +307,7 @@ fun MeeronNavigator(startDestination: Navigate) {
             )
         ) {
             CreateMeetingParticipantsScreen(
-                onAction = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
+                onAction = { navController.popBackStack(route = Navigate.Main.route(), inclusive = false) },
                 onPrevious = { navController.navigateUp() },
                 onNext = { meeting ->
                     navController.navigate(
@@ -349,8 +324,8 @@ fun MeeronNavigator(startDestination: Navigate) {
             )
         ) {
             CompleteMeetingScreen(
-                onAction = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
-                onNext = { navController.popBackStack(route = Navigate.BottomNavi.Home.route(), inclusive = false) },
+                onAction = { navController.popBackStack(route = Navigate.Main.route(), inclusive = false) },
+                onNext = { navController.popBackStack(route = Navigate.Main.route(), inclusive = false) },
                 onPrevious = { navController.navigateUp() }
             )
         }

@@ -1,6 +1,5 @@
 package fourtune.meeron.presentation.ui.home
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,7 +9,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,9 +16,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,15 +30,11 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.prolificinteractive.materialcalendarview.CalendarDay
+import forutune.meeron.domain.model.Meeting
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.navigator.Navigate
-import fourtune.meeron.presentation.ui.common.Dot
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 import kotlinx.coroutines.launch
-
-enum class TabItems(@StringRes val text: Int) {
-    TODO(R.string.coming_soon), COMPLETE(R.string.complete)
-}
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -53,9 +50,6 @@ fun HomeScreen(
 
     val pagerState = rememberPagerState(0)
     val bottomBarSize = 90.dp
-    var tabPos by rememberSaveable {
-        mutableStateOf(TabItems.TODO.ordinal)
-    }
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Closed))
     Scaffold(
@@ -120,33 +114,42 @@ fun HomeScreen(
                 date = currentDay,
                 openCalendar = openCalendar
             )
-            HomeTab(selectedTabIndex = tabPos, onClick = { selectedPosition -> tabPos = selectedPosition })
-            Spacer(modifier = Modifier.padding(6.dp))
-            when (tabPos) {
-                TabItems.COMPLETE.ordinal -> {
-                    HorizontalPager(
-                        modifier = Modifier.fillMaxHeight(),
-                        count = 20,
-                        state = pagerState,
-                        contentPadding = PaddingValues(horizontal = 50.dp),
-                        itemSpacing = 14.dp
-                    ) {
-                        PagerItem()
+            Text(
+                modifier = Modifier.padding(horizontal = 20.dp),
+                text = buildAnnotatedString {
+                    append("오늘의 회의  ")
+                    withStyle(SpanStyle(colorResource(id = R.color.primary), fontWeight = FontWeight.Bold)) {
+                        append("${uiState.todayMeeting.size}")
                     }
+                },
+                color = colorResource(id = R.color.dark_gray),
+                fontSize = 15.sp,
+                lineHeight = 24.sp
+            )
+            Spacer(modifier = Modifier.padding(6.dp))
+            if (uiState.todayMeeting.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        modifier = Modifier.align(Alignment.Center),
+                        text = stringResource(R.string.not_found_meeting),
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center,
+                        color = colorResource(id = R.color.gray)
+                    )
                 }
-                TabItems.TODO.ordinal -> {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        Text(
-                            modifier = Modifier.align(Alignment.Center),
-                            text = stringResource(R.string.not_found_meeting),
-                            fontSize = 16.sp,
-                            textAlign = TextAlign.Center,
-                            color = colorResource(id = R.color.gray)
-                        )
+            } else {
+                HorizontalPager(
+                    modifier = Modifier.fillMaxHeight(),
+                    count = 20,
+                    state = pagerState,
+                    contentPadding = PaddingValues(horizontal = 50.dp),
+                    itemSpacing = 14.dp
+                ) {
+                    uiState.todayMeeting.forEach {
+                        PagerItem(it)
                     }
                 }
             }
-
 
         }
     }
@@ -196,7 +199,7 @@ private fun TitleText(modifier: Modifier, title: String) {
 }
 
 @Composable
-private fun PagerItem() {
+private fun PagerItem(meeting: Meeting) {
     Card(modifier = Modifier.fillMaxHeight(), elevation = 1.dp) {
         //content
         Column(
@@ -211,7 +214,7 @@ private fun PagerItem() {
                     .padding(horizontal = 24.dp)
             ) {
                 Text(
-                    text = "1차 발표sasddsasddasadsdsadsaasdadsdasadsasdadsasdsasdsadadsasddasas123123123\n컨텐츠 구상",
+                    text = meeting.title,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     color = colorResource(id = R.color.black),
@@ -219,7 +222,7 @@ private fun PagerItem() {
                 )
                 Spacer(modifier = Modifier.padding(3.dp))
                 Text(
-                    text = "2022년 2월 4일\n9:00AM~1:00PM",
+                    text = "${meeting.date.displayString()}\n${meeting.time}",
                     fontSize = 12.sp,
                     color = colorResource(id = R.color.dark_gray)
                 )
@@ -237,7 +240,7 @@ private fun PagerItem() {
                         fontSize = 12.sp,
                         color = colorResource(id = R.color.gray)
                     )
-                    Text(text = "주관 오퍼레이션 팀", fontSize = 13.sp, color = colorResource(id = R.color.gray))
+                    Text(text = "주관 ${meeting.team.name}", fontSize = 13.sp, color = colorResource(id = R.color.gray))
                 }
                 Column {
                     Row {
@@ -270,7 +273,7 @@ private fun PagerItem() {
                     .fillMaxWidth()
                     .padding(vertical = 34.dp, horizontal = 24.dp)
             ) {
-                Text(text = "앙 기무치", fontSize = 14.sp)
+                Text(text = meeting.purpose, fontSize = 14.sp)
             }
         }
 
@@ -316,33 +319,15 @@ private fun CalendarTitle(modifier: Modifier, date: CalendarDay, openCalendar: (
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-private fun HomeTab(modifier: Modifier = Modifier, selectedTabIndex: Int, onClick: (selected: Int) -> Unit) {
-    ScrollableTabRow(modifier = modifier, selectedTabIndex = selectedTabIndex, edgePadding = 20.dp) {
-        TabItems.values().forEachIndexed { index, tabItems ->
-            Row(
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .clickable { onClick(index) }
-            ) {
-                Text(
-                    text = stringResource(id = tabItems.text),
-                    color = colorResource(id = if (selectedTabIndex == index) R.color.dark_primary else R.color.gray),
-                    fontSize = 15.sp,
-                    fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Medium
-                )
-                Dot(color = colorResource(id = R.color.dark_primary), size = 4.dp)
-            }
-        }
-    }
-}
-
 @Preview
 @Composable
 private fun PagerItemPrev() {
     MeeronTheme {
-        PagerItem()
+        PagerItem(
+            Meeting(
+                title = "회의제목"
+            )
+        )
     }
 }
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import dagger.hilt.android.lifecycle.HiltViewModel
+import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.usecase.meeting.GetTodayMeetingUseCase
 import forutune.meeron.domain.usecase.workspace.GetLatestWorkspaceIdUseCase
 import forutune.meeron.domain.usecase.workspace.GetWorkSpaceUseCase
@@ -11,7 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,16 +31,17 @@ class HomeViewModel @Inject constructor(
             val workspaceId = getLatestWorkspaceIdUseCase()
             val workspace = getWorkSpaceUseCase(workspaceId = workspaceId)
             _uiState.update {
-                it.copy(workspaceName = workspace.workSpaceName)
-            }
-            getTodayMeetingUseCase().also {
-                Timber.tag("🔥zero:init").d("$it")
+                it.copy(
+                    workspaceName = workspace.workSpaceName,
+                    todayMeeting = getTodayMeetingUseCase()
+                )
             }
         }
     }
 
     data class UiState(
-        val workspaceName: String = ""
+        val workspaceName: String = "",
+        val todayMeeting: List<Meeting> = emptyList()
     )
 
 }

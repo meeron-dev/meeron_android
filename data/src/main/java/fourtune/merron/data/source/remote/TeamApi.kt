@@ -3,10 +3,8 @@ package fourtune.merron.data.source.remote
 import forutune.meeron.domain.model.Teams
 import fourtune.merron.data.model.dto.request.TeamRequest
 import fourtune.merron.data.model.dto.response.TeamIdResponse
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import fourtune.merron.data.model.dto.response.WorkSpaceUsersResponse
+import retrofit2.http.*
 
 interface TeamApi {
     @GET("/api/teams")
@@ -18,4 +16,9 @@ interface TeamApi {
     suspend fun createTeam(
         @Body teamRequest: TeamRequest
     ): TeamIdResponse
+
+    @GET("api/teams/{teamId}/workspace-users")
+    suspend fun getTeamMembers(
+        @Path("teamId") teamId: Long
+    ): WorkSpaceUsersResponse
 }

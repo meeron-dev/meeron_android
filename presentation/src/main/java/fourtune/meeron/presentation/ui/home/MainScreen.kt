@@ -55,7 +55,10 @@ fun MainScreen(
             when (content) {
                 BottomNavi.Home -> HomeTopBar(scaffoldState, homeUiState, addMeeting)
                 BottomNavi.My -> {}
-                BottomNavi.Team -> TeamTopBar(teams = teamUiState.teams)
+                BottomNavi.Team -> TeamTopBar(
+                    teams = teamUiState.teams,
+                    selectedTeam = teamUiState.selectedTeam
+                ) { teamViewModel.changeTeam(it) }
             }
 
         },

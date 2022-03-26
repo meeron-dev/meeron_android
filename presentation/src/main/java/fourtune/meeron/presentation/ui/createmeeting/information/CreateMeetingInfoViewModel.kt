@@ -10,8 +10,8 @@ import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.model.Team
 import forutune.meeron.domain.model.WorkspaceUser
-import forutune.meeron.domain.usecase.GetWorkSpaceTeamUseCase
 import forutune.meeron.domain.usecase.me.GetMyWorkSpaceUserUseCase
+import forutune.meeron.domain.usecase.team.GetWorkSpaceTeamUseCase
 import forutune.meeron.domain.usecase.user.GetWorkspaceUserUseCase
 import fourtune.meeron.presentation.R
 import kotlinx.coroutines.Job

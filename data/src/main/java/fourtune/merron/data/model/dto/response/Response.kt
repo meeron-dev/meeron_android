@@ -1,5 +1,6 @@
 package fourtune.merron.data.model.dto.response
 
+import forutune.meeron.domain.model.WorkspaceUser
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -80,4 +81,9 @@ data class WorkSpaceResponse(
 @Serializable
 data class TeamIdResponse(
     @SerialName("createdTeamId") val createdTeamId: Long
+)
+
+@Serializable
+data class WorkSpaceUsersResponse(
+    @SerialName("workspaceUsers") val workspaceUsers: List<WorkspaceUser>
 )

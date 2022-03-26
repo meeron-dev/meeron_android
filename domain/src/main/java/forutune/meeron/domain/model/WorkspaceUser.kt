@@ -15,5 +15,6 @@ data class WorkspaceUser(
     @SerialName("nickname") val nickname: String = "",
     @SerialName("profileImageUrl") val profileImageUrl: String = "",
     @SerialName("position") val position: String = "",
+    @SerialName("email") val email: String = "",
     @SerialName("workspaceAdmin") val workspaceAdmin: Boolean = false
 ) : java.io.Serializable

@@ -8,7 +8,7 @@ import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.model.Team
 import forutune.meeron.domain.model.WorkspaceUser
-import forutune.meeron.domain.usecase.GetWorkSpaceTeamUseCase
+import forutune.meeron.domain.usecase.team.GetWorkSpaceTeamUseCase
 import forutune.meeron.domain.usecase.user.GetWorkspaceUserUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

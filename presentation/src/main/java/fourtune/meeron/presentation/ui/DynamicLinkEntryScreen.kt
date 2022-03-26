@@ -1,6 +1,7 @@
 package fourtune.meeron.presentation.ui
 
 import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -30,6 +31,10 @@ fun DynamicLinkEntryScreen(
 ) {
     val activity = LocalContext.current as? Activity
     val uiState by viewModel.uiState.collectAsState()
+
+    BackHandler {
+        activity?.finish()
+    }
 
     LaunchedEffect(key1 = currentComposer) {
         viewModel.event.collectLatest { event ->

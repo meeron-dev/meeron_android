@@ -234,7 +234,9 @@ fun MeeronNavigator(startDestination: Navigate) {
                     }
                 },
                 goToHome = {
-                    navController.navigate(Navigate.BottomNavi.Home.route())
+                    navController.navigate(Navigate.BottomNavi.Home.route()) {
+                        popUpTo(Navigate.BottomNavi.Home.route()) { inclusive = true }
+                    }
                 }
             )
         }

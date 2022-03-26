@@ -14,6 +14,6 @@ class GetTodayMeetingUseCase @Inject constructor(
     suspend operator fun invoke(): List<Meeting> {
         val myId = userRepository.getUserId()
         val workspaceId = workSpaceRepository.getCurrentWorkspaceId()
-        return meetingRepository.getTodayMeetings(requireNotNull(workspaceId), myId)//todo workspaceId
+        return meetingRepository.getTodayMeetings(requireNotNull(workspaceId), myId)
     }
 }

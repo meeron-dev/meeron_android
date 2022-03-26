@@ -33,6 +33,7 @@ import fourtune.meeron.presentation.ui.createmeeting.time.CreateMeetingTimeScree
 import fourtune.meeron.presentation.ui.createworkspace.*
 import fourtune.meeron.presentation.ui.home.HomeScreen
 import fourtune.meeron.presentation.ui.login.LoginScreen
+import fourtune.meeron.presentation.ui.team.TeamScreen
 
 sealed interface Navigate {
     fun route() = requireNotNull(this::class.qualifiedName)
@@ -245,7 +246,7 @@ fun MeeronNavigator(startDestination: Navigate) {
         composable(
             route = Navigate.BottomNavi.Team.route(),
         ) {
-
+            TeamScreen()
         }
 
         composable(Navigate.BottomNavi.My.route()) {

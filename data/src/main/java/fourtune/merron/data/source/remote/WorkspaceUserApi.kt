@@ -2,13 +2,14 @@ package fourtune.merron.data.source.remote
 
 import forutune.meeron.domain.model.WorkspaceUser
 import forutune.meeron.domain.model.WorkspaceUsers
+import fourtune.merron.data.model.dto.response.MyWorkspaceUserResponse
 import okhttp3.MultipartBody
 import retrofit2.http.*
 
 interface WorkspaceUserApi {
 
     @GET("/api/users/{userId}/workspace-users")
-    suspend fun getWorkspaceUsers(@Path("userId") userId: Long): List<WorkspaceUser>
+    suspend fun getWorkspaceUsers(@Path("userId") userId: Long): MyWorkspaceUserResponse
 
     @GET("/api/workspace-users/{workspaceUserId}")
     suspend fun getWorkspaceUser(@Path("workspaceUserId") workspaceUserId: Long): WorkspaceUser

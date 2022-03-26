@@ -18,7 +18,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getTodayMeetingUseCase: GetTodayMeetingUseCase,
     private val getLatestWorkspaceIdUseCase: GetLatestWorkspaceIdUseCase,
-    private val getWorkSpaceUseCase: GetWorkSpaceUseCase
+    private val getWorkSpaceUseCase: GetWorkSpaceUseCase,
 ) : ViewModel() {
     private val _currentDay = MutableStateFlow(CalendarDay.today())
     fun currentDay() = _currentDay.asStateFlow()

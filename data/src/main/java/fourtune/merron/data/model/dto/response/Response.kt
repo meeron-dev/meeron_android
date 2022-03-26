@@ -72,6 +72,11 @@ data class MyWorkSpacesResponse(
 )
 
 @Serializable
+data class MyWorkspaceUserResponse(
+    @SerialName("myWorkspaceUsers") val myWorkspaceUsers: List<WorkspaceUser>
+)
+
+@Serializable
 data class WorkSpaceResponse(
     @SerialName("workspaceId") val workspaceId: Long,
     @SerialName("workspaceName") val workspaceName: String,

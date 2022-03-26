@@ -12,8 +12,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -60,7 +58,16 @@ fun TeamScreen(viewModel: TeamViewModel = hiltViewModel()) {
                 fontSize = 21.sp,
                 color = colorResource(id = R.color.black)
             )
-            Image(imageVector = Icons.Default.DateRange, contentDescription = null)
+            Row {
+                Image(painter = painterResource(id = R.drawable.ic_calendar), contentDescription = null)
+                if (uiState.isAdmin) {
+                    Spacer(modifier = Modifier.padding(4.dp))
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_setting),
+                        contentDescription = null
+                    )
+                }
+            }
         }
         Column(modifier = Modifier.padding(top = 24.dp, start = 20.dp, end = 20.dp)) {
             Text(text = "팀원", fontSize = 17.sp, color = colorResource(id = R.color.dark_gray))

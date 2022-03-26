@@ -9,7 +9,7 @@ import forutune.meeron.domain.repository.WorkspaceUserRepository
 import fourtune.merron.data.model.dto.request.WorkSpaceRequest
 import fourtune.merron.data.source.local.preference.DataStoreKeys
 import fourtune.merron.data.source.remote.WorkspaceUserApi
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -26,6 +26,11 @@ class WorkspaceUserRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     private val fileProvider: forutune.meeron.domain.provider.FileProvider
 ) : WorkspaceUserRepository {
+
+    override suspend fun getMyWorkspaceUsers(userId: Long): List<WorkspaceUser> {
+        return workspaceUserApi.getWorkspaceUsers(userId).myWorkspaceUsers
+    }
+
     override suspend fun getWorkspaceUsers(workspaceId: Long, nickName: String): List<WorkspaceUser> {
         return workspaceUserApi.getUsers(workspaceId, nickName).workspaceUsers
     }
@@ -45,10 +50,10 @@ class WorkspaceUserRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getCurrentWorkspaceUserId(): Flow<Long?> {
+    override suspend fun getCurrentWorkspaceUserId(): Long? {
         return dataStore.data.map {
             it[DataStoreKeys.Workspace.userId]
-        }
+        }.firstOrNull()
     }
 
     override suspend fun createWorkspaceAdmin(workSpace: WorkSpace) {

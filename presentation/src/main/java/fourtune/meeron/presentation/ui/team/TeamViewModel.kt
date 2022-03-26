@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.model.Team
 import forutune.meeron.domain.model.WorkspaceUser
+import forutune.meeron.domain.usecase.me.GetMyWorkSpaceUserUseCase
 import forutune.meeron.domain.usecase.team.GetTeamMemberUseCase
 import forutune.meeron.domain.usecase.team.GetWorkSpaceTeamUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,8 +16,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TeamViewModel @Inject constructor(
+    private val getMyWorkSpaceUser: GetMyWorkSpaceUserUseCase,
     private val getWorkSpaceTeamUseCase: GetWorkSpaceTeamUseCase,
-    private val getTeamMember: GetTeamMemberUseCase
+    private val getTeamMember: GetTeamMemberUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
@@ -28,7 +30,8 @@ class TeamViewModel @Inject constructor(
                 it.copy(
                     teams = teams,
                     teamMembers = if (teams.isEmpty()) emptyList() else getTeamMember(teams.first().id),
-                    selectedTeam = teams.firstOrNull()
+                    selectedTeam = teams.firstOrNull(),
+                    isAdmin = getMyWorkSpaceUser().workspaceAdmin
                 )
             }
         }
@@ -48,6 +51,7 @@ class TeamViewModel @Inject constructor(
     data class UiState(
         val teams: List<Team> = emptyList(),
         val teamMembers: List<WorkspaceUser> = emptyList(),
-        val selectedTeam: Team? = null
+        val selectedTeam: Team? = null,
+        val isAdmin: Boolean = false
     )
 }

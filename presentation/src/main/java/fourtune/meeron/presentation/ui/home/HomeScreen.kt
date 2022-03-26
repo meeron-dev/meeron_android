@@ -5,8 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -233,7 +231,7 @@ private fun TitleText(modifier: Modifier, title: String) {
 private fun CalendarTitle(modifier: Modifier, date: CalendarDay, openCalendar: () -> Unit = {}) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         IconButton(onClick = openCalendar) {
-            Image(imageVector = Icons.Default.DateRange, contentDescription = null)
+            Image(painter = painterResource(id = R.drawable.ic_calendar), contentDescription = null)
         }
         Text(
             text = String.format(stringResource(R.string.calendar_title), date.month, date.day),

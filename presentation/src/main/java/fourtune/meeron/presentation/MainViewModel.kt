@@ -3,8 +3,7 @@ package fourtune.meeron.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import forutune.meeron.domain.repository.WorkSpaceRepository
-import forutune.meeron.domain.usecase.workspace.GetLatestWorkspaceIdUseCase
+import forutune.meeron.domain.usecase.SettingAccountUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -15,8 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getLatestWorkspaceId: GetLatestWorkspaceIdUseCase,
-    private val workSpaceRepository: WorkSpaceRepository
+    private val settingAccount: SettingAccountUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
@@ -27,8 +25,7 @@ class MainViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             runCatching {
-                val workspaceId = getLatestWorkspaceId()
-                workSpaceRepository.setCurrentWorkspaceId(workspaceId)
+                settingAccount()
             }.onSuccess {
                 _event.emit(Event.GoToHome)
             }.onFailure {

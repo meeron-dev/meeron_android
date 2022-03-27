@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -72,9 +73,18 @@ fun TeamScreen(viewModel: TeamViewModel = hiltViewModel()) {
         Column(modifier = Modifier.padding(top = 24.dp, start = 20.dp, end = 20.dp)) {
             Text(text = "팀원", fontSize = 17.sp, color = colorResource(id = R.color.dark_gray))
             Spacer(modifier = Modifier.padding(5.dp))
-            LazyVerticalGrid(columns = GridCells.Fixed(4)) {
-                items(uiState.teamMembers) { workspaceUser: WorkspaceUser ->
-                    UserItem(user = workspaceUser, selected = false, admin = workspaceUser.workspaceAdmin)
+            if (uiState.teamMembers.isEmpty()) {
+                Text(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    text = "아직 팀원이 존재하지 않습니다.",
+                    fontSize = 15.sp,
+                    color = colorResource(id = R.color.gray)
+                )
+            } else {
+                LazyVerticalGrid(columns = GridCells.Fixed(4)) {
+                    items(uiState.teamMembers) { workspaceUser: WorkspaceUser ->
+                        UserItem(user = workspaceUser, selected = false, admin = workspaceUser.workspaceAdmin)
+                    }
                 }
             }
         }
@@ -87,7 +97,7 @@ fun TeamTopBar(teams: List<Team>, selectedTeam: Team?, onClickTeam: (team: Team)
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = colorResource(id = R.color.light_gray))
+            .background(color = Color(0xffF5F7FA))
             .padding(bottom = 18.dp)
     ) {
         Text(

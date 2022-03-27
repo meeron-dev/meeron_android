@@ -13,7 +13,7 @@ object App {
 }
 
 object Dep {
-    const val androidGradlePlugin = "com.android.tools.build:gradle:7.1.0"
+    const val androidGradlePlugin = "com.android.tools.build:gradle:7.1.2"
 
     object Google {
         const val firebase = "com.google.gms:google-services:4.3.10"
@@ -43,7 +43,7 @@ object Dep {
     }
 
     object Compose {
-        const val version = "1.0.5"
+        const val version = "1.1.1"
         const val ui = "androidx.compose.ui:ui:$version"
         const val material = "androidx.compose.material:material:$version"
         const val tooling = "androidx.compose.ui:ui-tooling:$version"
@@ -60,7 +60,7 @@ object Dep {
     }
 
     object Kotlin {
-        private const val version = "1.5.31"
+        private const val version = "1.6.10"
 
         const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
 

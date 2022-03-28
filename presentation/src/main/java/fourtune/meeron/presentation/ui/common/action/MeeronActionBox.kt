@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -29,6 +30,8 @@ sealed interface ContentFactory {
         private val isEssential: Boolean,
         private val limit: Int,
         private val easyDelete: Boolean = false,
+        private val error: Boolean = false,
+        private val errorText: String = "",
         private val onClickDelete: () -> Unit = {}
     ) : ContentFactory {
 
@@ -46,6 +49,8 @@ sealed interface ContentFactory {
                         easyDelete = easyDelete,
                         onClickDelete = onClickDelete,
                         useUnderLine = true,
+                        error = error,
+                        errorText = errorText,
                         contents = innerTextField
                     )
                 }
@@ -117,6 +122,8 @@ private fun ActionBody(
     easyDelete: Boolean = false,
     onClickDelete: () -> Unit = {},
     useUnderLine: Boolean,
+    error: Boolean = false,
+    errorText: String = "",
     contents: @Composable () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -154,7 +161,16 @@ private fun ActionBody(
                 )
             }
         }
-        if (useUnderLine) Divider(Modifier.padding(top = 1.dp))
+        if (useUnderLine) {
+            Divider(
+                modifier = Modifier.padding(top = 1.dp),
+                color = if (error) Color(0xffd86d6d) else colorResource(id = R.color.light_gray)
+            )
+        }
+        if (error){
+            Spacer(modifier = Modifier.padding(2.dp))
+            Text(text = errorText, fontSize = 14.sp, color = Color(0xffd86d6d))
+        }
     }
 }
 
@@ -177,5 +193,14 @@ private fun Preview2() {
         "Meeron",
         showIcon = true
     )
+}
 
+@Preview(showBackground = true)
+@Composable
+private fun Preview3() {
+    MeeronActionBox(
+        factory = ContentFactory.LimitTextField(
+            text = "에러 프리뷰", onValueChange = {}, isEssential = false, limit = 0, error = true, errorText = "이미 사용중임"
+        ), title = "Meeron"
+    )
 }

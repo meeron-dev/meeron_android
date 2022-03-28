@@ -7,8 +7,8 @@ import forutune.meeron.domain.model.WorkSpaceInfo
 import forutune.meeron.domain.repository.WorkSpaceRepository
 import fourtune.merron.data.source.local.preference.DataStoreKeys
 import fourtune.merron.data.source.remote.WorkSpaceApi
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.mapNotNull
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -32,10 +32,11 @@ class WorkSpaceRepositoryImpl @Inject constructor(
         return WorkSpaceInfo(res.workspaceId, res.workspaceName, res.workspaceLogoUrl)
     }
 
-    override suspend fun getCurrentWorkspaceId(): Long? {
-        return dataStore.data.map {
+    override suspend fun getCurrentWorkspaceId(): Long {
+        val workspaceId = dataStore.data.mapNotNull {
             it[DataStoreKeys.Workspace.id]
-        }.firstOrNull().also { Timber.tag("🔥getCurrentWorkspaceId").d("$it") }
+        }.first()
+        return workspaceId.also { Timber.tag("🔥getCurrentWorkspaceId").d("$it") }
 
     }
 

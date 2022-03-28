@@ -23,6 +23,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -46,6 +47,12 @@ enum class TeamItems(
 fun TeamScreen(viewModel: TeamViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
 
+    TeamScreen(uiState)
+
+}
+
+@Composable
+private fun TeamScreen(uiState: TeamViewModel.UiState) {
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.padding(7.dp))
         Row(
@@ -74,12 +81,13 @@ fun TeamScreen(viewModel: TeamViewModel = hiltViewModel()) {
             Text(text = "팀원", fontSize = 17.sp, color = colorResource(id = R.color.dark_gray))
             Spacer(modifier = Modifier.padding(5.dp))
             if (uiState.teamMembers.isEmpty()) {
-                Text(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    text = "아직 팀원이 존재하지 않습니다.",
-                    fontSize = 15.sp,
-                    color = colorResource(id = R.color.gray)
-                )
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(
+                        text = "아직 팀원이 존재하지 않습니다.",
+                        fontSize = 15.sp,
+                        color = colorResource(id = R.color.gray)
+                    )
+                }
             } else {
                 LazyVerticalGrid(columns = GridCells.Fixed(4)) {
                     items(uiState.teamMembers) { workspaceUser: WorkspaceUser ->
@@ -89,7 +97,6 @@ fun TeamScreen(viewModel: TeamViewModel = hiltViewModel()) {
             }
         }
     }
-
 }
 
 @Composable
@@ -97,7 +104,7 @@ fun TeamTopBar(teams: List<Team>, selectedTeam: Team?, onClickTeam: (team: Team)
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color(0xffF5F7FA))
+            .background(color = Color(0xFFF5F7FA))
             .padding(bottom = 18.dp)
     ) {
         Text(
@@ -110,15 +117,27 @@ fun TeamTopBar(teams: List<Team>, selectedTeam: Team?, onClickTeam: (team: Team)
             fontWeight = FontWeight.Bold
         )
         LazyRow(modifier = Modifier.fillMaxWidth(), contentPadding = PaddingValues(horizontal = 20.dp)) {
+            item {
+                TeamCircleItem(drawable = R.drawable.ic_team_plus, teamName = "", enable = teams.size < 5)
+            }
             itemsIndexed(teams) { index, team ->
                 TeamCircleItem(
-                    teamItem = TeamItems.values()[index], team = team, isSelected = team == selectedTeam
+                    drawable = TeamItems.values()[index].drawable,
+                    teamName = team.name.substring(0..1),
+                    isSelected = team == selectedTeam,
+                    fontSize = 15.sp,
+                    fontColor = colorResource(id = R.color.dark_gray_white),
                 ) {
                     onClickTeam(team)
                 }
             }
             item {
-                TeamCircleItem(teamItem = TeamItems.None, team = null)
+                TeamCircleItem(
+                    drawable = TeamItems.None.drawable,
+                    teamName = "NONE",
+                    fontSize = 12.sp,
+                    fontColor = colorResource(id = R.color.gray),
+                )
             }
         }
     }
@@ -126,28 +145,31 @@ fun TeamTopBar(teams: List<Team>, selectedTeam: Team?, onClickTeam: (team: Team)
 
 @Composable
 fun TeamCircleItem(
-    teamItem: TeamItems = TeamItems.None,
-    team: Team?,
+    @DrawableRes drawable: Int = -1,
+    teamName: String,
     isSelected: Boolean = false,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontColor: Color = Color.Unspecified,
+    enable: Boolean = true,
     onClick: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
             .clip(CircleShape)
             .size(56.dp)
-            .clickable(onClick = onClick),
+            .clickable(onClick = onClick, enabled = enable),
         contentAlignment = Alignment.Center
     ) {
         Image(
             modifier = Modifier.fillMaxWidth(),
-            painter = painterResource(id = teamItem.drawable),
+            painter = painterResource(id = drawable),
             contentDescription = null
         )
         Text(
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 16.dp),
-            text = team?.name?.substring(0..1) ?: "NONE",
-            fontSize = if (team == null) 12.sp else 15.sp,
-            color = colorResource(id = if (team == null) R.color.gray else R.color.dark_gray_white),
+            text = teamName,
+            fontSize = fontSize,
+            color = fontColor,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
         )
     }
@@ -156,11 +178,11 @@ fun TeamCircleItem(
 @Preview
 @Composable
 private fun Preview() {
-    TeamScreen()
+    TeamScreen(TeamViewModel.UiState())
 }
 
 @Preview
 @Composable
 private fun Preview2() {
-    TeamCircleItem(team = Team(name = "개발 팀"))
+    TeamCircleItem(teamName = "개발 팀")
 }

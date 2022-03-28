@@ -8,9 +8,7 @@ import forutune.meeron.domain.model.WorkspaceUser
 import forutune.meeron.domain.usecase.me.GetMyWorkSpaceUserUseCase
 import forutune.meeron.domain.usecase.team.GetTeamMemberUseCase
 import forutune.meeron.domain.usecase.team.GetWorkSpaceTeamUseCase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,6 +20,9 @@ class TeamViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
+
+    private val _event = MutableSharedFlow<Event>()
+    val event = _event.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -46,6 +47,12 @@ class TeamViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+
+    sealed interface Event {
+        object AdministerTeam : Event
+        object OpenCalendar : Event
     }
 
     data class UiState(

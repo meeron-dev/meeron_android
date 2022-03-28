@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,7 +25,7 @@ import fourtune.meeron.presentation.ui.team.TeamTopBar
 import fourtune.meeron.presentation.ui.team.TeamViewModel
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
-sealed class BottomNavi(@DrawableRes val image: Int, @StringRes val text: Int) {
+sealed class BottomNavi(@DrawableRes val image: Int, @StringRes val text: Int) : java.io.Serializable {
     object Home : BottomNavi(R.drawable.ic_navi_home, R.string.home)
     object Team : BottomNavi(R.drawable.ic_navi_team, R.string.team)
     object My : BottomNavi(R.drawable.ic_navi_door, R.string.my_merron)
@@ -37,13 +38,14 @@ fun MainScreen(
     teamViewModel: TeamViewModel = hiltViewModel(),
     openCalendar: () -> Unit = {},
     addMeeting: () -> Unit = {},
-    createWorkspace: () -> Unit = {}
+    createWorkspace: () -> Unit = {},
+    administerTeam: () -> Unit = {}
 ) {
 
     val homeUiState by homeViewModel.uiState.collectAsState()
     val teamUiState by teamViewModel.uiState.collectAsState()
 
-    var content: BottomNavi by remember {
+    var content: BottomNavi by rememberSaveable() {
         mutableStateOf(BottomNavi.Home)
     }
 
@@ -91,7 +93,7 @@ fun MainScreen(
         when (content) {
             BottomNavi.Home -> HomeScreen(homeViewModel, bottomBarSize, openCalendar, homeUiState)
             BottomNavi.My -> {}
-            BottomNavi.Team -> TeamScreen(teamViewModel)
+            BottomNavi.Team -> TeamScreen(teamViewModel, administerTeam = administerTeam, openCalendar = openCalendar)
         }
 
     }
@@ -99,7 +101,7 @@ fun MainScreen(
 
 @Composable
 private fun BottomNavigation(modifier: Modifier, onClick: (selected: BottomNavi) -> Unit) {
-    var naviPos: BottomNavi by remember {
+    var naviPos: BottomNavi by rememberSaveable {
         mutableStateOf(BottomNavi.Home)
     }
 

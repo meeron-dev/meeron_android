@@ -30,6 +30,7 @@ import fourtune.meeron.presentation.ui.createmeeting.time.CreateMeetingTimeScree
 import fourtune.meeron.presentation.ui.createworkspace.*
 import fourtune.meeron.presentation.ui.home.MainScreen
 import fourtune.meeron.presentation.ui.login.LoginScreen
+import fourtune.meeron.presentation.ui.team.AdministerTeamScreen
 
 sealed interface Navigate {
     fun route() = requireNotNull(this::class.qualifiedName)
@@ -69,6 +70,10 @@ sealed interface Navigate {
         object Agenda : CreateMeeting
         object Participants : CreateMeeting
         object Complete : CreateMeeting
+    }
+
+    sealed interface Team : Navigate {
+        object Administer : Team
     }
 
     private fun queries(argument: Array<out String>): String = argument.mapIndexed { index, arg ->
@@ -195,11 +200,15 @@ fun MeeronNavigator(startDestination: Navigate) {
 
         composable(route = Navigate.Main.route()) {
             MainScreen(
-                openCalendar = {
-                    navController.navigate(Navigate.Calendar.route())
-                },
-                addMeeting = { navController.navigate(Navigate.CreateMeeting.Date.route()) }
-            ) { navController.navigate(Navigate.CreateWorkspace.CreateOrJoin.route()) }
+                openCalendar = { navController.navigate(Navigate.Calendar.route()) },
+                addMeeting = { navController.navigate(Navigate.CreateMeeting.Date.route()) },
+                createWorkspace = { navController.navigate(Navigate.CreateWorkspace.CreateOrJoin.route()) },
+                administerTeam = { navController.navigate(route = Navigate.Team.Administer.route()) }
+            )
+        }
+
+        composable(route = Navigate.Team.Administer.route()) {
+            AdministerTeamScreen(onBack = { navController.navigateUp() })
         }
 
         composable(

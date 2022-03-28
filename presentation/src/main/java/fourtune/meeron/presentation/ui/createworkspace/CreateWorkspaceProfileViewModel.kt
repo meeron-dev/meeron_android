@@ -41,7 +41,13 @@ class CreateWorkspaceProfileViewModel @Inject constructor(
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             delay(500)
-            val isDuplicateNickname = runCatching { isDuplicateNickname(nickname) }.getOrDefault(true)
+            val isDuplicateNickname = runCatching { isDuplicateNickname(nickname) }.getOrElse {
+                if (it is NoSuchElementException) {
+                    return@getOrElse false
+                } else {
+                    true
+                }
+            }
 
             _uiState.update {
                 it.copy(

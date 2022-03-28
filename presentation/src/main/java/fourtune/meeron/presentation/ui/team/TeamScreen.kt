@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -44,15 +45,29 @@ enum class TeamItems(
 }
 
 @Composable
-fun TeamScreen(viewModel: TeamViewModel = hiltViewModel()) {
+fun TeamScreen(
+    viewModel: TeamViewModel = hiltViewModel(),
+    administerTeam: () -> Unit = {},
+    openCalendar: () -> Unit = {}
+) {
     val uiState by viewModel.uiState.collectAsState()
+    TeamScreen(
+        uiState = uiState,
+        event = { event ->
+            when (event) {
+                TeamViewModel.Event.AdministerTeam -> {
+                    administerTeam()
+                }
+                TeamViewModel.Event.OpenCalendar -> openCalendar()
+            }
+        }
+    )
 
-    TeamScreen(uiState)
 
 }
 
 @Composable
-private fun TeamScreen(uiState: TeamViewModel.UiState) {
+private fun TeamScreen(uiState: TeamViewModel.UiState, event: (TeamViewModel.Event) -> Unit = {}) {
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.padding(7.dp))
         Row(
@@ -67,13 +82,17 @@ private fun TeamScreen(uiState: TeamViewModel.UiState) {
                 color = colorResource(id = R.color.black)
             )
             Row {
-                Image(painter = painterResource(id = R.drawable.ic_calendar), contentDescription = null)
+                IconButton(onClick = { event(TeamViewModel.Event.OpenCalendar) }) {
+                    Image(painter = painterResource(id = R.drawable.ic_calendar), contentDescription = null)
+                }
                 if (uiState.isAdmin) {
                     Spacer(modifier = Modifier.padding(4.dp))
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_setting),
-                        contentDescription = null
-                    )
+                    IconButton(onClick = { event(TeamViewModel.Event.AdministerTeam) }) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_setting),
+                            contentDescription = null
+                        )
+                    }
                 }
             }
         }

@@ -11,6 +11,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -21,15 +22,30 @@ import androidx.compose.ui.unit.sp
 import fourtune.meeron.presentation.R
 
 @Composable
-fun CenterTextTopAppBar(onAction: () -> Unit, text: @Composable BoxScope.() -> Unit) {
+fun CenterTextTopAppBar(
+    onNavigation: (() -> Unit)? = null,
+    navigationIcon: Painter = painterResource(id = R.drawable.ic_back),
+    onAction: (() -> Unit)? = null,
+    actionIcon: Painter = painterResource(id = R.drawable.ic_calender_close),
+    text: @Composable BoxScope.() -> Unit
+) {
     TopAppBar(
         actions = {
-            IconButton(onClick = onAction) {
-                Image(painter = painterResource(id = R.drawable.ic_calender_close), contentDescription = null)
+            IconButton(onClick = { onAction?.invoke() }, enabled = onAction != null) {
+                if (onAction != null) {
+                    Image(painter = actionIcon, contentDescription = null)
+                }
             }
         },
         title = {
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center, content = text)
+        },
+        navigationIcon = {
+            IconButton(onClick = { onNavigation?.invoke() }, enabled = onNavigation != null) {
+                if (onNavigation != null) {
+                    Image(painter = navigationIcon, contentDescription = null)
+                }
+            }
         }
     )
 }

@@ -36,26 +36,18 @@ class CreateWorkspaceProfileViewModel @Inject constructor(
         }.toList()
         .toMutableStateMap()
 
-    fun changeText(info: Info, it: String) {
-        workspaceInfoMap[info] = it
-        _uiState.update {
-            it.copy(
-                workSpace = it.workSpace.copy(
-                    nickname = workspaceInfoMap[Info.NickName].orEmpty(),
-                    position = workspaceInfoMap[Info.Position].orEmpty(),
-                    email = workspaceInfoMap[Info.Email].orEmpty(),
-                    phone = workspaceInfoMap[Info.PhoneNumber].orEmpty(),
-                ),
-            )
-        }
-
+    fun changeName(info: Info, nickname: String) {
+        workspaceInfoMap[info] = nickname
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             delay(500)
-            val isDuplicateNickname = runCatching { isDuplicateNickname(it) }.getOrDefault(false)
+            val isDuplicateNickname = runCatching { isDuplicateNickname(nickname) }.getOrDefault(true)
 
             _uiState.update {
                 it.copy(
+                    workSpace = it.workSpace.copy(
+                        nickname = workspaceInfoMap[Info.NickName].orEmpty(),
+                    ),
                     isVerify = workspaceInfoMap
                         .filter { it.key.isEssential }
                         .all { it.value.isNotEmpty() }
@@ -63,6 +55,19 @@ class CreateWorkspaceProfileViewModel @Inject constructor(
                     isDuplicateNickname = isDuplicateNickname
                 )
             }
+        }
+    }
+
+    fun changeText(info: Info, it: String) {
+        workspaceInfoMap[info] = it
+        _uiState.update {
+            it.copy(
+                workSpace = it.workSpace.copy(
+                    position = workspaceInfoMap[Info.Position].orEmpty(),
+                    email = workspaceInfoMap[Info.Email].orEmpty(),
+                    phone = workspaceInfoMap[Info.PhoneNumber].orEmpty(),
+                ),
+            )
         }
     }
 

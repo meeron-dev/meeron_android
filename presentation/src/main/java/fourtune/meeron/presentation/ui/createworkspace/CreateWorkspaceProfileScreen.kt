@@ -91,17 +91,34 @@ fun CreateWorkspaceProfileScreen(
                     }
 
                     items(CreateWorkspaceProfileViewModel.Info.values()) { info ->
-                        MeeronActionBox(
-                            factory = ContentFactory.LimitTextField(
-                                text = viewModel.workspaceInfoMap[info].orEmpty(),
-                                isEssential = info.isEssential,
-                                limit = info.limit,
-                                onValueChange = { viewModel.changeText(info, it) },
-                                error = uiState.isDuplicateNickname,
-                                errorText = "이미 사용중인 별명입니다."
-                            ),
-                            title = stringResource(id = info.title) + if (info.isEssential) " *" else ""
-                        )
+                        when (info) {
+                            CreateWorkspaceProfileViewModel.Info.NickName -> {
+                                MeeronActionBox(
+                                    factory = ContentFactory.LimitTextField(
+                                        text = viewModel.workspaceInfoMap[info].orEmpty(),
+                                        isEssential = info.isEssential,
+                                        limit = info.limit,
+                                        onValueChange = { viewModel.changeName(info, it) },
+                                        error = uiState.isDuplicateNickname,
+                                        errorText = "이미 사용중인 별명입니다."
+                                    ),
+                                    title = stringResource(id = info.title) + if (info.isEssential) " *" else ""
+                                )
+
+                            }
+                            else -> {
+                                MeeronActionBox(
+                                    factory = ContentFactory.LimitTextField(
+                                        text = viewModel.workspaceInfoMap[info].orEmpty(),
+                                        isEssential = info.isEssential,
+                                        limit = info.limit,
+                                        onValueChange = { viewModel.changeText(info, it) },
+                                    ),
+                                    title = stringResource(id = info.title) + if (info.isEssential) " *" else ""
+                                )
+
+                            }
+                        }
                     }
                 }
             }

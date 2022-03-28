@@ -2,6 +2,7 @@ package fourtune.merron.data.source.remote
 
 import forutune.meeron.domain.model.WorkspaceUser
 import forutune.meeron.domain.model.WorkspaceUsers
+import fourtune.merron.data.model.dto.response.DuplicateResponse
 import fourtune.merron.data.model.dto.response.MyWorkspaceUserResponse
 import okhttp3.MultipartBody
 import retrofit2.http.*
@@ -36,5 +37,11 @@ interface WorkspaceUserApi {
         @Part files: MultipartBody.Part? = null,
         @Part request: MultipartBody.Part
     )
+
+    @GET("/api/workspace-users/nickname")
+    suspend fun isDuplicateWorkspaceUser(
+        @Query("workspaceId") workspaceId: Long,
+        @Query("nickname") nickname: String
+    ): DuplicateResponse
 
 }

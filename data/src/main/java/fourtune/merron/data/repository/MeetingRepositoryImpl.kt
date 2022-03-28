@@ -35,7 +35,7 @@ class MeetingRepositoryImpl @Inject constructor(
         val meetingId = response.body()?.meetingId ?: throw IOException(response.message())
         meetingApi.addParticipants(
             meetingId = meetingId,
-            workspaceUserIds = WorkSpaceUserIdsRequest(meeting.participants.map { it.workspaceUserId })
+            workspaceUserIds = WorkSpaceUserIdsRequest(meeting.participants.map { it.workspaceUserId } - meeting.ownerIds)
         )
         val agendaResponse = meetingApi.addAgendas(meetingId = meetingId, AgendaRequest(meeting.agenda))
         meeting.agenda.forEachIndexed { index, agenda ->

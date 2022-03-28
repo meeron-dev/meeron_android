@@ -279,7 +279,10 @@ fun MeeronNavigator(startDestination: Navigate) {
                     )
                 },
                 onPrevious = { navController.navigateUp() },
-                onLoad = { navController.navigate(Navigate.Calendar.route()) }
+                onLoad = { navController.navigate(Navigate.Calendar.route()) },
+                onAction = {
+                    navController.popBackStack(Navigate.Main.route(), inclusive = false)
+                }
             )
         }
 

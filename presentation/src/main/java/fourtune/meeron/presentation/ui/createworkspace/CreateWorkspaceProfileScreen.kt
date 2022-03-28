@@ -96,7 +96,9 @@ fun CreateWorkspaceProfileScreen(
                                 text = viewModel.workspaceInfoMap[info].orEmpty(),
                                 isEssential = info.isEssential,
                                 limit = info.limit,
-                                onValueChange = { viewModel.changeText(info, it) }
+                                onValueChange = { viewModel.changeText(info, it) },
+                                error = uiState.isDuplicateNickname,
+                                errorText = "이미 사용중인 별명입니다."
                             ),
                             title = stringResource(id = info.title) + if (info.isEssential) " *" else ""
                         )

@@ -5,22 +5,30 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.toMutableStateMap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.WorkSpace
+import forutune.meeron.domain.usecase.workspace.IsDuplicateNicknameUseCase
 import fourtune.meeron.presentation.R
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateWorkspaceProfileViewModel @Inject constructor(
+    private val isDuplicateNickname: IsDuplicateNicknameUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState =
         MutableStateFlow(UiState(workSpace = WorkSpace(workspaceName = savedStateHandle[Const.WorkspaceName] ?: "")))
     val uiState = _uiState.asStateFlow()
+
+    private var searchJob: Job? = null
 
     val workspaceInfoMap = Info.values()
         .associate { info ->
@@ -32,16 +40,29 @@ class CreateWorkspaceProfileViewModel @Inject constructor(
         workspaceInfoMap[info] = it
         _uiState.update {
             it.copy(
-                isVerify = workspaceInfoMap
-                    .filter { it.key.isEssential }
-                    .all { it.value.isNotEmpty() },
                 workSpace = it.workSpace.copy(
                     nickname = workspaceInfoMap[Info.NickName].orEmpty(),
                     position = workspaceInfoMap[Info.Position].orEmpty(),
                     email = workspaceInfoMap[Info.Email].orEmpty(),
-                    phone = workspaceInfoMap[Info.PhoneNumber].orEmpty()
-                )
+                    phone = workspaceInfoMap[Info.PhoneNumber].orEmpty(),
+                ),
             )
+        }
+
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(500)
+            val isDuplicateNickname = runCatching { isDuplicateNickname(it) }.getOrDefault(false)
+
+            _uiState.update {
+                it.copy(
+                    isVerify = workspaceInfoMap
+                        .filter { it.key.isEssential }
+                        .all { it.value.isNotEmpty() }
+                            && !isDuplicateNickname,
+                    isDuplicateNickname = isDuplicateNickname
+                )
+            }
         }
     }
 
@@ -57,7 +78,8 @@ class CreateWorkspaceProfileViewModel @Inject constructor(
     data class UiState(
         val isVerify: Boolean = false,
         val workSpace: WorkSpace = WorkSpace(),
-        val fileName: String = ""
+        val fileName: String = "",
+        val isDuplicateNickname: Boolean = false
     )
 
     enum class Info(

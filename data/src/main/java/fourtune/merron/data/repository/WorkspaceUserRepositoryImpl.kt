@@ -76,6 +76,10 @@ class WorkspaceUserRepositoryImpl @Inject constructor(
         )
     }
 
+    override suspend fun isDuplicateWorkspaceUser(workspaceId: Long, nickName: String): Boolean {
+        return workspaceUserApi.isDuplicateWorkspaceUser(workspaceId, nickName).duplicate
+    }
+
     private fun createWorkspaceRequestBody(workSpace: WorkSpace) = Json.encodeToString(
         WorkSpaceRequest(
             workspaceId = workSpace.workspaceId,

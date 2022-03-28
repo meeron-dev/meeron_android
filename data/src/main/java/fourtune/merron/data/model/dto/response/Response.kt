@@ -92,3 +92,8 @@ data class TeamIdResponse(
 data class WorkSpaceUsersResponse(
     @SerialName("workspaceUsers") val workspaceUsers: List<WorkspaceUser>
 )
+
+@Serializable
+data class DuplicateResponse(
+    @SerialName("duplicate") val duplicate: Boolean
+)

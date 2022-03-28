@@ -80,7 +80,7 @@ fun HomeScreen(
         } else {
             HorizontalPager(
                 modifier = Modifier.fillMaxHeight(),
-                count = 20,
+                count = uiState.todayMeeting.size,
                 state = pagerState,
                 contentPadding = PaddingValues(horizontal = 50.dp),
                 itemSpacing = 14.dp

@@ -17,7 +17,6 @@ data class MeetingsResponse(
         @SerialName("endTime") val endTime: String = "",
         @SerialName("operationTeamId") val operationTeamId: Long = -1,
         @SerialName("operationTeamName") val operationTeamName: String = "",
-        @SerialName("meetingStatus") val meetingStatus: String = "",
         @SerialName("workspaceId") val workspaceId: Long? = null,
         @SerialName("workspaceName") val workspaceName: String? = null,
     )

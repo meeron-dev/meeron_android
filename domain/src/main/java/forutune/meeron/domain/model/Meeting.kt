@@ -13,15 +13,5 @@ data class Meeting(
     val team: Team = Team(),
     val agenda: List<Agenda> = emptyList(),
     val participants: List<WorkspaceUser> = emptyList(),
-    val status: MeetingStatus = MeetingStatus.CREATING
 ) : Serializable
 
-enum class MeetingStatus {
-    CREATING, EXPECT, END;
-
-    companion object {
-        fun getStatus(value: String): MeetingStatus {
-            return valueOf(value)
-        }
-    }
-}

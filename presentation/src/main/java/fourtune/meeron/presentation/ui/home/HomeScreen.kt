@@ -84,9 +84,9 @@ fun HomeScreen(
                 state = pagerState,
                 contentPadding = PaddingValues(horizontal = 50.dp),
                 itemSpacing = 14.dp
-            ) {
-                uiState.todayMeeting.forEach {
-                    PagerItem(it)
+            ) { pager ->
+                repeat(uiState.todayMeeting.size) {
+                    PagerItem(meeting = uiState.todayMeeting[pager])
                 }
             }
         }

@@ -14,8 +14,8 @@ class SettingAccountUseCase @Inject constructor(
     private val getMe: GetMeUseCase,
     private val userRepository: UserRepository
 ) {
-    suspend operator fun invoke() {
-        val workspaceId = getLatestWorkspaceId()
+    suspend operator fun invoke(workspaceId: Long? = null) {
+        val workspaceId = workspaceId ?: getLatestWorkspaceId()
         workSpaceRepository.setCurrentWorkspaceId(workspaceId)
 
         val me = getMe()

@@ -75,6 +75,7 @@ class NetworkModule {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(convertFactory)
+            .addCallAdapterFactory(ErrorHandlingCallAdapterFactory)
             .client(okHttpClient)
             .build()
     }

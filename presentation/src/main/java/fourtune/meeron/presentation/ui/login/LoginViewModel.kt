@@ -8,6 +8,7 @@ import com.kakao.sdk.user.model.User
 import com.kakao.sdk.user.rx
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.model.LoginUser
+import forutune.meeron.domain.model.MeeronError
 import forutune.meeron.domain.usecase.IsFirstVisitUserUseCase
 import forutune.meeron.domain.usecase.login.LoginUseCase
 import forutune.meeron.domain.usecase.login.LogoutUseCase
@@ -44,7 +45,7 @@ class LoginViewModel @Inject constructor(
 
     private val loginContext = CoroutineExceptionHandler { _, throwable ->
         _toast.tryEmit(throwable.message ?: "coroutine error $throwable")
-        Timber.tag("🔥zero:").e("$throwable")
+        Timber.tag("🔥zero:coroutine").e("$throwable")
     }
 
     init {
@@ -53,8 +54,13 @@ class LoginViewModel @Inject constructor(
                 loginUseCase(getMe = { UserApiClient.rx.me().await().toLoginUser() })
             }
                 .onFailure {
+                    if (it is MeeronError) {
+                        _toast.emit(it.errorMessage)
+                    } else {
+                        _toast.emit(it.message)
+                    }
                     Timber.tag("🔥zero:initLogin").w("$it")
-                    _toast.emit(it.message)
+
                 }.onSuccess {
                     redirectLoginEvent()
                 }

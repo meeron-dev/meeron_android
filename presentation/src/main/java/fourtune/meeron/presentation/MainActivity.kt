@@ -3,6 +3,7 @@ package fourtune.meeron.presentation
 import android.os.Bundle
 import android.view.ViewTreeObserver
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -12,6 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import fourtune.meeron.presentation.navigator.MeeronNavigator
 import fourtune.meeron.presentation.navigator.Navigate
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -43,6 +45,12 @@ class MainActivity : ComponentActivity() {
                 }
             }
         )
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.toast.collectLatest {
+                Toast.makeText(this@MainActivity, it, Toast.LENGTH_SHORT).show()
+            }
+        }
 
         viewModel.event.onEach { event ->
             val navigate = when (event) {

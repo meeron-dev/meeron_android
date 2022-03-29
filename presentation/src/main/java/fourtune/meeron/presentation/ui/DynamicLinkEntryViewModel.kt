@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import forutune.meeron.domain.model.MeeronError
 import forutune.meeron.domain.model.WorkSpace
 import forutune.meeron.domain.usecase.SettingAccountUseCase
 import forutune.meeron.domain.usecase.me.GetMeUseCase
@@ -22,13 +23,16 @@ class DynamicLinkEntryViewModel @Inject constructor(
     private val settingAccountUseCase: SettingAccountUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val workspaceId = savedStateHandle.get<String?>("id").orEmpty()
+    val workspaceId = savedStateHandle.get<String?>("id").orEmpty()
 
     private val _event = MutableSharedFlow<Event>()
     val event = _event.asSharedFlow()
 
     private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
     val uiState = _uiState.asStateFlow()
+
+    private val _toast = MutableSharedFlow<String>()
+    val toast = _toast.asSharedFlow()
 
     init {
         /**
@@ -42,7 +46,15 @@ class DynamicLinkEntryViewModel @Inject constructor(
                 settingAccountUseCase.invoke(workspaceId.toLong())
                 getMe()
             }.onFailure {
-                _uiState.update { UiState.NotFound }
+                if (it is MeeronError) {
+                    // 로그인 동선
+                    _uiState.update { UiState.NotFound }
+                } else {
+                    //워크스페이스 가입 안된 동선
+                    _uiState.update { UiState.GoToCreateProfile }
+                    Timber.tag("🔥zero:DynamicLink").d("$it")
+                }
+
             }.onSuccess {
                 if (it.name.isNullOrEmpty()) {
                     _uiState.update { UiState.NotFound }
@@ -64,12 +76,20 @@ class DynamicLinkEntryViewModel @Inject constructor(
         }
     }
 
-    fun createWorkspaceUser(workSpace: WorkSpace) {
+    fun createWorkspaceUser(workSpace: WorkSpace, onCreate: () -> Unit = {}) {
         viewModelScope.launch {
             kotlin.runCatching {
                 createWorkspaceUser.invoke(workSpace.copy(workspaceId.toLong()))
             }
-                .onFailure { Timber.tag("🔥zero:create").e("$it") }
+                .onFailure {
+                    Timber.tag("🔥createWUser(DL)").e("$it")
+                    if (it is MeeronError) {
+                        _toast.emit(it.errorMessage)
+                    } else {
+                        _toast.emit("${it.message} ?: $it")
+                    }
+                }
+                .onSuccess { onCreate() }
         }
     }
 

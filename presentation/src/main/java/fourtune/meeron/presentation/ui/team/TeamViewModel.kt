@@ -10,6 +10,7 @@ import forutune.meeron.domain.usecase.team.GetTeamMemberUseCase
 import forutune.meeron.domain.usecase.team.GetWorkSpaceTeamUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,15 +27,17 @@ class TeamViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val teams = getWorkSpaceTeamUseCase()
-            _uiState.update {
-                it.copy(
-                    teams = teams,
-                    teamMembers = if (teams.isEmpty()) emptyList() else getTeamMember(teams.first().id),
-                    selectedTeam = teams.firstOrNull(),
-                    isAdmin = getMyWorkSpaceUser().workspaceAdmin
-                )
-            }
+            runCatching {
+                val teams = getWorkSpaceTeamUseCase()
+                _uiState.update {
+                    it.copy(
+                        teams = teams,
+                        teamMembers = if (teams.isEmpty()) emptyList() else getTeamMember(teams.first().id),
+                        selectedTeam = teams.firstOrNull(),
+                        isAdmin = getMyWorkSpaceUser().workspaceAdmin
+                    )
+                }
+            }.onFailure { Timber.tag("🔥zero:teamViewModel").e("$it") }
         }
     }
 

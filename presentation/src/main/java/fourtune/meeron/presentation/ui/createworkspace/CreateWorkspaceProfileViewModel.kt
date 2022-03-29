@@ -54,9 +54,7 @@ class CreateWorkspaceProfileViewModel @Inject constructor(
                     workSpace = it.workSpace.copy(
                         nickname = workspaceInfoMap[Info.NickName].orEmpty(),
                     ),
-                    isVerify = workspaceInfoMap
-                        .filter { it.key.isEssential }
-                        .all { it.value.isNotEmpty() }
+                    isVerify = isInsertedEssential()
                             && !isDuplicateNickname,
                     isDuplicateNickname = isDuplicateNickname
                 )
@@ -68,6 +66,7 @@ class CreateWorkspaceProfileViewModel @Inject constructor(
         workspaceInfoMap[info] = it
         _uiState.update {
             it.copy(
+                isVerify = isInsertedEssential() && !it.isDuplicateNickname,
                 workSpace = it.workSpace.copy(
                     position = workspaceInfoMap[Info.Position].orEmpty(),
                     email = workspaceInfoMap[Info.Email].orEmpty(),
@@ -76,6 +75,10 @@ class CreateWorkspaceProfileViewModel @Inject constructor(
             )
         }
     }
+
+    private fun isInsertedEssential() = workspaceInfoMap
+        .filter { it.key.isEssential }
+        .all { it.value.isNotEmpty() }
 
     fun addImage(uri: Uri) {
         _uiState.update {

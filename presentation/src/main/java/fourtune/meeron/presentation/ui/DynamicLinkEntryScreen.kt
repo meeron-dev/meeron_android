@@ -1,6 +1,7 @@
 package fourtune.meeron.presentation.ui
 
 import android.app.Activity
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -21,15 +22,18 @@ import fourtune.meeron.presentation.ui.common.MeeronProgressIndicator
 import fourtune.meeron.presentation.ui.common.MeeronSingleButton
 import fourtune.meeron.presentation.ui.createworkspace.CreateWorkspaceProfileScreen
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @Composable
 fun DynamicLinkEntryScreen(
     viewModel: DynamicLinkEntryViewModel = hiltViewModel(),
-    goToLogin: () -> Unit,
+    goToLogin: (workspaceId: Long) -> Unit,
     goToTOS: () -> Unit,
     goToHome: () -> Unit
 ) {
     val activity = LocalContext.current as? Activity
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
 
     BackHandler {
@@ -37,6 +41,10 @@ fun DynamicLinkEntryScreen(
     }
 
     LaunchedEffect(key1 = currentComposer) {
+        viewModel.toast.onEach {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        }.launchIn(this)
+
         viewModel.event.collectLatest { event ->
             when (event) {
                 DynamicLinkEntryViewModel.Event.GoToTOS -> goToTOS()
@@ -57,12 +65,11 @@ fun DynamicLinkEntryScreen(
                 title = "귀하의 회원 정보가\n조회되지 않습니다.",
                 subTitle = "회원가입 후 다시 시도해주시길 바랍니다.",
                 buttonText = "가입하러 가기"
-            ) { goToLogin() }
+            ) { goToLogin(viewModel.workspaceId.toLong()) }
         }
         DynamicLinkEntryViewModel.UiState.GoToCreateProfile -> {
             CreateWorkspaceProfileScreen(onNext = { workSpace ->
-                viewModel.createWorkspaceUser(workSpace)
-                goToHome()
+                viewModel.createWorkspaceUser(workSpace, goToHome)
             })
         }
     }

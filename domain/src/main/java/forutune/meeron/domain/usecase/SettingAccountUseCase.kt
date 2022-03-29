@@ -22,8 +22,9 @@ class SettingAccountUseCase @Inject constructor(
         userRepository.setUserId(me.userId)
 
         val myWorkspaceUsers = workspaceUserRepository.getMyWorkspaceUsers(me.userId)
+        println("myWorkspaceUsers : $myWorkspaceUsers")
         val currentWorkspaceUser = myWorkspaceUsers.find { it.workspaceId == workspaceId }
-            ?: throw Exception("not fount workspaceUser")
+            ?: throw Exception("not found workspaceUser")
         workspaceUserRepository.setCurrentWorkspaceUserId(currentWorkspaceUser.workspaceUserId)
     }
 }

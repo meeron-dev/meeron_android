@@ -43,7 +43,6 @@ class DynamicLinkEntryViewModel @Inject constructor(
          */
         viewModelScope.launch {
             runCatching {
-                settingAccountUseCase.invoke(workspaceId.toLong())
                 getMe()
             }.onFailure {
                 if (it is MeeronError) {
@@ -55,19 +54,20 @@ class DynamicLinkEntryViewModel @Inject constructor(
                     Timber.tag("🔥zero:DynamicLink").d("$it")
                 }
 
-            }.onSuccess {
-                if (it.name.isNullOrEmpty()) {
+            }.onSuccess { me ->
+                if (me.name.isNullOrEmpty()) {
                     _uiState.update { UiState.NotFound }
                 } else {
                     runCatching {
                         val workspaces = getUserWorkspaces()
-                        val isJoin = workspaces.map { it.workSpaceId }.contains(workspaceId.toLong())
-                        if (isJoin) {
+                        val alreadyJoin = workspaces.map { it.workSpaceId }.contains(workspaceId.toLong())
+                        if (alreadyJoin) {
                             _uiState.update { UiState.AlreadyJoinOrDeleted }
                         } else {
                             _uiState.update { UiState.GoToCreateProfile }
                         }
                     }.onFailure {
+                        Timber.tag("🔥zero:동선 확인 필요(DM)").e("$it")
                         _uiState.update { UiState.AlreadyJoinOrDeleted }
                     }
                 }
@@ -80,6 +80,7 @@ class DynamicLinkEntryViewModel @Inject constructor(
         viewModelScope.launch {
             kotlin.runCatching {
                 createWorkspaceUser.invoke(workSpace.copy(workspaceId.toLong()))
+                settingAccountUseCase.invoke(workspaceId.toLong())
             }
                 .onFailure {
                     Timber.tag("🔥createWUser(DL)").e("$it")

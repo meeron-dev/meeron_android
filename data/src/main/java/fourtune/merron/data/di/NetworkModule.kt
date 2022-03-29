@@ -9,9 +9,11 @@ import forutune.meeron.domain.di.OK_HTTP_CLIENT
 import forutune.meeron.domain.di.OK_HTTP_CLIENT_NO_AUTH
 import forutune.meeron.domain.repository.TokenRepository
 import fourtune.merron.data.source.remote.*
-import fourtune.merron.data.source.remote.interceptor.AuthorizationInterceptor
+import fourtune.merron.data.source.remote.interceptor.TokenAuthenticator
+import fourtune.merron.data.source.remote.interceptor.TokenHeaderInterceptor
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import okhttp3.Authenticator
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -26,19 +28,26 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAuthorizationInterceptor(
+    fun provideTokenHeaderInterceptor(
         tokenRepository: TokenRepository
-    ): Interceptor = AuthorizationInterceptor(tokenRepository)
+    ): Interceptor = TokenHeaderInterceptor(tokenRepository)
 
+    @Provides
+    @Singleton
+    fun provideTokenAuthenticator(
+        tokenRepository: TokenRepository
+    ): Authenticator = TokenAuthenticator(tokenRepository)
 
     @Provides
     @Singleton
     @OK_HTTP_CLIENT
     fun provideOkhttpClient(
-        authorizationInterceptor: AuthorizationInterceptor
+        tokenHeaderInterceptor: TokenHeaderInterceptor,
+        tokenAuthenticator: TokenAuthenticator
     ): OkHttpClient =
         OkHttpClient.Builder()
-            .addInterceptor(authorizationInterceptor)
+            .authenticator(tokenAuthenticator)
+            .addInterceptor(tokenHeaderInterceptor)
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
                     setLevel(HttpLoggingInterceptor.Level.BODY)

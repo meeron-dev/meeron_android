@@ -119,7 +119,12 @@ private fun TeamScreen(uiState: TeamViewModel.UiState, event: (TeamViewModel.Eve
 }
 
 @Composable
-fun TeamTopBar(teams: List<Team>, selectedTeam: Team?, onClickTeam: (team: Team) -> Unit = {}) {
+fun TeamTopBar(
+    teams: List<Team>,
+    selectedTeam: Team?,
+    onClickTeam: (team: Team) -> Unit = {},
+    onClickNone: () -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -156,6 +161,7 @@ fun TeamTopBar(teams: List<Team>, selectedTeam: Team?, onClickTeam: (team: Team)
                     teamName = "NONE",
                     fontSize = 12.sp,
                     fontColor = colorResource(id = R.color.gray),
+                    onClick = onClickNone
                 )
             }
         }

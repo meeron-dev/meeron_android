@@ -59,8 +59,10 @@ fun MainScreen(
                 BottomNavi.My -> {}
                 BottomNavi.Team -> TeamTopBar(
                     teams = teamUiState.teams,
-                    selectedTeam = teamUiState.selectedTeam
-                ) { teamViewModel.changeTeam(it) }
+                    selectedTeam = teamUiState.selectedTeam,
+                    onClickTeam = { teamViewModel.changeTeam(it) },
+                    onClickNone = { teamViewModel.getNotJoinedTeamMembers() }
+                )
             }
 
         },

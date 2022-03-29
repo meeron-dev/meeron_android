@@ -8,6 +8,7 @@ import forutune.meeron.domain.model.WorkspaceUser
 import forutune.meeron.domain.usecase.me.GetMyWorkSpaceUserUseCase
 import forutune.meeron.domain.usecase.team.GetTeamMemberUseCase
 import forutune.meeron.domain.usecase.team.GetWorkSpaceTeamUseCase
+import forutune.meeron.domain.usecase.workspace.GetNotJoinedTeamWorkspaceUserUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -18,6 +19,7 @@ class TeamViewModel @Inject constructor(
     private val getMyWorkSpaceUser: GetMyWorkSpaceUserUseCase,
     private val getWorkSpaceTeamUseCase: GetWorkSpaceTeamUseCase,
     private val getTeamMember: GetTeamMemberUseCase,
+    private val getNotJoinedTeamWorkspaceUser: GetNotJoinedTeamWorkspaceUserUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
@@ -49,6 +51,18 @@ class TeamViewModel @Inject constructor(
                     teamMembers = getTeamMember(team.id)
                 )
             }
+        }
+    }
+
+    fun getNotJoinedTeamMembers() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    selectedTeam = null,
+                    teamMembers = getNotJoinedTeamWorkspaceUser()
+                )
+            }
+
         }
     }
 

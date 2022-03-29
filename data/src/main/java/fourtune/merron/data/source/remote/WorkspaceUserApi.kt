@@ -44,4 +44,9 @@ interface WorkspaceUserApi {
         @Query("nickname") nickname: String
     ): DuplicateResponse
 
+    @GET("/api/teams/none/workspace-users")
+    suspend fun getNotJoinedTeamWorkspaceUser(
+        @Query("workspaceId") workspaceId: Long
+    ): WorkspaceUsers
+
 }

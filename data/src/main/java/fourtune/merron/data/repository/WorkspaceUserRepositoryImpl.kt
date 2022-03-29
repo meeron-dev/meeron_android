@@ -80,6 +80,10 @@ class WorkspaceUserRepositoryImpl @Inject constructor(
         return workspaceUserApi.isDuplicateWorkspaceUser(workspaceId, nickName).duplicate
     }
 
+    override suspend fun getNotJoinedTeamWorkspaceUser(workspaceId: Long): List<WorkspaceUser> {
+        return workspaceUserApi.getNotJoinedTeamWorkspaceUser(workspaceId).workspaceUsers
+    }
+
     private fun createWorkspaceRequestBody(workSpace: WorkSpace) = Json.encodeToString(
         WorkSpaceRequest(
             workspaceId = workSpace.workspaceId,

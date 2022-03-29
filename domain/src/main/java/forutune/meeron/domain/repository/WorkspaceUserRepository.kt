@@ -16,4 +16,6 @@ interface WorkspaceUserRepository {
     suspend fun createWorkspaceUser(workSpace: WorkSpace)
 
     suspend fun isDuplicateWorkspaceUser(workspaceId: Long, nickName: String): Boolean
+
+    suspend fun getNotJoinedTeamWorkspaceUser(workspaceId: Long): List<WorkspaceUser>
 }

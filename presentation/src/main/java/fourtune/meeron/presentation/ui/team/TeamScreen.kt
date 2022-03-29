@@ -68,36 +68,47 @@ fun TeamScreen(
 
 @Composable
 private fun TeamScreen(uiState: TeamViewModel.UiState, event: (TeamViewModel.Event) -> Unit = {}) {
+    val selectedTeam = uiState.selectedTeam
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.padding(7.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 22.dp, horizontal = 20.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = uiState.selectedTeam?.name.orEmpty(),
+                text = when (selectedTeam) {
+                    is TeamViewModel.TeamState.Normal -> selectedTeam.team.name
+                    is TeamViewModel.TeamState.None -> selectedTeam.name
+                },
                 fontSize = 21.sp,
                 color = colorResource(id = R.color.black)
             )
-            Row {
-                IconButton(onClick = { event(TeamViewModel.Event.OpenCalendar) }) {
-                    Image(painter = painterResource(id = R.drawable.ic_calendar), contentDescription = null)
-                }
-                if (uiState.isAdmin) {
-                    Spacer(modifier = Modifier.padding(4.dp))
-                    IconButton(onClick = { event(TeamViewModel.Event.AdministerTeam) }) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_setting),
-                            contentDescription = null
-                        )
+            if (selectedTeam is TeamViewModel.TeamState.Normal) {
+                Row {
+                    IconButton(onClick = { event(TeamViewModel.Event.OpenCalendar) }) {
+                        Image(painter = painterResource(id = R.drawable.ic_calendar), contentDescription = null)
+                    }
+                    if (uiState.isAdmin) {
+                        Spacer(modifier = Modifier.padding(4.dp))
+                        IconButton(onClick = { event(TeamViewModel.Event.AdministerTeam) }) {
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_setting),
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
             }
         }
         Column(modifier = Modifier.padding(top = 24.dp, start = 20.dp, end = 20.dp)) {
-            Text(text = "팀원", fontSize = 17.sp, color = colorResource(id = R.color.dark_gray))
+            if (uiState.selectedTeam is TeamViewModel.TeamState.None) {
+                Text(text = "아직 팀이 없는 멤버들입니다.", fontSize = 15.sp, color = colorResource(id = R.color.light_gray))
+            } else {
+                Text(text = "팀원", fontSize = 17.sp, color = colorResource(id = R.color.dark_gray))
+            }
             Spacer(modifier = Modifier.padding(5.dp))
             if (uiState.teamMembers.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -110,7 +121,11 @@ private fun TeamScreen(uiState: TeamViewModel.UiState, event: (TeamViewModel.Eve
             } else {
                 LazyVerticalGrid(columns = GridCells.Fixed(4)) {
                     items(uiState.teamMembers) { workspaceUser: WorkspaceUser ->
-                        UserItem(user = workspaceUser, selected = false, admin = workspaceUser.workspaceAdmin)
+                        UserItem(
+                            user = workspaceUser,
+                            selected = false,
+                            admin = workspaceUser.workspaceAdmin
+                        )
                     }
                 }
             }
@@ -121,7 +136,7 @@ private fun TeamScreen(uiState: TeamViewModel.UiState, event: (TeamViewModel.Eve
 @Composable
 fun TeamTopBar(
     teams: List<Team>,
-    selectedTeam: Team?,
+    selectedTeam: TeamViewModel.TeamState,
     onClickTeam: (team: Team) -> Unit = {},
     onClickNone: () -> Unit = {}
 ) {
@@ -148,7 +163,7 @@ fun TeamTopBar(
                 TeamCircleItem(
                     drawable = TeamItems.values()[index].drawable,
                     teamName = team.name.substring(0..1),
-                    isSelected = team == selectedTeam,
+                    isSelected = team == (selectedTeam as? TeamViewModel.TeamState.Normal) ?: false,
                     fontSize = 15.sp,
                     fontColor = colorResource(id = R.color.dark_gray_white),
                 ) {

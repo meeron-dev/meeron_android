@@ -14,6 +14,7 @@ import forutune.meeron.domain.Const
 import fourtune.meeron.presentation.navigator.ext.encodeJson
 import fourtune.meeron.presentation.navigator.type.DateType
 import fourtune.meeron.presentation.navigator.type.MeetingType
+import fourtune.meeron.presentation.navigator.type.TeamType
 import fourtune.meeron.presentation.navigator.type.WorkSpaceType
 import fourtune.meeron.presentation.ui.DynamicLinkEntryScreen
 import fourtune.meeron.presentation.ui.NameInitScreen
@@ -203,11 +204,14 @@ fun MeeronNavigator(startDestination: Navigate) {
                 openCalendar = { navController.navigate(Navigate.Calendar.route()) },
                 addMeeting = { navController.navigate(Navigate.CreateMeeting.Date.route()) },
                 createWorkspace = { navController.navigate(Navigate.CreateWorkspace.CreateOrJoin.route()) },
-                administerTeam = { navController.navigate(route = Navigate.Team.Administer.route()) }
+                administerTeam = { navController.navigate(route = Navigate.Team.Administer.route(it.team.encodeJson())) }
             )
         }
 
-        composable(route = Navigate.Team.Administer.route()) {
+        composable(
+            route = Navigate.Team.Administer.destination(Const.Team),
+            arguments = listOf(navArgument(Const.Team) { type = TeamType() })
+        ) {
             AdministerTeamScreen(onBack = { navController.navigateUp() })
         }
 

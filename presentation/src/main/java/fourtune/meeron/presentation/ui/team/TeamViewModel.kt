@@ -35,7 +35,7 @@ class TeamViewModel @Inject constructor(
                     it.copy(
                         teams = teams,
                         teamMembers = if (teams.isEmpty()) emptyList() else getTeamMember(teams.first().id),
-                        selectedTeam = teams.firstOrNull(),
+                        selectedTeam = teams.firstOrNull()?.let(TeamState::Normal) ?: TeamState.None(),
                         isAdmin = getMyWorkSpaceUser().workspaceAdmin
                     )
                 }
@@ -47,7 +47,7 @@ class TeamViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    selectedTeam = team,
+                    selectedTeam = TeamState.Normal(team),
                     teamMembers = getTeamMember(team.id)
                 )
             }
@@ -58,7 +58,7 @@ class TeamViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    selectedTeam = null,
+                    selectedTeam = TeamState.None(),
                     teamMembers = getNotJoinedTeamWorkspaceUser()
                 )
             }
@@ -75,7 +75,12 @@ class TeamViewModel @Inject constructor(
     data class UiState(
         val teams: List<Team> = emptyList(),
         val teamMembers: List<WorkspaceUser> = emptyList(),
-        val selectedTeam: Team? = null,
+        val selectedTeam: TeamState = TeamState.None(),
         val isAdmin: Boolean = false
     )
+
+    sealed interface TeamState {
+        class Normal(val team: Team) : TeamState
+        class None(val name: String = "NONE") : TeamState
+    }
 }

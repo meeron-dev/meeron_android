@@ -39,7 +39,7 @@ fun MainScreen(
     openCalendar: () -> Unit = {},
     addMeeting: () -> Unit = {},
     createWorkspace: () -> Unit = {},
-    administerTeam: () -> Unit = {}
+    administerTeam: (team: TeamViewModel.TeamState.Normal) -> Unit = {}
 ) {
 
     val homeUiState by homeViewModel.uiState.collectAsState()
@@ -95,7 +95,16 @@ fun MainScreen(
         when (content) {
             BottomNavi.Home -> HomeScreen(homeViewModel, bottomBarSize, openCalendar, homeUiState)
             BottomNavi.My -> {}
-            BottomNavi.Team -> TeamScreen(teamViewModel, administerTeam = administerTeam, openCalendar = openCalendar)
+            BottomNavi.Team -> TeamScreen(
+                viewModel = teamViewModel,
+                administerTeam = {
+                    val selectedTeam = teamViewModel.uiState.value.selectedTeam
+                    if (selectedTeam is TeamViewModel.TeamState.Normal) {
+                        administerTeam(selectedTeam)
+                    }
+                },
+                openCalendar = openCalendar
+            )
         }
 
     }

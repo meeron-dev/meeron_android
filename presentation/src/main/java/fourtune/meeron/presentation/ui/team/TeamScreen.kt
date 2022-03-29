@@ -163,7 +163,7 @@ fun TeamTopBar(
                 TeamCircleItem(
                     drawable = TeamItems.values()[index].drawable,
                     teamName = team.name.substring(0..1),
-                    isSelected = team == (selectedTeam as? TeamViewModel.TeamState.Normal) ?: false,
+                    isSelected = team == (selectedTeam as? TeamViewModel.TeamState.Normal)?.team ?: false,
                     fontSize = 15.sp,
                     fontColor = colorResource(id = R.color.dark_gray_white),
                 ) {
@@ -175,7 +175,8 @@ fun TeamTopBar(
                     drawable = TeamItems.None.drawable,
                     teamName = "NONE",
                     fontSize = 12.sp,
-                    fontColor = colorResource(id = R.color.gray),
+                    isSelected = selectedTeam is TeamViewModel.TeamState.None,
+                    fontColor = colorResource(id = if (selectedTeam is TeamViewModel.TeamState.None) R.color.primary else R.color.gray),
                     onClick = onClickNone
                 )
             }

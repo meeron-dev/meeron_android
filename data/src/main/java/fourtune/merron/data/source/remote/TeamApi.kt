@@ -4,6 +4,7 @@ import forutune.meeron.domain.model.Teams
 import fourtune.merron.data.model.dto.request.TeamRequest
 import fourtune.merron.data.model.dto.response.TeamIdResponse
 import fourtune.merron.data.model.dto.response.WorkSpaceUsersResponse
+import retrofit2.Response
 import retrofit2.http.*
 
 interface TeamApi {
@@ -27,4 +28,7 @@ interface TeamApi {
         @Path("workspaceUserId") workspaceUserId: Long,
         @Body adminWorkspaceUserId: Long
     )
+
+    @POST("/api/teams/{teamId}")
+    suspend fun deleteTeam(@Path("teamId") teamId: Long, @Body workspaceUserId: Long): Response<Unit>
 }

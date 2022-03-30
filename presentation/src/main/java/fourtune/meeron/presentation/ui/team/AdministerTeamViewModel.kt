@@ -24,7 +24,6 @@ class AdministerTeamViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
-
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -45,6 +44,13 @@ class AdministerTeamViewModel @Inject constructor(
             val myWorkspaceUser = getMyWorkSpaceUser()
             val isSuccess = teamRepository.kickTeamMember(user.workspaceUserId, myWorkspaceUser.workspaceUserId)
             if (isSuccess) _uiState.update { it.copy(teamMembers = it.teamMembers - listOf(user)) }
+        }
+    }
+
+    fun deleteTeam() {
+        viewModelScope.launch {
+            val myWorkspaceUser = getMyWorkSpaceUser()
+            teamRepository.deleteTeam(uiState.value.selectedTeam.id, myWorkspaceUser.workspaceUserId)
         }
     }
 

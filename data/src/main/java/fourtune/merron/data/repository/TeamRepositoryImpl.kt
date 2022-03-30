@@ -28,4 +28,8 @@ class TeamRepositoryImpl @Inject constructor(
         }.isSuccess
     }
 
+    override suspend fun deleteTeam(teamId: Long, workspaceUserId: Long) {
+        teamApi.deleteTeam(teamId, workspaceUserId)
+    }
+
 }

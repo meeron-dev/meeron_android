@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.model.MeeronError
-import forutune.meeron.domain.usecase.SettingAccountUseCase
+import forutune.meeron.domain.usecase.workspace.GetUserWorkspacesUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val settingAccount: SettingAccountUseCase
+    private val getUserWorkspaces: GetUserWorkspacesUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
@@ -29,9 +29,13 @@ class MainViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             runCatching {
-                settingAccount()
-            }.onSuccess {
-                _event.emit(Event.GoToHome)
+                getUserWorkspaces()
+            }.onSuccess { workspaces ->
+                if (workspaces.isEmpty()) {
+                    _event.emit(Event.GoToCreateOrJoin)
+                } else {
+                    _event.emit(Event.GoToHome)
+                }
             }.onFailure {
                 if (it is MeeronError) {
                     if (it.code == 1100) {
@@ -55,5 +59,6 @@ class MainViewModel @Inject constructor(
     sealed interface Event {
         object GoToHome : Event
         object GoToLogin : Event
+        object GoToCreateOrJoin : Event
     }
 }

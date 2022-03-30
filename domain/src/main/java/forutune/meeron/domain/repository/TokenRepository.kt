@@ -8,4 +8,5 @@ interface TokenRepository {
     fun getRefreshToken(): Flow<String?>
     suspend fun saveToken(token: Token)
     suspend fun clearToken()
+    suspend fun reissue(): Token
 }

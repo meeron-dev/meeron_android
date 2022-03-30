@@ -7,7 +7,6 @@ import forutune.meeron.domain.model.User
 import forutune.meeron.domain.repository.LoginRepository
 import forutune.meeron.domain.repository.TokenRepository
 import forutune.meeron.domain.repository.UserRepository
-import forutune.meeron.domain.usecase.SettingAccountUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -17,7 +16,6 @@ class LoginUseCase @Inject constructor(
     private val loginRepository: LoginRepository,
     private val userRepository: UserRepository,
     private val tokenRepository: TokenRepository,
-    private val settingAccount: SettingAccountUseCase
 ) {
 
     suspend operator fun invoke(
@@ -27,9 +25,6 @@ class LoginUseCase @Inject constructor(
 
         kotlin.runCatching {
             val token = loginRepository.login(me)
-            settingAccount()
-            token
-        }.onSuccess { token ->
             updateToken(me, token)
         }.onFailure {
             tokenRepository.clearToken()

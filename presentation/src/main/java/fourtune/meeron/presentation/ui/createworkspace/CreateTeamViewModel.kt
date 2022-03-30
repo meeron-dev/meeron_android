@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.WorkSpace
+import forutune.meeron.domain.repository.WorkSpaceRepository
 import forutune.meeron.domain.usecase.workspace.CreateWorkSpaceUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateTeamViewModel @Inject constructor(
     private val createWorkSpaceUseCase: CreateWorkSpaceUseCase,
+    private val workSpaceRepository: WorkSpaceRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val workSpace: WorkSpace = requireNotNull(savedStateHandle[Const.WorkSpace])
@@ -30,6 +32,7 @@ class CreateTeamViewModel @Inject constructor(
                 createWorkSpaceUseCase(workSpace, teamName)
             }.onSuccess { workspaceId ->
                 _showLoading.emit(false)
+                workSpaceRepository.setCurrentWorkspaceId(workspaceId)
                 onCreate(workspaceId)
             }.onFailure {
                 _showLoading.emit(false)

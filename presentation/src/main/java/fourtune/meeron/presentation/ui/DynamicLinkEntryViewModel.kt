@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.model.MeeronError
 import forutune.meeron.domain.model.WorkSpace
-import forutune.meeron.domain.usecase.SettingAccountUseCase
 import forutune.meeron.domain.usecase.me.GetMeUseCase
 import forutune.meeron.domain.usecase.workspace.CreateWorkspaceUserUseCase
 import forutune.meeron.domain.usecase.workspace.GetUserWorkspacesUseCase
@@ -20,7 +19,6 @@ class DynamicLinkEntryViewModel @Inject constructor(
     getMe: GetMeUseCase,
     getUserWorkspaces: GetUserWorkspacesUseCase,
     private val createWorkspaceUser: CreateWorkspaceUserUseCase,
-    private val settingAccountUseCase: SettingAccountUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val workspaceId = savedStateHandle.get<String?>("id").orEmpty()
@@ -80,7 +78,6 @@ class DynamicLinkEntryViewModel @Inject constructor(
         viewModelScope.launch {
             kotlin.runCatching {
                 createWorkspaceUser.invoke(workSpace.copy(workspaceId.toLong()))
-                settingAccountUseCase.invoke(workspaceId.toLong())
             }
                 .onFailure {
                     Timber.tag("🔥createWUser(DL)").e("$it")

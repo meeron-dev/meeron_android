@@ -57,11 +57,11 @@ class WorkspaceUserRepositoryImpl @Inject constructor(
         }.firstOrNull().also { Timber.tag("🔥getWorkspaceUserId").d("$it") }
     }
 
-    override suspend fun createWorkspaceAdmin(workSpace: WorkSpace) {
+    override suspend fun createWorkspaceAdmin(workSpace: WorkSpace): WorkspaceUser {
         val files = createFileData(workSpace)
         val requestBody = createWorkspaceRequestBody(workSpace)
 
-        workspaceUserApi.createWorkSpaceAdmin(
+        return workspaceUserApi.createWorkSpaceAdmin(
             request = MultipartBody.Part.createFormData(name = "request", body = requestBody, filename = "request"),
             files = files
         )

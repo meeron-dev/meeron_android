@@ -12,7 +12,7 @@ interface WorkspaceUserRepository {
     suspend fun setCurrentWorkspaceUserId(workspaceUserId: Long)
     suspend fun getCurrentWorkspaceUserId(): Long?
 
-    suspend fun createWorkspaceAdmin(workSpace: WorkSpace)
+    suspend fun createWorkspaceAdmin(workSpace: WorkSpace): WorkspaceUser
     suspend fun createWorkspaceUser(workSpace: WorkSpace)
 
     suspend fun isDuplicateWorkspaceUser(workspaceId: Long, nickName: String): Boolean

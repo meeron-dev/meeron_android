@@ -56,6 +56,7 @@ class MainActivity : ComponentActivity() {
             val navigate = when (event) {
                 MainViewModel.Event.GoToHome -> Navigate.Main
                 MainViewModel.Event.GoToLogin -> Navigate.Login
+                MainViewModel.Event.GoToCreateOrJoin -> Navigate.CreateWorkspace.CreateOrJoin
             }
             isReady = true
             setContent {

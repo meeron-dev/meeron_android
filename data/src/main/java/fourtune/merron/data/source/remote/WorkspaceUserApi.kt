@@ -29,7 +29,7 @@ interface WorkspaceUserApi {
     suspend fun createWorkSpaceAdmin(
         @Part files: MultipartBody.Part? = null,
         @Part request: MultipartBody.Part
-    )
+    ): WorkspaceUser
 
     @Multipart
     @POST("/api/workspace-users")

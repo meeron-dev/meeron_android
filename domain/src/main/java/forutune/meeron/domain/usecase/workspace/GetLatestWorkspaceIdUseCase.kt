@@ -8,9 +8,10 @@ class GetLatestWorkspaceIdUseCase @Inject constructor(
     private val getMe: GetMeUseCase,
     private val workSpaceRepository: WorkSpaceRepository
 ) {
-    suspend operator fun invoke():Long {//todo 지금은 가장 첫번째지만 나중에는 바꿔야 함.. (use datastore : account)
+    suspend operator fun invoke(): Long {//todo 지금은 가장 첫번째지만 나중에는 바꿔야 함.. (use datastore : account)
         val me = getMe()
-        val workSpaceInfos = workSpaceRepository.getUserWorkspace(me.userId)
+        val workSpaceInfos = runCatching { workSpaceRepository.getUserWorkspace(me.userId) }
+            .getOrDefault(emptyList())
         return workSpaceInfos.first().workSpaceId
     }
 }

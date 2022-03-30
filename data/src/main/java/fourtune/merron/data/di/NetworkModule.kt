@@ -134,6 +134,13 @@ class NetworkModule {
         convertFactory: Converter.Factory
     ): WorkSpaceApi = createRetrofit(convertFactory, okHttpClient).create(WorkSpaceApi::class.java)
 
+    @Provides
+    @Singleton
+    fun providerOauthApi(
+        @OK_HTTP_CLIENT_NO_AUTH okHttpClient: OkHttpClient,
+        convertFactory: Converter.Factory
+    ): OauthApi = createRetrofit(convertFactory, okHttpClient).create(OauthApi::class.java)
+
     companion object {
         private const val BASE_URL = "https://dev.meeron.net/"
     }

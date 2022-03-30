@@ -22,4 +22,10 @@ class TeamRepositoryImpl @Inject constructor(
         return teamApi.getTeamMembers(teamId).workspaceUsers
     }
 
+    override suspend fun kickTeamMember(workspaceUserId: Long, adminWorkspaceUserId: Long): Boolean {
+        return runCatching {
+            teamApi.kickTeamMember(workspaceUserId, adminWorkspaceUserId)
+        }.isSuccess
+    }
+
 }

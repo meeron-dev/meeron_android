@@ -21,4 +21,10 @@ interface TeamApi {
     suspend fun getTeamMembers(
         @Path("teamId") teamId: Long
     ): WorkSpaceUsersResponse
+
+    @PATCH("/api/workspace-users/{workspaceUserId}/team")
+    suspend fun kickTeamMember(
+        @Path("workspaceUserId") workspaceUserId: Long,
+        @Body adminWorkspaceUserId: Long
+    )
 }

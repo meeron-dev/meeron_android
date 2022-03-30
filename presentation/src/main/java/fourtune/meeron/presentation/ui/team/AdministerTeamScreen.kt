@@ -24,10 +24,14 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
-import fourtune.meeron.presentation.ui.common.UserItem
+import fourtune.meeron.presentation.ui.common.DeletedUserItem
 
 @Composable
-fun AdministerTeamScreen(viewModel: AdministerTeamViewModel = hiltViewModel(), onBack: () -> Unit) {
+fun AdministerTeamScreen(
+    viewModel: AdministerTeamViewModel = hiltViewModel(),
+    onBack: () -> Unit = {},
+    goToAddTeamMember: () -> Unit = {}
+) {
     val uiState by viewModel.uiState.collectAsState()
     Scaffold(
         topBar = {
@@ -75,14 +79,14 @@ fun AdministerTeamScreen(viewModel: AdministerTeamViewModel = hiltViewModel(), o
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "팀원", fontSize = 18.sp, color = colorResource(id = R.color.dark_gray))
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = goToAddTeamMember) {
                         Image(painter = painterResource(id = R.drawable.ic_plus), contentDescription = null)
                     }
                 }
                 Spacer(modifier = Modifier.padding(5.dp))
                 LazyVerticalGrid(columns = GridCells.Fixed(4)) {
                     items(uiState.teamMembers) { user ->
-                        UserItem(user = user, selected = false, admin = false)
+                        DeletedUserItem(user = user, onClickDelete = { viewModel.deletedTeamMember(user) })
                     }
                 }
             }

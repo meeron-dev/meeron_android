@@ -7,6 +7,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.Team
 import forutune.meeron.domain.model.WorkspaceUser
+import forutune.meeron.domain.repository.TeamRepository
+import forutune.meeron.domain.usecase.me.GetMyWorkSpaceUserUseCase
 import forutune.meeron.domain.usecase.team.GetTeamMemberUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,10 +19,12 @@ import javax.inject.Inject
 @HiltViewModel
 class AdministerTeamViewModel @Inject constructor(
     private val getTeamMembers: GetTeamMemberUseCase,
-
+    private val teamRepository: TeamRepository,
+    private val getMyWorkSpaceUser: GetMyWorkSpaceUserUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
+
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -34,6 +38,14 @@ class AdministerTeamViewModel @Inject constructor(
             }
         }
 
+    }
+
+    fun deletedTeamMember(user: WorkspaceUser) {
+        viewModelScope.launch {
+            val myWorkspaceUser = getMyWorkSpaceUser()
+            val isSuccess = teamRepository.kickTeamMember(user.workspaceUserId, myWorkspaceUser.workspaceUserId)
+            if (isSuccess) _uiState.update { it.copy(teamMembers = it.teamMembers - listOf(user)) }
+        }
     }
 
     data class UiState(

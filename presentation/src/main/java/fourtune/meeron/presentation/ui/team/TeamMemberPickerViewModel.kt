@@ -29,8 +29,7 @@ class TeamMemberPickerViewModel @Inject constructor(
             UiState(
                 type = requireNotNull(savedStateHandle.get<Type>(Const.TeamMemberPickerType)),
                 teamId = requireNotNull(savedStateHandle.get(Const.TeamId)),
-
-                )
+            )
         )
 
     val uiState = _uiState.asStateFlow()
@@ -43,6 +42,16 @@ class TeamMemberPickerViewModel @Inject constructor(
                     workspaceName = getWorkSpaceUseCase(getMyWorkSpaceUserUseCase().workspaceId).workSpaceName
                 )
             }
+        }
+    }
+
+    fun addTeamMember(selectedTeamMember: List<WorkspaceUser>) {
+        viewModelScope.launch {
+            teamRepository.addTeamMember(
+                uiState.value.teamId,
+                getMyWorkSpaceUserUseCase().workspaceUserId,
+                selectedTeamMember.map { it.workspaceUserId }
+            )
         }
     }
 

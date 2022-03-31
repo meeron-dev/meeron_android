@@ -40,3 +40,9 @@ data class TeamRequest(
     @SerialName("workspaceId") val workspaceId: Long,
     @SerialName("teamName") val teamName: String,
 )
+
+@Serializable
+data class AddTeamMemberRequest(
+    @SerialName("adminWorkspaceUserId") val adminWorkspaceUserId: Long,
+    @SerialName("joinTeamWorkspaceUserIds") val joinTeamWorkspaceUserIds: List<Long>
+)

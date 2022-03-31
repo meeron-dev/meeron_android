@@ -142,7 +142,7 @@ private fun TeamMembers(
     }
     Spacer(modifier = Modifier.padding(5.dp))
     LazyVerticalGrid(columns = GridCells.Fixed(4)) {
-        items(teamMember) { user ->
+        items(teamMember, key = { it.workspaceUserId }) { user ->
             DeletedUserItem(user = user, onClickDelete = { deleteTeamMember(user) })
         }
     }

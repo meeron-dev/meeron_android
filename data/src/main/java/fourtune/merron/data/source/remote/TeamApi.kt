@@ -1,6 +1,7 @@
 package fourtune.merron.data.source.remote
 
 import forutune.meeron.domain.model.Teams
+import fourtune.merron.data.model.dto.request.AddTeamMemberRequest
 import fourtune.merron.data.model.dto.request.TeamRequest
 import fourtune.merron.data.model.dto.response.TeamIdResponse
 import fourtune.merron.data.model.dto.response.WorkSpaceUsersResponse
@@ -27,8 +28,14 @@ interface TeamApi {
     suspend fun kickTeamMember(
         @Path("workspaceUserId") workspaceUserId: Long,
         @Body adminWorkspaceUserId: Long
-    )
+    ): Response<Unit>
 
     @POST("/api/teams/{teamId}")
     suspend fun deleteTeam(@Path("teamId") teamId: Long, @Body workspaceUserId: Long): Response<Unit>
+
+    @PATCH("/api/teams/{teamId}/workspace-users")
+    suspend fun addTeamMember(
+        @Path("teamId") teamId: Long,
+        @Body addTeamMemberRequest: AddTeamMemberRequest
+    ): Response<Unit>
 }

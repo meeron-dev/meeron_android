@@ -63,7 +63,8 @@ fun TeamMemberPickerScreen(
         },
         content = {
             TeamMemberPickerScreen(uiState) { selectedTeamMember ->
-
+                viewModel.addTeamMember(selectedTeamMember)
+                goToMain()
             }
         }
     )

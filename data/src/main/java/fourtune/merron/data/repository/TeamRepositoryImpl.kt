@@ -3,6 +3,7 @@ package fourtune.merron.data.repository
 import forutune.meeron.domain.model.Teams
 import forutune.meeron.domain.model.WorkspaceUser
 import forutune.meeron.domain.repository.TeamRepository
+import fourtune.merron.data.model.dto.request.AddTeamMemberRequest
 import fourtune.merron.data.model.dto.request.TeamRequest
 import fourtune.merron.data.source.remote.TeamApi
 import javax.inject.Inject
@@ -22,14 +23,16 @@ class TeamRepositoryImpl @Inject constructor(
         return teamApi.getTeamMembers(teamId).workspaceUsers
     }
 
-    override suspend fun kickTeamMember(workspaceUserId: Long, adminWorkspaceUserId: Long): Boolean {
-        return runCatching {
-            teamApi.kickTeamMember(workspaceUserId, adminWorkspaceUserId)
-        }.isSuccess
+    override suspend fun kickTeamMember(workspaceUserId: Long, adminWorkspaceUserId: Long) {
+        teamApi.kickTeamMember(workspaceUserId, adminWorkspaceUserId)
     }
 
     override suspend fun deleteTeam(teamId: Long, workspaceUserId: Long) {
         teamApi.deleteTeam(teamId, workspaceUserId)
+    }
+
+    override suspend fun addTeamMember(teamId: Long, adminWorkspaceUserId: Long, workspaceUserIds: List<Long>) {
+        teamApi.addTeamMember(teamId, AddTeamMemberRequest(adminWorkspaceUserId, workspaceUserIds))
     }
 
 }

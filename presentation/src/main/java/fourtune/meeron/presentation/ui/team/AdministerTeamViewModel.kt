@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,7 +44,8 @@ class AdministerTeamViewModel @Inject constructor(
         viewModelScope.launch {
             val myWorkspaceUser = getMyWorkSpaceUser()
             val isSuccess = teamRepository.kickTeamMember(user.workspaceUserId, myWorkspaceUser.workspaceUserId)
-            if (isSuccess) _uiState.update { it.copy(teamMembers = it.teamMembers - listOf(user)) }
+            Timber.tag("🔥zero:deletedTeamMember").d("$isSuccess")
+            _uiState.update { it.copy(teamMembers = it.teamMembers - user) }
         }
     }
 

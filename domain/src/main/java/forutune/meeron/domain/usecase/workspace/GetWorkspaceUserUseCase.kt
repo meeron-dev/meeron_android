@@ -1,8 +1,7 @@
-package forutune.meeron.domain.usecase.user
+package forutune.meeron.domain.usecase.workspace
 
 import forutune.meeron.domain.model.WorkspaceUser
 import forutune.meeron.domain.repository.WorkspaceUserRepository
-import forutune.meeron.domain.usecase.workspace.GetLatestWorkspaceIdUseCase
 import javax.inject.Inject
 
 class GetWorkspaceUserUseCase @Inject constructor(

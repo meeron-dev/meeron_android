@@ -105,7 +105,6 @@ fun MeeronNavigator(startDestination: Navigate) {
     AnimatedNavHost(
         navController = navController,
         startDestination = startDestination.route()
-//        startDestination = Navigate.CreateWorkspace.CreateOrJoin.route()
     ) {
         composable(route = Navigate.Login.route()) {
             LoginScreen(
@@ -220,7 +219,14 @@ fun MeeronNavigator(startDestination: Navigate) {
         ) {
             AdministerTeamScreen(
                 onBack = { navController.navigateUp() },
-                goToAddTeamMember = {navController.navigate(Navigate.Team.TeamMemberPicker.route(TeamMemberPickerViewModel.Type.Administer))}
+                goToAddTeamMember = { teamId ->
+                    navController.navigate(
+                        Navigate.Team.TeamMemberPicker.route(
+                            TeamMemberPickerViewModel.Type.Administer,
+                            teamId
+                        )
+                    )
+                }
             )
         }
 
@@ -229,17 +235,29 @@ fun MeeronNavigator(startDestination: Navigate) {
         ) {
             AddTeamScreen(
                 onAction = { navController.navigateUp() },
-                openTeamPicker = { navController.navigate(Navigate.Team.TeamMemberPicker.route(TeamMemberPickerViewModel.Type.Add)) }
+                openTeamPicker = { teamId ->
+                    navController.navigate(
+                        Navigate.Team.TeamMemberPicker.route(TeamMemberPickerViewModel.Type.Add, teamId)
+                    )
+                }
             )
         }
 
         composable(
-            route = Navigate.Team.TeamMemberPicker.destination(Const.TeamMemberPickerType),
-            arguments = listOf(navArgument(Const.TeamMemberPickerType) {
-                type = NavType.EnumType(TeamMemberPickerViewModel.Type::class.java)
-            })
+            route = Navigate.Team.TeamMemberPicker.destination(Const.TeamMemberPickerType, Const.TeamId),
+            arguments = listOf(
+                navArgument(Const.TeamMemberPickerType) {
+                    type = NavType.EnumType(TeamMemberPickerViewModel.Type::class.java)
+                },
+                navArgument(Const.TeamId) {
+                    type = NavType.LongType
+                }
+            )
         ) {
-            TeamMemberPickerScreen(onAction = {})
+            TeamMemberPickerScreen(
+                onBack = { navController.navigateUp() },
+                goToMain = { navController.popBackStack(Navigate.Main.route(), false) }
+            )
         }
 
         composable(

@@ -9,7 +9,7 @@ import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.model.Team
 import forutune.meeron.domain.model.WorkspaceUser
 import forutune.meeron.domain.usecase.team.GetWorkSpaceTeamUseCase
-import forutune.meeron.domain.usecase.user.GetWorkspaceUserUseCase
+import forutune.meeron.domain.usecase.workspace.GetWorkspaceUserUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

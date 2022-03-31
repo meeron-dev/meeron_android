@@ -1,5 +1,6 @@
 package fourtune.meeron.presentation.ui.team
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -24,8 +25,17 @@ import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
 import fourtune.meeron.presentation.ui.common.UserItem
 
 @Composable
-fun TeamMemberPickerScreen(viewModel: TeamMemberPickerViewModel = hiltViewModel(), onAction: () -> Unit) {
+fun TeamMemberPickerScreen(
+    viewModel: TeamMemberPickerViewModel = hiltViewModel(),
+    onBack: () -> Unit,
+    goToMain: () -> Unit
+) {
     val uiState by viewModel.uiState.collectAsState()
+
+    val deleteTeam = remember {
+        { viewModel.deleteTeamIfAdded() }
+    }
+    BackHandler { deleteTeam(); onBack() }
 
     Scaffold(
         topBar = {
@@ -38,14 +48,18 @@ fun TeamMemberPickerScreen(viewModel: TeamMemberPickerViewModel = hiltViewModel(
                         fontWeight = FontWeight.Bold
                     )
                 },
-                onAction = onAction,
-                onNavigation = if (uiState.type == TeamMemberPickerViewModel.Type.Add) {
-                    {
-
+                onAction = {
+                    deleteTeam();
+                    if (uiState.type == TeamMemberPickerViewModel.Type.Add) {
+                        goToMain()
+                    } else {
+                        onBack()
                     }
+                },
+                onNavigation = if (uiState.type == TeamMemberPickerViewModel.Type.Add) {
+                    { deleteTeam(); onBack() }
                 } else null,
-
-                )
+            )
         },
         content = {
             TeamMemberPickerScreen(uiState) { selectedTeamMember ->
@@ -78,7 +92,7 @@ private fun TeamMemberPickerScreen(
             )
             if (uiState.type == TeamMemberPickerViewModel.Type.Add) {
                 Spacer(modifier = Modifier.padding(6.dp))
-                Text(text = "workspaceName", fontSize = 15.sp, color = colorResource(id = R.color.gray))
+                Text(text = uiState.workspaceName, fontSize = 15.sp, color = colorResource(id = R.color.gray))
                 Text(
                     text = "팀은 최대 5개까지 생성이 가능합니다.",
                     fontSize = 13.sp,

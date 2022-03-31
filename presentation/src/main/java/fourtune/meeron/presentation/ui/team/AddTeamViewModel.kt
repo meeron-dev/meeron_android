@@ -35,14 +35,14 @@ class AddTeamViewModel @Inject constructor(
         }
     }
 
-    fun addTeam(teamName: String, onComplete: () -> Unit) {
+    fun addTeam(teamName: String, onComplete: (teamId: Long) -> Unit) {
         viewModelScope.launch {
             runCatching {
                 createTeam(teamName)
             }.onFailure {
 
             }.onSuccess {
-                onComplete()
+                onComplete(it)
             }
 
         }

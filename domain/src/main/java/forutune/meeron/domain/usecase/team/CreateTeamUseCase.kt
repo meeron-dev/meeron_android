@@ -8,8 +8,8 @@ class CreateTeamUseCase @Inject constructor(
     private val getLatestWorkspaceId: GetLatestWorkspaceIdUseCase,
     private val teamRepository: TeamRepository
 ) {
-    suspend operator fun invoke(teamName: String) {
+    suspend operator fun invoke(teamName: String): Long {
         val workspaceId = getLatestWorkspaceId()
-        teamRepository.createTeam(workspaceId, teamName)
+        return teamRepository.createTeam(workspaceId, teamName)
     }
 }

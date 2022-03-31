@@ -25,7 +25,7 @@ import fourtune.meeron.presentation.ui.common.action.MeeronActionBox
 fun AddTeamScreen(
     viewModel: AddTeamViewModel = hiltViewModel(),
     onAction: () -> Unit = {},
-    openTeamPicker: () -> Unit
+    openTeamPicker: (teamId: Long) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

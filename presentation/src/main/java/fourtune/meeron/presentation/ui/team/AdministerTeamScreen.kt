@@ -27,7 +27,7 @@ import fourtune.meeron.presentation.ui.common.DeletedUserItem
 fun AdministerTeamScreen(
     viewModel: AdministerTeamViewModel = hiltViewModel(),
     onBack: () -> Unit = {},
-    goToAddTeamMember: () -> Unit = {}
+    goToAddTeamMember: (teamId: Long) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -53,7 +53,7 @@ fun AdministerTeamScreen(
         content = {
             AdministerTeamScreen(
                 uiState = uiState,
-                goToAddTeamMember = goToAddTeamMember,
+                goToAddTeamMember = { goToAddTeamMember(uiState.selectedTeam.id) },
                 deleteTeamMember = viewModel::deletedTeamMember,
                 deleteTeam = { openDeleteDialog = true }
             )

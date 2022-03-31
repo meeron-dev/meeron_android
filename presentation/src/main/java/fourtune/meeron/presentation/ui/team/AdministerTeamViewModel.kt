@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,16 +42,16 @@ class AdministerTeamViewModel @Inject constructor(
     fun deletedTeamMember(user: WorkspaceUser) {
         viewModelScope.launch {
             val myWorkspaceUser = getMyWorkSpaceUser()
-            val isSuccess = teamRepository.kickTeamMember(user.workspaceUserId, myWorkspaceUser.workspaceUserId)
-            Timber.tag("🔥zero:deletedTeamMember").d("$isSuccess")
+            teamRepository.kickTeamMember(user.workspaceUserId, myWorkspaceUser.workspaceUserId)
             _uiState.update { it.copy(teamMembers = it.teamMembers - user) }
         }
     }
 
-    fun deleteTeam() {
+    fun deleteTeam(onDeleteComplete: () -> Unit) {
         viewModelScope.launch {
             val myWorkspaceUser = getMyWorkSpaceUser()
-            teamRepository.deleteTeam(uiState.value.selectedTeam.id, myWorkspaceUser.workspaceUserId)
+            val isSuccess = teamRepository.deleteTeam(uiState.value.selectedTeam.id, myWorkspaceUser.workspaceUserId)
+            if (isSuccess) onDeleteComplete()
         }
     }
 

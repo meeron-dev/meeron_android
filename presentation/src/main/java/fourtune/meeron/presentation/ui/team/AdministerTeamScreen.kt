@@ -63,7 +63,7 @@ fun AdministerTeamScreen(
     if (openDeleteDialog) {
         DeleteDialog(
             onDismissRequest = { openDeleteDialog = false },
-            onClickDelete = { viewModel.deleteTeam();openDeleteDialog = false;onBack() }
+            onClickDelete = { viewModel.deleteTeam(onBack) }
         )
     }
 }

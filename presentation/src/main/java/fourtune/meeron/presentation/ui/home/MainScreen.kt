@@ -55,7 +55,7 @@ fun MainScreen(
             teamViewModel.fetch()
         }
     }
-    var content: BottomNavi by rememberSaveable() {
+    var content: BottomNavi by rememberSaveable {
         mutableStateOf(BottomNavi.Home)
     }
 

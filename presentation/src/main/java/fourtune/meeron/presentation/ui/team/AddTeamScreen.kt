@@ -28,10 +28,22 @@ fun AddTeamScreen(
     openTeamPicker: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    AddTeamScreen(onAction, uiState) { teamName ->
+        viewModel.addTeam(teamName, openTeamPicker)
+    }
+
+}
+
+@Composable
+private fun AddTeamScreen(
+    onAction: () -> Unit,
+    uiState: AddTeamViewModel.UiState,
+    addTeam: (teamName: String) -> Unit = {}
+) {
     var teamName by remember {
         mutableStateOf("")
     }
-
     Scaffold(
         topBar = {
             CenterTextTopAppBar(text = {
@@ -46,7 +58,7 @@ fun AddTeamScreen(
         content = {
             MeeronSingleButtonBackGround(
                 text = stringResource(id = R.string.next),
-                onClick = { viewModel.addTeam(teamName, openTeamPicker) },
+                onClick = { addTeam(teamName) },
                 enable = teamName.isNotEmpty()
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
@@ -83,7 +95,6 @@ fun AddTeamScreen(
             }
         }
     )
-
 }
 
 @Preview

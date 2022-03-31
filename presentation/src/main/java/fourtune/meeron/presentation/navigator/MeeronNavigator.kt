@@ -33,6 +33,8 @@ import fourtune.meeron.presentation.ui.home.MainScreen
 import fourtune.meeron.presentation.ui.login.LoginScreen
 import fourtune.meeron.presentation.ui.team.AddTeamScreen
 import fourtune.meeron.presentation.ui.team.AdministerTeamScreen
+import fourtune.meeron.presentation.ui.team.TeamMemberPickerScreen
+import fourtune.meeron.presentation.ui.team.TeamMemberPickerViewModel
 
 sealed interface Navigate {
     fun route() = requireNotNull(this::class.qualifiedName)
@@ -77,6 +79,7 @@ sealed interface Navigate {
     sealed interface Team : Navigate {
         object Administer : Team
         object Add : Team
+        object TeamMemberPicker : Team
     }
 
     private fun queries(argument: Array<out String>): String = argument.mapIndexed { index, arg ->
@@ -215,13 +218,28 @@ fun MeeronNavigator(startDestination: Navigate) {
             route = Navigate.Team.Administer.destination(Const.Team),
             arguments = listOf(navArgument(Const.Team) { type = TeamType() })
         ) {
-            AdministerTeamScreen(onBack = { navController.navigateUp() })
+            AdministerTeamScreen(
+                onBack = { navController.navigateUp() },
+                goToAddTeamMember = {navController.navigate(Navigate.Team.TeamMemberPicker.route(TeamMemberPickerViewModel.Type.Administer))}
+            )
         }
 
         composable(
             route = Navigate.Team.Add.route()
         ) {
-            AddTeamScreen(onAction = { navController.navigateUp() }, openTeamPicker = {})
+            AddTeamScreen(
+                onAction = { navController.navigateUp() },
+                openTeamPicker = { navController.navigate(Navigate.Team.TeamMemberPicker.route(TeamMemberPickerViewModel.Type.Add)) }
+            )
+        }
+
+        composable(
+            route = Navigate.Team.TeamMemberPicker.destination(Const.TeamMemberPickerType),
+            arguments = listOf(navArgument(Const.TeamMemberPickerType) {
+                type = NavType.EnumType(TeamMemberPickerViewModel.Type::class.java)
+            })
+        ) {
+            TeamMemberPickerScreen(onAction = {})
         }
 
         composable(

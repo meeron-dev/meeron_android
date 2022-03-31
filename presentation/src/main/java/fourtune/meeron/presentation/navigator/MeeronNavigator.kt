@@ -218,7 +218,7 @@ fun MeeronNavigator(startDestination: Navigate) {
             arguments = listOf(navArgument(Const.Team) { type = TeamType() })
         ) {
             AdministerTeamScreen(
-                onBack = { navController.navigateUp() },
+                onBack = { navController.popBackStack() },
                 goToAddTeamMember = { teamId ->
                     navController.navigate(
                         Navigate.Team.TeamMemberPicker.route(

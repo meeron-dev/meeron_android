@@ -54,6 +54,30 @@ class TeamViewModel @Inject constructor(
         }
     }
 
+    fun fetch() {
+        viewModelScope.launch {
+            runCatching {
+                val teams = getWorkSpaceTeamUseCase()
+                val selectedTeam = uiState.value.selectedTeam
+                _uiState.update {
+                    it.copy(
+                        teams = teams,
+                        teamMembers = when {
+                            teams.isEmpty() -> emptyList()
+                            selectedTeam is TeamState.Normal -> {
+                                getTeamMember(selectedTeam.team.id)
+                            }
+                            selectedTeam is TeamState.None -> {
+                                getNotJoinedTeamWorkspaceUser()
+                            }
+                            else -> emptyList()
+                        },
+                    )
+                }
+            }.onFailure { Timber.tag("🔥zero:teamViewModel").e("$it") }
+        }
+    }
+
     fun getNotJoinedTeamMembers() {
         viewModelScope.launch {
             _uiState.update {

@@ -11,6 +11,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -18,6 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.whenStarted
 import com.google.accompanist.pager.ExperimentalPagerApi
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.team.TeamScreen
@@ -34,6 +37,7 @@ sealed class BottomNavi(@DrawableRes val image: Int, @StringRes val text: Int) :
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun MainScreen(
+    owner: LifecycleOwner = LocalLifecycleOwner.current,
     homeViewModel: HomeViewModel = hiltViewModel(),
     teamViewModel: TeamViewModel = hiltViewModel(),
     openCalendar: () -> Unit = {},
@@ -46,6 +50,11 @@ fun MainScreen(
     val homeUiState by homeViewModel.uiState.collectAsState()
     val teamUiState by teamViewModel.uiState.collectAsState()
 
+    LaunchedEffect(true) {
+        owner.whenStarted {
+            teamViewModel.fetch()
+        }
+    }
     var content: BottomNavi by rememberSaveable() {
         mutableStateOf(BottomNavi.Home)
     }

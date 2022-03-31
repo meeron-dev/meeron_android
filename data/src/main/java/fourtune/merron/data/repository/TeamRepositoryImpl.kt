@@ -27,12 +27,16 @@ class TeamRepositoryImpl @Inject constructor(
         teamApi.kickTeamMember(workspaceUserId, adminWorkspaceUserId)
     }
 
-    override suspend fun deleteTeam(teamId: Long, workspaceUserId: Long) {
-        teamApi.deleteTeam(teamId, workspaceUserId)
+    override suspend fun deleteTeam(teamId: Long, workspaceUserId: Long): Boolean {
+        return teamApi.deleteTeam(teamId, workspaceUserId).isSuccessful
     }
 
-    override suspend fun addTeamMember(teamId: Long, adminWorkspaceUserId: Long, workspaceUserIds: List<Long>) {
-        teamApi.addTeamMember(teamId, AddTeamMemberRequest(adminWorkspaceUserId, workspaceUserIds))
+    override suspend fun addTeamMember(
+        teamId: Long,
+        adminWorkspaceUserId: Long,
+        workspaceUserIds: List<Long>
+    ): Boolean {
+        return teamApi.addTeamMember(teamId, AddTeamMemberRequest(adminWorkspaceUserId, workspaceUserIds)).isSuccessful
     }
 
 }

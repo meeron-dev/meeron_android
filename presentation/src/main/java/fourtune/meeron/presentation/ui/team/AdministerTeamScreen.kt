@@ -61,7 +61,10 @@ fun AdministerTeamScreen(
     )
 
     if (openDeleteDialog) {
-        DeleteDialog({ openDeleteDialog = false }, viewModel::deleteTeam)
+        DeleteDialog(
+            onDismissRequest = { openDeleteDialog = false },
+            onClickDelete = { viewModel.deleteTeam();openDeleteDialog = false;onBack() }
+        )
     }
 }
 

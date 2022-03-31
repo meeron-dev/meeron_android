@@ -8,6 +8,6 @@ interface TeamRepository {
     suspend fun createTeam(workspaceId: Long, teamName: String): Long
     suspend fun getTeamMembers(teamId: Long): List<WorkspaceUser>
     suspend fun kickTeamMember(workspaceUserId: Long, adminWorkspaceUserId: Long)
-    suspend fun deleteTeam(teamId: Long, workspaceUserId: Long)
-    suspend fun addTeamMember(teamId: Long, adminWorkspaceUserId: Long, workspaceUserIds: List<Long>)
+    suspend fun deleteTeam(teamId: Long, workspaceUserId: Long): Boolean
+    suspend fun addTeamMember(teamId: Long, adminWorkspaceUserId: Long, workspaceUserIds: List<Long>): Boolean
 }

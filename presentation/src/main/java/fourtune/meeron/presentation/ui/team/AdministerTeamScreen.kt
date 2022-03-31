@@ -72,19 +72,24 @@ private fun DeleteDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        buttons = {
-            Row {
-                Button(onClick = onDismissRequest) {
-                    Text(text = "닫기")
-                }
-                Button(onClick = onClickDelete) {
-                    Text(text = "삭제하기")
-                }
+        title = {
+            Text(
+                text = "해당 팀을 정말 삭제하시겠습니까?",
+                fontSize = 16.sp,
+                color = colorResource(id = R.color.dark_gray),
+                fontWeight = FontWeight.Medium
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onClickDelete) {
+                Text(text = "삭제하기", fontSize = 16.sp, color = colorResource(id = R.color.dark_gray))
             }
         },
-        title = {
-            Text(text = "해당 팀을 정말 삭제하시겠습니까?", fontSize = 16.sp, color = colorResource(id = R.color.dark_gray))
-        }
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text(text = "닫기", fontSize = 16.sp, color = colorResource(id = R.color.dark_gray))
+            }
+        },
     )
 }
 

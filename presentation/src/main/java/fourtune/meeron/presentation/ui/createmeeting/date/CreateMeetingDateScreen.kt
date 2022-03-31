@@ -66,7 +66,6 @@ private fun CreateMeetingDateScreen(uiState: MeetingDateUiState, event: (CreateM
         },
     ) {
         MeeronSingleButtonBackGround(
-            modifier = Modifier.padding(vertical = 40.dp, horizontal = 20.dp),
             text = stringResource(id = R.string.next),
             onClick = { event(CreateMeetingDateViewModel.Event.OnNext) }
         ) {

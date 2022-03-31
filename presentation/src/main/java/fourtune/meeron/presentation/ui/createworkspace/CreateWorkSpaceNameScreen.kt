@@ -29,7 +29,6 @@ fun CreateWorkSpaceNameScreen(onPrevious: () -> Unit = {}, onNext: (String) -> U
         },
         content = {
             MeeronButtonBackGround(
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 50.dp),
                 rightEnable = workspaceName.isNotEmpty(),
                 rightClick = { onNext(workspaceName) },
                 leftClick = onPrevious

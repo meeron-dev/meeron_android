@@ -39,13 +39,11 @@ fun UserSelectScreen(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp)
             .height((LocalConfiguration.current.screenHeightDp * 0.9).dp),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         MeeronSingleButtonBackGround(
-            modifier = Modifier.padding(bottom = 50.dp),
             enable = selectedUsers.isNotEmpty(),
             onClick = { onComplete(selectedUsers) }
         ) {

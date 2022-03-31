@@ -31,11 +31,9 @@ fun TeamSelectScreen(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp)
             .height((LocalConfiguration.current.screenHeightDp * 0.9).dp)
     ) {
         MeeronSingleButtonBackGround(
-            modifier = Modifier.padding(bottom = 50.dp),
             enable = selected != null,
             onClick = { onSelectTeam(teams[requireNotNull(selected)].id) }
         ) {

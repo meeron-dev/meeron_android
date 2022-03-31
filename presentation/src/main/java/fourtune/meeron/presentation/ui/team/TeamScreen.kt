@@ -138,7 +138,8 @@ fun TeamTopBar(
     teams: List<Team>,
     selectedTeam: TeamViewModel.TeamState,
     onClickTeam: (team: Team) -> Unit = {},
-    onClickNone: () -> Unit = {}
+    onClickNone: () -> Unit = {},
+    onClickCreate: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -157,7 +158,12 @@ fun TeamTopBar(
         )
         LazyRow(modifier = Modifier.fillMaxWidth(), contentPadding = PaddingValues(horizontal = 20.dp)) {
             item {
-                TeamCircleItem(drawable = R.drawable.ic_team_plus, teamName = "", enable = teams.size < 5)
+                TeamCircleItem(
+                    drawable = R.drawable.ic_team_plus,
+                    teamName = "",
+                    enable = teams.size < 5,
+                    onClick = onClickCreate
+                )
             }
             itemsIndexed(teams) { index, team ->
                 TeamCircleItem(

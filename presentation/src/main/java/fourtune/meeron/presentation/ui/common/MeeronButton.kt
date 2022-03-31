@@ -33,6 +33,7 @@ fun MeeronButtonBackGround(
     ConstraintLayout(
         modifier = modifier
             .fillMaxSize()
+            .padding(horizontal = 20.dp, vertical = 40.dp)
     ) {
         val (content, button) = createRefs()
         Surface(
@@ -69,7 +70,8 @@ fun MeeronSingleButtonBackGround(
 ) {
     Box(
         modifier = modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(horizontal = 20.dp, vertical = 40.dp),
     ) {
         contents()
         MeeronSingleButton(

@@ -33,14 +33,14 @@ fun JoinScreen(close: () -> Unit = {}) {
         },
         content = {
             MeeronSingleButtonBackGround(
-                modifier = Modifier.padding(bottom = 50.dp, start = 38.dp, end = 38.dp, top = 32.dp),
                 text = "닫기",
                 onClick = close
             ) {
                 Spacer(modifier = Modifier.padding(32.dp))
                 LazyColumn(
                     modifier = Modifier
-                        .fillMaxSize(),
+                        .fillMaxSize()
+                        .padding(horizontal = 18.dp),
                     verticalArrangement = Arrangement.spacedBy(80.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {

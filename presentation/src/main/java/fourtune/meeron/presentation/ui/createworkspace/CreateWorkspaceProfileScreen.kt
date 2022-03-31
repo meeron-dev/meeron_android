@@ -56,7 +56,6 @@ fun CreateWorkspaceProfileScreen(
         topBar = { CenterTextTopAppBar(text = "프로필 작성") },
         content = {
             MeeronSingleButtonBackGround(
-                modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 50.dp),
                 enable = uiState.isVerify,
                 onClick = { onNext(uiState.workSpace) }
             ) {

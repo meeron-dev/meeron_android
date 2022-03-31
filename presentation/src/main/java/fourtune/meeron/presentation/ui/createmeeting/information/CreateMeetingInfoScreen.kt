@@ -152,7 +152,6 @@ private fun CreateMeetingInfoScreen(
         },
     ) {
         MeeronButtonBackGround(
-            modifier = Modifier.padding(vertical = 40.dp, horizontal = 20.dp),
             leftClick = { event(CreateMeetingInfoViewModel.Event.Previous) },
             rightClick = { event(CreateMeetingInfoViewModel.Event.Next) },
             rightEnable = uiState.isVerify

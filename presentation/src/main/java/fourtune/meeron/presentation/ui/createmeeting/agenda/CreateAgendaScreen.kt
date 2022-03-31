@@ -132,7 +132,6 @@ private fun CreateAgendaScreen(
         },
     ) {
         MeeronButtonBackGround(
-            modifier = Modifier.padding(vertical = 40.dp, horizontal = 20.dp),
             rightClick = { event(CreateAgendaViewModel.Event.Next) },
             leftClick = { event(CreateAgendaViewModel.Event.Previous) }
         ) {

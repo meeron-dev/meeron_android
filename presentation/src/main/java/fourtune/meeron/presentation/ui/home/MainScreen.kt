@@ -39,6 +39,7 @@ fun MainScreen(
     openCalendar: () -> Unit = {},
     addMeeting: () -> Unit = {},
     createWorkspace: () -> Unit = {},
+    goToAddTeamMember: () -> Unit = {},
     administerTeam: (team: TeamViewModel.TeamState.Normal) -> Unit = {}
 ) {
 
@@ -61,7 +62,8 @@ fun MainScreen(
                     teams = teamUiState.teams,
                     selectedTeam = teamUiState.selectedTeam,
                     onClickTeam = { teamViewModel.changeTeam(it) },
-                    onClickNone = { teamViewModel.getNotJoinedTeamMembers() }
+                    onClickNone = { teamViewModel.getNotJoinedTeamMembers() },
+                    onClickCreate = goToAddTeamMember
                 )
             }
 

@@ -73,8 +73,7 @@ private fun CreateMeetingTimeScreen(
         }
     ) {
         MeeronButtonBackGround(
-            modifier = Modifier
-                .padding(vertical = 40.dp, horizontal = 20.dp),
+            modifier = Modifier,
             leftClick = { event(CreateMeetingTimeViewModel.Event.Previous) },
             rightClick = { event(CreateMeetingTimeViewModel.Event.Next) }
         ) {

@@ -136,7 +136,6 @@ private fun CreateMeetingParticipantsScreen(
             })
     }) {
         MeeronButtonBackGround(
-            modifier = Modifier.padding(vertical = 40.dp, horizontal = 20.dp),
             rightText = "완료",
             rightClick = { event(CreateMeetingParticipantsViewModel.Event.Next(selectedUsers)) },
             leftClick = { event(CreateMeetingParticipantsViewModel.Event.Previous) }

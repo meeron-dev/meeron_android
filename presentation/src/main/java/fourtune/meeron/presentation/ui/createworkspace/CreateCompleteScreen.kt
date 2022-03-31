@@ -42,7 +42,6 @@ fun CreateCompleteScreen(
         },
         content = {
             MeeronSingleButtonBackGround(
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 50.dp),
                 text = "다음에 하기",
                 onClick = {
                     if (uiState.showOnBoarding) showOnBoarding()

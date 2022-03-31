@@ -54,7 +54,6 @@ fun CompleteMeetingScreen(
             })
     }) {
         MeeronButtonBackGround(
-            modifier = Modifier.padding(vertical = 40.dp, horizontal = 20.dp),
             rightClick = {
                 viewModel.createMeeting(onNext)
             },

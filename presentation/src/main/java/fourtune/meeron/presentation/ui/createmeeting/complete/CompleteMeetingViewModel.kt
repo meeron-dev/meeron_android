@@ -42,7 +42,7 @@ class CompleteMeetingViewModel @Inject constructor(
                 createMeetingUseCase(_uiState.value.meeting)
             }.onFailure {
                 Timber.tag("🔥zero:createMeeting").e("$it")
-                _toast.emit("회의 생성에 실패했습니다. ${it.message}")
+                _toast.emit("$it")
             }.onSuccess {
                 onComplete()
             }

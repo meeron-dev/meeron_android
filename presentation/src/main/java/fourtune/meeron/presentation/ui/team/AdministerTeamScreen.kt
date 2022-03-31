@@ -182,10 +182,10 @@ private fun Preview() {
     AdministerTeamScreen(
         AdministerTeamViewModel.UiState(
             teamMembers = listOf(
-                WorkspaceUser(nickname = "zero"),
-                WorkspaceUser(nickname = "zero"),
-                WorkspaceUser(nickname = "zero"),
-                WorkspaceUser(nickname = "zero"),
+                WorkspaceUser(workspaceUserId = 1, nickname = "zero"),
+                WorkspaceUser(workspaceUserId = 2, nickname = "zero"),
+                WorkspaceUser(workspaceUserId = 3, nickname = "zero"),
+                WorkspaceUser(workspaceUserId = 4, nickname = "zero"),
             )
         )
     )

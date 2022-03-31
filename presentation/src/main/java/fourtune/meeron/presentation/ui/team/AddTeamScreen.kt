@@ -41,9 +41,6 @@ private fun AddTeamScreen(
     uiState: AddTeamViewModel.UiState,
     addTeam: (teamName: String) -> Unit = {}
 ) {
-    var teamName by remember {
-        mutableStateOf("")
-    }
     Scaffold(
         topBar = {
             CenterTextTopAppBar(text = {
@@ -56,50 +53,62 @@ private fun AddTeamScreen(
             }, onAction = onAction)
         },
         content = {
-            MeeronSingleButtonBackGround(
-                text = stringResource(id = R.string.next),
-                onClick = { addTeam(teamName) },
-                enable = teamName.isNotEmpty()
-            ) {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = "팀 이름을\n입력해주세요.",
-                        fontSize = 25.sp,
-                        color = colorResource(id = R.color.black),
-                        lineHeight = 39.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Spacer(modifier = Modifier.padding(9.dp))
-                    Text(
-                        text = uiState.workspaceName,
-                        fontSize = 15.sp,
-                        color = colorResource(id = R.color.gray),
-                        lineHeight = 26.sp
-                    )
-                    Text(
-                        text = "팀은 최대 5개까지 생성이 가능합니다.",
-                        fontSize = 13.sp,
-                        color = colorResource(id = R.color.light_gray),
-                        lineHeight = 20.sp
-                    )
-                    Spacer(modifier = Modifier.padding(50.dp))
-                    MeeronActionBox(
-                        factory = ContentFactory.LimitTextField(
-                            text = teamName,
-                            onValueChange = { teamName = it },
-                            limit = 10,
-                            isEssential = false
-                        ), title = ""
-                    )
-                }
-            }
+            AddTeamScreen(addTeam, uiState)
         }
     )
+}
+
+@Composable
+private fun AddTeamScreen(
+    addTeam: (teamName: String) -> Unit,
+    uiState: AddTeamViewModel.UiState
+) {
+    var teamName by remember {
+        mutableStateOf("")
+    }
+
+    MeeronSingleButtonBackGround(
+        text = stringResource(id = R.string.next),
+        onClick = { addTeam(teamName) },
+        enable = teamName.isNotEmpty()
+    ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = "팀 이름을\n입력해주세요.",
+                fontSize = 25.sp,
+                color = colorResource(id = R.color.black),
+                lineHeight = 39.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Spacer(modifier = Modifier.padding(9.dp))
+            Text(
+                text = uiState.workspaceName,
+                fontSize = 15.sp,
+                color = colorResource(id = R.color.gray),
+                lineHeight = 26.sp
+            )
+            Text(
+                text = "팀은 최대 5개까지 생성이 가능합니다.",
+                fontSize = 13.sp,
+                color = colorResource(id = R.color.light_gray),
+                lineHeight = 20.sp
+            )
+            Spacer(modifier = Modifier.padding(50.dp))
+            MeeronActionBox(
+                factory = ContentFactory.LimitTextField(
+                    text = teamName,
+                    onValueChange = { teamName = it },
+                    limit = 10,
+                    isEssential = false
+                ), title = ""
+            )
+        }
+    }
 }
 
 @Preview
 @Composable
 private fun Preview() {
-
+    AddTeamScreen(addTeam = {}, uiState = AddTeamViewModel.UiState())
 
 }

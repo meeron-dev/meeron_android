@@ -28,7 +28,8 @@ import fourtune.meeron.presentation.ui.common.UserItem
 fun TeamMemberPickerScreen(
     viewModel: TeamMemberPickerViewModel = hiltViewModel(),
     onBack: () -> Unit,
-    goToMain: () -> Unit
+    goToMain: () -> Unit,
+    goToTeamCreateComplete: (teamId: Long) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -63,8 +64,9 @@ fun TeamMemberPickerScreen(
         },
         content = {
             TeamMemberPickerScreen(uiState) { selectedTeamMember ->
-                viewModel.addTeamMember(selectedTeamMember)
-                goToMain()
+                viewModel.addTeamMember(selectedTeamMember) {
+                    goToTeamCreateComplete(uiState.teamId)
+                }
             }
         }
     )

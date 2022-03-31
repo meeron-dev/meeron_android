@@ -35,6 +35,7 @@ import fourtune.meeron.presentation.ui.team.AddTeamScreen
 import fourtune.meeron.presentation.ui.team.AdministerTeamScreen
 import fourtune.meeron.presentation.ui.team.TeamMemberPickerScreen
 import fourtune.meeron.presentation.ui.team.TeamMemberPickerViewModel
+import fourtune.meeron.presentation.ui.team.createcomplete.TeamCreateCompleteScreen
 
 sealed interface Navigate {
     fun route() = requireNotNull(this::class.qualifiedName)
@@ -80,6 +81,7 @@ sealed interface Navigate {
         object Administer : Team
         object Add : Team
         object TeamMemberPicker : Team
+        object TemCreateComplete : Team
     }
 
     private fun queries(argument: Array<out String>): String = argument.mapIndexed { index, arg ->
@@ -256,8 +258,17 @@ fun MeeronNavigator(startDestination: Navigate) {
         ) {
             TeamMemberPickerScreen(
                 onBack = { navController.navigateUp() },
-                goToMain = { navController.popBackStack(Navigate.Main.route(), false) }
+                goToMain = { navController.popBackStack(Navigate.Main.route(), false) },
+                goToTeamCreateComplete = { navController.navigate(Navigate.Team.TemCreateComplete.route(it)) }
             )
+        }
+        composable(
+            route = Navigate.Team.TemCreateComplete.destination(Const.TeamId),
+            arguments = listOf(navArgument(Const.TeamId) { type = NavType.LongType })
+        ) {
+            TeamCreateCompleteScreen {
+                navController.popBackStack(Navigate.Main.route(), false)
+            }
         }
 
         composable(

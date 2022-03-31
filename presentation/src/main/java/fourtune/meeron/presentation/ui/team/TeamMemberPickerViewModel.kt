@@ -45,15 +45,21 @@ class TeamMemberPickerViewModel @Inject constructor(
         }
     }
 
-    fun addTeamMember(selectedTeamMember: List<WorkspaceUser>) {
+    fun addTeamMember(selectedTeamMember: List<WorkspaceUser>, onComplete: () -> Unit) {
         if (selectedTeamMember.isNotEmpty()) {
             viewModelScope.launch {
-                teamRepository.addTeamMember(
-                    uiState.value.teamId,
-                    getMyWorkSpaceUserUseCase().workspaceUserId,
-                    selectedTeamMember.map { it.workspaceUserId }
-                )
+                runCatching {
+                    teamRepository.addTeamMember(
+                        uiState.value.teamId,
+                        getMyWorkSpaceUserUseCase().workspaceUserId,
+                        selectedTeamMember.map { it.workspaceUserId }
+                    )
+                }.onSuccess {
+                    onComplete()
+                }
             }
+        } else {
+            onComplete()
         }
     }
 

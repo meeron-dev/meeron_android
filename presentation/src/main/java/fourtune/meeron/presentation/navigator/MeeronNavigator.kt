@@ -31,11 +31,11 @@ import fourtune.meeron.presentation.ui.createmeeting.time.CreateMeetingTimeScree
 import fourtune.meeron.presentation.ui.createworkspace.*
 import fourtune.meeron.presentation.ui.home.MainScreen
 import fourtune.meeron.presentation.ui.login.LoginScreen
-import fourtune.meeron.presentation.ui.team.AddTeamScreen
-import fourtune.meeron.presentation.ui.team.AdministerTeamScreen
-import fourtune.meeron.presentation.ui.team.TeamMemberPickerScreen
-import fourtune.meeron.presentation.ui.team.TeamMemberPickerViewModel
+import fourtune.meeron.presentation.ui.team.add.AddTeamScreen
+import fourtune.meeron.presentation.ui.team.admin.AdministerTeamScreen
 import fourtune.meeron.presentation.ui.team.createcomplete.TeamCreateCompleteScreen
+import fourtune.meeron.presentation.ui.team.picker.TeamMemberPickerScreen
+import fourtune.meeron.presentation.ui.team.picker.TeamMemberPickerViewModel
 
 sealed interface Navigate {
     fun route() = requireNotNull(this::class.qualifiedName)

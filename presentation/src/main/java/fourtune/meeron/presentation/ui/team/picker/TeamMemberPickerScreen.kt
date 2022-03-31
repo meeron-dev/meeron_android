@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.team
+package fourtune.meeron.presentation.ui.team.picker
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable

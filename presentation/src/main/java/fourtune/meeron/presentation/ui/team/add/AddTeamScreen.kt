@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.team
+package fourtune.meeron.presentation.ui.team.add
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

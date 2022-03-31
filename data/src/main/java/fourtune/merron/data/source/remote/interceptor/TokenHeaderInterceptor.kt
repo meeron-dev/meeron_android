@@ -36,7 +36,6 @@ class TokenAuthenticator @Inject constructor(
                 val token = tokenRepository.reissue()
                 tokenRepository.saveToken(token)
             }
-            return null
         }
         val newToken = runBlocking { tokenRepository.getAccessToken().firstOrNull() } ?: return null
 

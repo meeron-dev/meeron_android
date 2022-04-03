@@ -22,7 +22,7 @@ interface MeetingApi {
     suspend fun addAgendas(
         @Path("meetingId") meetingId: Long,
         @Body agendas: AgendaRequest
-    ): AgendaResponses
+    ): CreateAgendaIdsResponse
 
     @Multipart
     @POST("/api/agendas/{agendaId}/files")

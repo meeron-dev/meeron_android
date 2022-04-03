@@ -40,13 +40,14 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     homeViewModel: HomeViewModel,
     bottomBarSize: Dp = 90.dp,
-    openCalendar: () -> Unit
+    openCalendar: () -> Unit,
+    onClickMeeting: (meeting: Meeting) -> Unit
 ) {
     val currentDay by homeViewModel.currentDay().collectAsState()
     val uiState by homeViewModel.uiState.collectAsState()
     val pagerState = rememberPagerState(0)
 
-    HomeScreen(bottomBarSize, pagerState, currentDay, uiState, openCalendar)
+    HomeScreen(bottomBarSize, pagerState, currentDay, uiState, openCalendar, onClickMeeting)
 }
 
 @OptIn(ExperimentalPagerApi::class)
@@ -56,7 +57,8 @@ private fun HomeScreen(
     pagerState: PagerState = rememberPagerState(0),
     currentDay: CalendarDay = CalendarDay.today(),
     uiState: HomeViewModel.UiState,
-    openCalendar: () -> Unit = {}
+    openCalendar: () -> Unit = {},
+    onClickMeeting: (meeting: Meeting) -> Unit = {}
 ) {
     Column(
         Modifier
@@ -100,7 +102,9 @@ private fun HomeScreen(
                 itemSpacing = 14.dp
             ) { pager ->
                 repeat(uiState.todayMeeting.size) {
-                    PagerItem(meeting = uiState.todayMeeting[pager])
+                    PagerItem(
+                        meeting = uiState.todayMeeting[pager],
+                        onClick = { onClickMeeting(uiState.todayMeeting[pager]) })
                 }
             }
         }
@@ -109,8 +113,12 @@ private fun HomeScreen(
 }
 
 @Composable
-private fun PagerItem(meeting: Meeting) {
-    Card(modifier = Modifier.fillMaxHeight(), elevation = 1.dp) {
+private fun PagerItem(meeting: Meeting, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxHeight()
+            .clickable(onClick = onClick), elevation = 1.dp
+    ) {
         //content
         Column(
             modifier = Modifier

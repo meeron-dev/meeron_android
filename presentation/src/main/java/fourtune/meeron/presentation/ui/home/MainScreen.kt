@@ -22,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.whenStarted
 import com.google.accompanist.pager.ExperimentalPagerApi
+import forutune.meeron.domain.model.Meeting
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.team.TeamScreen
 import fourtune.meeron.presentation.ui.team.TeamTopBar
@@ -44,7 +45,8 @@ fun MainScreen(
     addMeeting: () -> Unit = {},
     createWorkspace: () -> Unit = {},
     goToAddTeamMember: () -> Unit = {},
-    administerTeam: (team: TeamViewModel.TeamState.Normal) -> Unit = {}
+    administerTeam: (team: TeamViewModel.TeamState.Normal) -> Unit = {},
+    goToMeetingDetail: (meeting: Meeting) -> Unit = {}
 ) {
 
     val homeUiState by homeViewModel.uiState.collectAsState()
@@ -53,6 +55,7 @@ fun MainScreen(
     LaunchedEffect(true) {
         owner.whenStarted {
             teamViewModel.fetch()
+            homeViewModel.fetch()
         }
     }
     var content: BottomNavi by rememberSaveable {
@@ -104,7 +107,12 @@ fun MainScreen(
         }
     ) {
         when (content) {
-            BottomNavi.Home -> HomeScreen(homeViewModel, bottomBarSize, openCalendar)
+            BottomNavi.Home -> HomeScreen(
+                homeViewModel = homeViewModel,
+                bottomBarSize = bottomBarSize,
+                openCalendar = openCalendar,
+                onClickMeeting = goToMeetingDetail
+            )
             BottomNavi.My -> {}
             BottomNavi.Team -> TeamScreen(
                 viewModel = teamViewModel,

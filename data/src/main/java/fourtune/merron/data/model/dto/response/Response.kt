@@ -28,15 +28,9 @@ data class MeetingIdResponse(
 )
 
 @Serializable
-data class AgendaResponses(
-    @SerialName("agendaResponses") val agendaResponses: List<AgendaResponse>
-) {
-    @Serializable
-    data class AgendaResponse(
-        @SerialName("agendaNumber") val agendaNumber: Long,
-        @SerialName("createdAgendaId") val createdAgendaId: Long,
-    )
-}
+data class CreateAgendaIdsResponse(
+    @SerialName("createdAgendaIds") val createdAgendaIds: List<Long>
+)
 
 @Serializable
 data class YearCountsResponse(

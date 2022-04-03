@@ -24,6 +24,7 @@ import forutune.meeron.domain.model.Meeting
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
+import fourtune.meeron.presentation.ui.common.MeeronProgressIndicator
 import fourtune.meeron.presentation.ui.createmeeting.CreateTitle
 import kotlinx.coroutines.flow.collectLatest
 
@@ -41,6 +42,7 @@ fun CompleteMeetingScreen(
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
     }
+    val showLoading by viewModel.showLoading.collectAsState()
 
     Scaffold(topBar = {
         CenterTextTopAppBar(
@@ -53,6 +55,7 @@ fun CompleteMeetingScreen(
                 )
             })
     }) {
+        MeeronProgressIndicator(showLoading)
         MeeronButtonBackGround(
             rightClick = {
                 viewModel.createMeeting(onNext)

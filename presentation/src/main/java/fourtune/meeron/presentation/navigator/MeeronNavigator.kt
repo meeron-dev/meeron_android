@@ -29,6 +29,7 @@ import fourtune.meeron.presentation.ui.createmeeting.information.CreateMeetingIn
 import fourtune.meeron.presentation.ui.createmeeting.participants.CreateMeetingParticipantsScreen
 import fourtune.meeron.presentation.ui.createmeeting.time.CreateMeetingTimeScreen
 import fourtune.meeron.presentation.ui.createworkspace.*
+import fourtune.meeron.presentation.ui.detail.MeetingDetailScreen
 import fourtune.meeron.presentation.ui.home.MainScreen
 import fourtune.meeron.presentation.ui.login.LoginScreen
 import fourtune.meeron.presentation.ui.team.add.AddTeamScreen
@@ -82,6 +83,10 @@ sealed interface Navigate {
         object Add : Team
         object TeamMemberPicker : Team
         object TemCreateComplete : Team
+    }
+
+    sealed interface Detail : Navigate {
+        object Meeting : Detail
     }
 
     private fun queries(argument: Array<out String>): String = argument.mapIndexed { index, arg ->
@@ -211,10 +216,17 @@ fun MeeronNavigator(startDestination: Navigate) {
                 addMeeting = { navController.navigate(Navigate.CreateMeeting.Date.route()) },
                 createWorkspace = { navController.navigate(Navigate.CreateWorkspace.CreateOrJoin.route()) },
                 administerTeam = { navController.navigate(route = Navigate.Team.Administer.route(it.team.encodeJson())) },
-                goToAddTeamMember = { navController.navigate(Navigate.Team.Add.route()) }
+                goToAddTeamMember = { navController.navigate(Navigate.Team.Add.route()) },
+                goToMeetingDetail = { navController.navigate(Navigate.Detail.Meeting.route(it.encodeJson())) }
             )
         }
 
+        composable(
+            route = Navigate.Detail.Meeting.destination(Const.Meeting),
+            arguments = listOf(navArgument(Const.Meeting) { type = MeetingType() })
+        ) {
+            MeetingDetailScreen()
+        }
         composable(
             route = Navigate.Team.Administer.destination(Const.Team),
             arguments = listOf(navArgument(Const.Team) { type = TeamType() })

@@ -22,8 +22,8 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     private val _currentDay = MutableStateFlow(CalendarDay.today())
     fun currentDay() = _currentDay.asStateFlow()
-
     private val _uiState = MutableStateFlow(UiState())
+
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -33,6 +33,16 @@ class HomeViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     workspaceName = workspace.workSpaceName,
+                )
+            }
+            fetch()
+        }
+    }
+
+    fun fetch() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
                     todayMeeting = getTodayMeetingUseCase()
                 )
             }

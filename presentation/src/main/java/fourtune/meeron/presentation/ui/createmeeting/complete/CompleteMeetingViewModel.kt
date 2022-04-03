@@ -25,6 +25,9 @@ class CompleteMeetingViewModel @Inject constructor(
     private val _toast = MutableSharedFlow<String>()
     val toast = _toast.asSharedFlow()
 
+    private val _showLoading = MutableStateFlow(false)
+    val showLoading = _showLoading.asStateFlow()
+
     init {
         viewModelScope.launch {
             _uiState.update {
@@ -39,7 +42,9 @@ class CompleteMeetingViewModel @Inject constructor(
     fun createMeeting(onComplete: () -> Unit = {}) {
         viewModelScope.launch {
             runCatching {
+                _showLoading.emit(true)
                 createMeetingUseCase(_uiState.value.meeting)
+                _showLoading.emit(false)
             }.onFailure {
                 Timber.tag("🔥zero:createMeeting").e("$it")
                 _toast.emit("$it")

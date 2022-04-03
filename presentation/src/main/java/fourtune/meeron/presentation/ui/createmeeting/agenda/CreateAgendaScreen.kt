@@ -174,12 +174,6 @@ fun AgendaBody(
         Issues(agendaStates, selected, event)
         Files(agendaStates, selected, event)
         Spacer(modifier = Modifier.padding(30.dp))
-        Text(
-            modifier = Modifier.padding(vertical = 30.dp),
-            text = "회의 생성 후에도 추가 및 편집이 가능합니다. ",
-            fontSize = 14.sp,
-            color = colorResource(id = R.color.gray)
-        )
     }
 }
 
@@ -199,7 +193,10 @@ private fun AgendaCountRow(
         LazyRow(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            itemsIndexed(agendaStates) { index, _ ->
+            itemsIndexed(
+                items = agendaStates,
+                key = { _, item -> item.name }
+            ) { index, _ ->
                 AgendaCountItem(index = index, isSelected = selected, onClick = onClick)
             }
         }

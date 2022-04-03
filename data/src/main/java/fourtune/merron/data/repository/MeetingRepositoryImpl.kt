@@ -37,13 +37,13 @@ class MeetingRepositoryImpl @Inject constructor(
             meetingId = meetingId,
             workspaceUserIds = WorkSpaceUserIdsRequest(meeting.participants.map { it.workspaceUserId } - meeting.ownerIds)
         )
-        val agendaResponse = meetingApi.addAgendas(meetingId = meetingId, AgendaRequest(meeting.agenda))
-        meeting.agenda.forEachIndexed { index, agenda ->
-            agenda.fileInfos.forEach { fileInfo ->
+        val agendaIds = meetingApi.addAgendas(meetingId = meetingId, AgendaRequest(meeting.agenda)).createdAgendaIds
+        agendaIds.forEachIndexed { index, agendaId ->
+            meeting.agenda[index].fileInfos.forEach { fileInfo ->
                 val pathname = fileProvider.getPath(fileInfo.uriString)
                 val mediaType = fileProvider.getMediaType(fileInfo.uriString)
                 meetingApi.addFile(
-                    agendaId = agendaResponse.agendaResponses[index].createdAgendaId,
+                    agendaId = agendaId,
                     files = MultipartBody.Part.createFormData(
                         name = "files",
                         filename = fileInfo.fileName,
@@ -52,6 +52,7 @@ class MeetingRepositoryImpl @Inject constructor(
                 )
             }
         }
+
     }
 
     override suspend fun getTodayMeetings(workSpaceId: Long, workSpaceUserId: Long): List<Meeting> {

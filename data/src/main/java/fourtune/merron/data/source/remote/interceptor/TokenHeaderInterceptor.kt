@@ -4,7 +4,6 @@ import forutune.meeron.domain.repository.TokenRepository
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import okhttp3.*
-import timber.log.Timber
 import javax.inject.Inject
 
 private const val KEY_AUTHORIZATION = "Authorization"
@@ -16,7 +15,6 @@ class TokenHeaderInterceptor @Inject constructor(
     override fun intercept(chain: Interceptor.Chain): Response {
         return chain.request().newBuilder().apply {
             val token = runBlocking { tokenRepository.getAccessToken().firstOrNull() }
-            Timber.tag("🔥zero:intercept").d("token : $token")
             if (!token.isNullOrBlank()) {
                 header(KEY_AUTHORIZATION, "Bearer $token")
             }
@@ -30,7 +28,6 @@ class TokenAuthenticator @Inject constructor(
     override fun authenticate(route: Route?, response: Response): Request? {
         if (response.request.header(KEY_AUTHORIZATION).isNullOrEmpty()) return null
         if (response.code == 401) {
-            Timber.tag("🔥zero:authenticate").w("$response")
             runBlocking { tokenRepository.getAccessToken().firstOrNull() } ?: return null
             runBlocking {
                 val token = tokenRepository.reissue()

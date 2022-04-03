@@ -40,10 +40,9 @@ private fun <T> Call<T>.revise(retrofit: Retrofit): Call<T> {
 private fun <T> Response<T>.getMeeronError(retrofit: Retrofit): MeeronError? = runCatching {
     val errorBody = errorBody() ?: return null
     val converter = retrofit.responseBodyConverter<MeeronError>(MeeronError::class.java, emptyArray())
-    val errorRes = converter.convert(errorBody)
-
-    errorRes
+    converter.convert(errorBody)
 }.getOrNull()
+
 
 private fun <T> Callback<T>.revise(retrofit: Retrofit): Callback<T> {
     val actual = this
@@ -51,7 +50,6 @@ private fun <T> Callback<T>.revise(retrofit: Retrofit): Callback<T> {
     return object : Callback<T> by actual {
         override fun onResponse(call: Call<T>, response: Response<T>) {
             val neroError = response.getMeeronError(retrofit)
-
             if (neroError == null)
                 actual.onResponse(call, response)
             else

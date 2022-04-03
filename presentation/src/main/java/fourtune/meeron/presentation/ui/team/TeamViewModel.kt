@@ -9,6 +9,7 @@ import forutune.meeron.domain.usecase.me.GetMyWorkSpaceUserUseCase
 import forutune.meeron.domain.usecase.team.GetTeamMemberUseCase
 import forutune.meeron.domain.usecase.team.GetWorkSpaceTeamUseCase
 import forutune.meeron.domain.usecase.workspace.GetNotJoinedTeamWorkspaceUserUseCase
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -27,15 +28,20 @@ class TeamViewModel @Inject constructor(
     private val _event = MutableSharedFlow<Event>()
     val event = _event.asSharedFlow()
 
+    private var initJob: Job? = null
+
     init {
-        viewModelScope.launch {
+        initJob = viewModelScope.launch {
             runCatching {
                 val teams = getWorkSpaceTeamUseCase()
+                val teamMembers = if (teams.isEmpty()) emptyList() else getTeamMember(teams.first().id)
+                val selectedTeam = teams.firstOrNull()?.let(TeamState::Normal) ?: TeamState.None()
+                Timber.tag("🔥zero:init").w("$selectedTeam")
                 _uiState.update {
                     it.copy(
                         teams = teams,
-                        teamMembers = if (teams.isEmpty()) emptyList() else getTeamMember(teams.first().id),
-                        selectedTeam = teams.firstOrNull()?.let(TeamState::Normal) ?: TeamState.None(),
+                        teamMembers = teamMembers,
+                        selectedTeam = selectedTeam,
                         isAdmin = getMyWorkSpaceUser().workspaceAdmin
                     )
                 }
@@ -56,6 +62,7 @@ class TeamViewModel @Inject constructor(
 
     fun fetch() {
         viewModelScope.launch {
+            initJob?.join()
             runCatching {
                 val teams = getWorkSpaceTeamUseCase()
                 val selectedTeam = uiState.value.selectedTeam

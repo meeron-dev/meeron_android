@@ -1,5 +1,6 @@
 package fourtune.merron.data.model.dto.response
 
+import forutune.meeron.domain.model.TeamState
 import forutune.meeron.domain.model.WorkspaceUser
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -89,4 +90,9 @@ data class WorkSpaceUsersResponse(
 @Serializable
 data class DuplicateResponse(
     @SerialName("duplicate") val duplicate: Boolean
+)
+
+@Serializable
+data class ParticipantsResponse(
+    @SerialName("attendees") val teamStates: List<TeamState>
 )

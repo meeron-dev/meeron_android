@@ -63,4 +63,7 @@ interface MeetingApi {
         @Query("id") id: Long,
         @Query("date") date: String
     ): MeetingsResponse
+
+    @GET("/api/meetings/{meetingId}/attendees/teams")
+    suspend fun getTeamState(@Path("meetingId") meetingId: Long): ParticipantsResponse
 }

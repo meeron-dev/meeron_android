@@ -113,4 +113,8 @@ class MeetingRepositoryImpl @Inject constructor(
                 }
             }
     }
+
+    override suspend fun getTeamStates(meetingId: Long): List<TeamState> {
+        return meetingApi.getTeamState(meetingId).teamStates
+    }
 }

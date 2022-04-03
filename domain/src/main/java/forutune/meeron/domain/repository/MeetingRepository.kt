@@ -12,4 +12,6 @@ interface MeetingRepository {
     suspend fun addAgenda(meetingId: Long, meeting: Meeting): List<Long>
     suspend fun addParticipants(meetingId: Long, meeting: Meeting)
     suspend fun addFiles(agendaId: Long, fileInfo: FileInfo)
+
+    suspend fun getTeamStates(meetingId: Long): List<TeamState>
 }

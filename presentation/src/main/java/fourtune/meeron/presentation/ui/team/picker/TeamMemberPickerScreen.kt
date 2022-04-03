@@ -51,10 +51,9 @@ fun TeamMemberPickerScreen(
                 },
                 onAction = {
                     deleteTeam();
-                    if (uiState.type == TeamMemberPickerViewModel.Type.Add) {
-                        goToMain()
-                    } else {
-                        onBack()
+                    when (uiState.type) {
+                        TeamMemberPickerViewModel.Type.Administer -> onBack()
+                        TeamMemberPickerViewModel.Type.Add -> goToMain()
                     }
                 },
                 onNavigation = if (uiState.type == TeamMemberPickerViewModel.Type.Add) {
@@ -65,7 +64,11 @@ fun TeamMemberPickerScreen(
         content = {
             TeamMemberPickerScreen(uiState) { selectedTeamMember ->
                 viewModel.addTeamMember(selectedTeamMember) {
-                    goToTeamCreateComplete(uiState.teamId)
+                    when (uiState.type) {
+                        TeamMemberPickerViewModel.Type.Administer -> goToMain()
+                        TeamMemberPickerViewModel.Type.Add -> goToTeamCreateComplete(uiState.teamId)
+                    }
+
                 }
             }
         }

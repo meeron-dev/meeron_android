@@ -233,3 +233,12 @@ private fun Preview() {
 private fun Preview2() {
     TeamCircleItem(teamName = "개발 팀")
 }
+
+@Preview
+@Composable
+private fun Preview3() {
+    TeamTopBar(
+        teams = listOf(Team(id = 1, name = "team1"), Team(id = 2, name = "team2")),
+        selectedTeam = TeamViewModel.TeamState.Normal(Team(name = "team1"))
+    )
+}

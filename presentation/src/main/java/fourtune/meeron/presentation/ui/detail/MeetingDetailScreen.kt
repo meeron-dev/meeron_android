@@ -25,7 +25,7 @@ import forutune.meeron.domain.model.*
 import fourtune.meeron.presentation.R
 
 @Composable
-fun MeetingDetailScreen(viewModel: MeetingDetailViewModel = hiltViewModel()) {
+fun MeetingDetailScreen(viewModel: MeetingDetailViewModel = hiltViewModel(), goToAgendaDetail: (Meeting) -> Unit) {
     val uiState by viewModel.uiState.collectAsState()
     Scaffold(
         topBar = {
@@ -35,7 +35,7 @@ fun MeetingDetailScreen(viewModel: MeetingDetailViewModel = hiltViewModel()) {
             )
         },
         content = {
-            MeetingDetailContent(uiState = uiState)
+            MeetingDetailContent(uiState = uiState, onClickAgenda = { goToAgendaDetail(uiState.meeting) })
         }
     )
 
@@ -119,10 +119,10 @@ private fun TopbarContent(title: String, text: String, info: String) {
 }
 
 @Composable
-fun MeetingDetailContent(uiState: MeetingDetailViewModel.UiState) {
+fun MeetingDetailContent(uiState: MeetingDetailViewModel.UiState, onClickAgenda: () -> Unit = {}) {
     Column {
         uiState.meeting.agenda.forEach { agenda ->
-            DetailItem(title = "아젠다", onClickDetail = { /*TODO*/ }, {
+            DetailItem(title = "아젠다", onClickDetail = onClickAgenda) {
                 Row {
                     Image(painter = painterResource(id = R.drawable.ic_meeting_clip), contentDescription = null)
                     Spacer(modifier = Modifier.padding(2.dp))
@@ -132,7 +132,7 @@ fun MeetingDetailContent(uiState: MeetingDetailViewModel.UiState) {
                         color = colorResource(id = R.color.dark_gray)
                     )
                 }
-            })
+            }
         }
         Divider(color = colorResource(id = R.color.light_gray), thickness = 3.dp)
 

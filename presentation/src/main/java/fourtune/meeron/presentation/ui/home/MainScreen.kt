@@ -104,7 +104,7 @@ fun MainScreen(
         }
     ) {
         when (content) {
-            BottomNavi.Home -> HomeScreen(homeViewModel, bottomBarSize, openCalendar, homeUiState)
+            BottomNavi.Home -> HomeScreen(homeViewModel, bottomBarSize, openCalendar)
             BottomNavi.My -> {}
             BottomNavi.Team -> TeamScreen(
                 viewModel = teamViewModel,

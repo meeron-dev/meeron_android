@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import forutune.meeron.domain.model.Meeting
@@ -38,12 +39,25 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
-    bottomBarSize: Dp,
-    openCalendar: () -> Unit,
-    uiState: HomeViewModel.UiState
+    bottomBarSize: Dp = 90.dp,
+    openCalendar: () -> Unit
 ) {
     val currentDay by homeViewModel.currentDay().collectAsState()
+    val uiState by homeViewModel.uiState.collectAsState()
     val pagerState = rememberPagerState(0)
+
+    HomeScreen(bottomBarSize, pagerState, currentDay, uiState, openCalendar)
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+private fun HomeScreen(
+    bottomBarSize: Dp = 90.dp,
+    pagerState: PagerState = rememberPagerState(0),
+    currentDay: CalendarDay = CalendarDay.today(),
+    uiState: HomeViewModel.UiState,
+    openCalendar: () -> Unit = {}
+) {
     Column(
         Modifier
             .fillMaxHeight()
@@ -242,14 +256,11 @@ private fun CalendarTitle(modifier: Modifier, date: CalendarDay, openCalendar: (
 }
 
 
+@OptIn(ExperimentalPagerApi::class)
 @Preview
 @Composable
 private fun PagerItemPrev() {
     MeeronTheme {
-        PagerItem(
-            Meeting(
-                title = "회의제목"
-            )
-        )
+        HomeScreen(uiState = HomeViewModel.UiState("workspaceName"))
     }
 }

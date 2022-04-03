@@ -18,7 +18,7 @@ class MeetingRepositoryImpl @Inject constructor(
     private val meetingApi: MeetingApi,
     private val fileProvider: FileProvider,
 ) : MeetingRepository {
-    override suspend fun createMeeting(workSpaceId: Long, meeting: Meeting) {
+    override suspend fun createMeeting(workSpaceId: Long, meeting: Meeting): Long {
         val (start, end) = meeting.time.split("~")
         val meetingRequest = MeetingRequest(
             workspaceId = workSpaceId,
@@ -32,27 +32,35 @@ class MeetingRepositoryImpl @Inject constructor(
         )
 
         val response = meetingApi.createMeeting(meetingRequest)
-        val meetingId = response.body()?.meetingId ?: throw IOException(response.message())
+        return response.body()?.meetingId ?: throw IOException(response.message())
+    }
+
+    override suspend fun addParticipants(meetingId: Long, meeting: Meeting) {
         meetingApi.addParticipants(
             meetingId = meetingId,
             workspaceUserIds = WorkSpaceUserIdsRequest(meeting.participants.map { it.workspaceUserId } - meeting.ownerIds)
         )
-        val agendaIds = meetingApi.addAgendas(meetingId = meetingId, AgendaRequest(meeting.agenda)).createdAgendaIds
-        agendaIds.forEachIndexed { index, agendaId ->
-            meeting.agenda[index].fileInfos.forEach { fileInfo ->
-                val pathname = fileProvider.getPath(fileInfo.uriString)
-                val mediaType = fileProvider.getMediaType(fileInfo.uriString)
-                meetingApi.addFile(
-                    agendaId = agendaId,
-                    files = MultipartBody.Part.createFormData(
-                        name = "files",
-                        filename = fileInfo.fileName,
-                        body = File(pathname).asRequestBody("$mediaType/*".toMediaType())
-                    )
-                )
-            }
-        }
+    }
 
+    override suspend fun addAgenda(
+        meetingId: Long,
+        meeting: Meeting
+    ) = meetingApi.addAgendas(meetingId = meetingId, AgendaRequest(meeting.agenda)).createdAgendaIds
+
+    override suspend fun addFiles(
+        agendaId: Long,
+        fileInfo: FileInfo
+    ) {
+        val pathname = fileProvider.getPath(fileInfo.uriString)
+        val mediaType = fileProvider.getMediaType(fileInfo.uriString)
+        meetingApi.addFile(
+            agendaId = agendaId,
+            files = MultipartBody.Part.createFormData(
+                name = "files",
+                filename = fileInfo.fileName,
+                body = File(pathname).asRequestBody("$mediaType/*".toMediaType())
+            )
+        )
     }
 
     override suspend fun getTodayMeetings(workSpaceId: Long, workSpaceUserId: Long): List<Meeting> {

@@ -11,6 +11,13 @@ class CreateMeetingUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(meeting: Meeting) {
         val workspaceId = getLatestWorkspaceId()
-        meetingRepository.createMeeting(workspaceId, meeting)
+        val meetingId = meetingRepository.createMeeting(workspaceId, meeting)
+        meetingRepository.addParticipants(meetingId, meeting)
+        val agendaIds = meetingRepository.addAgenda(meetingId, meeting)
+        agendaIds.forEachIndexed { index, agendaId ->
+            meeting.agenda[index].fileInfos.forEach { fileInfo ->
+                meetingRepository.addFiles(agendaId, fileInfo)
+            }
+        }
     }
 }

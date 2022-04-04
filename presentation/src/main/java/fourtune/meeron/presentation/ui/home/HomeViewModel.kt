@@ -42,8 +42,9 @@ class HomeViewModel @Inject constructor(
     fun fetch() {
         viewModelScope.launch {
             _uiState.update {
+                val todayMeeting = getTodayMeetingUseCase()
                 it.copy(
-                    todayMeeting = getTodayMeetingUseCase()
+                    todayMeeting = todayMeeting
                 )
             }
         }

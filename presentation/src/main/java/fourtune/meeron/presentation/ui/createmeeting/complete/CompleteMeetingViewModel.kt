@@ -15,8 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CompleteMeetingViewModel @Inject constructor(
-    private val createMeetingUseCase: CreateMeetingUseCase,
-    getMyWorkSpaceUserUseCase: GetMyWorkSpaceUserUseCase,
+    private val createMeeting: CreateMeetingUseCase,
+    getMyWorkSpaceUser: GetMyWorkSpaceUserUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState(requireNotNull(savedStateHandle[Const.Meeting])))
@@ -31,7 +31,7 @@ class CompleteMeetingViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             _uiState.update {
-                val myWorkspaceUser = getMyWorkSpaceUserUseCase()
+                val myWorkspaceUser = getMyWorkSpaceUser()
                 it.copy(
                     owners = String.format("${myWorkspaceUser.nickname} 외 %d명", it.meeting.ownerIds.size - 1)
                 )
@@ -43,7 +43,7 @@ class CompleteMeetingViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 _showLoading.emit(true)
-                createMeetingUseCase(_uiState.value.meeting)
+                createMeeting(uiState.value.meeting)
                 _showLoading.emit(false)
             }.onFailure {
                 Timber.tag("🔥zero:createMeeting").e("$it")

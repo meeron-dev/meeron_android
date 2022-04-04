@@ -104,7 +104,8 @@ private fun HomeScreen(
                 repeat(uiState.todayMeeting.size) {
                     PagerItem(
                         meeting = uiState.todayMeeting[pager],
-                        onClick = { onClickMeeting(uiState.todayMeeting[pager]) })
+                        onClick = { onClickMeeting(uiState.todayMeeting[pager]) }
+                    )
                 }
             }
         }

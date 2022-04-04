@@ -1,9 +1,13 @@
 package fourtune.meeron.presentation.ui.detail
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
@@ -12,8 +16,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,6 +36,20 @@ import fourtune.meeron.presentation.ui.common.topbar.DetailTopBar
 
 @Composable
 fun AgendaDetailScreen(viewModel: AgendaDetailViewModel = hiltViewModel(), onBack: () -> Unit) {
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+            if (uri == null) {
+                //todo file download (데이터 레이어로 넘기자..!!!!)
+            } else {
+                val inputStream = context.contentResolver.openInputStream(uri)
+                val bytes = inputStream?.readBytes()
+                //todo 우선 내 파일 열리는지 확인하기.
+            }
+        }
+    )
+
     val uiState by viewModel.uiState.collectAsState()
     var selected by remember {
         mutableStateOf(1)
@@ -35,7 +59,7 @@ fun AgendaDetailScreen(viewModel: AgendaDetailViewModel = hiltViewModel(), onBac
             AgendaDetailTopBar(uiState.meeting.agenda, selected, { selected = it }, onBack)
         },
         content = {
-            AgendaDetailContent(uiState.meeting.agenda[selected])
+            AgendaDetailContent(uiState.meeting.agenda[selected], openFile = { launcher.launch("*/*") })
         }
     )
 }
@@ -69,7 +93,7 @@ fun AgendaDetailTopBar(
 }
 
 @Composable
-fun AgendaDetailContent(agenda: Agenda) {
+fun AgendaDetailContent(agenda: Agenda, openFile: (url: String) -> Unit = {}) {
     Column {
         Column(modifier = Modifier.padding(horizontal = 20.dp)) {
             Spacer(modifier = Modifier.padding(25.dp))
@@ -82,9 +106,31 @@ fun AgendaDetailContent(agenda: Agenda) {
             Spacer(modifier = Modifier.padding(25.dp))
         }
         Divider(color = Color(0xffe7e7e7))
-        LazyColumn(contentPadding = PaddingValues(vertical = 30.dp)) {
+        LazyColumn(contentPadding = PaddingValues(vertical = 30.dp, horizontal = 20.dp)) {
             itemsIndexed(agenda.issues) { index, issue ->
                 IssueItem(index, issue)
+            }
+            item {
+                Spacer(modifier = Modifier.padding(30.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(painter = painterResource(id = R.drawable.ic_meeting_clip), contentDescription = null)
+                    Spacer(modifier = Modifier.padding(5.dp))
+                    Text(text = "자료", fontSize = 18.sp, color = colorResource(id = R.color.black))
+                }
+                Spacer(modifier = Modifier.padding(14.dp))
+            }
+            items(agenda.fileInfos) { fileInfo ->
+                Text(
+                    modifier = Modifier
+                        .padding(vertical = 14.dp)
+                        .clickable { openFile(fileInfo.uriString) },
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+                            append(fileInfo.fileName)
+                        }
+                    }, fontSize = 15.sp,
+                    color = colorResource(id = R.color.dark_primary)
+                )
             }
         }
     }
@@ -121,10 +167,14 @@ private fun Preview2() {
             order = 1,
             name = "agenda1",
             issues = listOf(
-                Issue("첫번 째 이슈입니다.")
+                Issue("첫번 째 이슈입니다."),
+                Issue("두번 째 이슈입니다."),
+                Issue("세번 째 이슈입니다."),
             ),
             fileInfos = listOf(
-                FileInfo("", "fileName.mp4")
+                FileInfo("", "fileName.mp4"),
+                FileInfo("", "zero.jpg"),
+                FileInfo("", "adsasdjdhfdjlafhakdfhkfadfafdadf.avi"),
             )
         )
     )

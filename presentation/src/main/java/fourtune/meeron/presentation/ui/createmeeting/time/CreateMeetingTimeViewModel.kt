@@ -56,12 +56,11 @@ class CreateMeetingTimeViewModel @Inject constructor(
     fun changeTime(key: Int, hour: Int, minute: Int) {
         val time = getTimeUseCase(hour, minute)
         _uiState.update {
+            val timeMap = it.timeMap.toMutableMap().apply { this[key] = time }
             it.copy(
-                timeMap = it.timeMap.toMutableMap().apply {
-                    this[key] = time
-                },
+                timeMap = timeMap,
                 meeting = it.meeting.copy(
-                    time = "${it.timeMap[R.string.start]} ~ ${it.timeMap[R.string.end]}"
+                    time = "${timeMap[R.string.start]} ~ ${timeMap[R.string.end]}"
                 )
             )
         }

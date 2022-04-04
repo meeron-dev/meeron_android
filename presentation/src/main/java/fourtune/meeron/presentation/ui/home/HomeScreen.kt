@@ -32,6 +32,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import forutune.meeron.domain.model.Meeting
 import fourtune.meeron.presentation.R
+import fourtune.meeron.presentation.ui.common.StateItem
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 import kotlinx.coroutines.launch
 
@@ -47,7 +48,14 @@ fun HomeScreen(
     val uiState by homeViewModel.uiState.collectAsState()
     val pagerState = rememberPagerState(0)
 
-    HomeScreen(bottomBarSize, pagerState, currentDay, uiState, openCalendar, onClickMeeting)
+    HomeScreen(
+        bottomBarSize = bottomBarSize,
+        pagerState = pagerState,
+        currentDay = currentDay,
+        uiState = uiState,
+        openCalendar = openCalendar,
+        onClickMeeting = onClickMeeting
+    )
 }
 
 @OptIn(ExperimentalPagerApi::class)
@@ -162,27 +170,9 @@ private fun PagerItem(meeting: Meeting, onClick: () -> Unit) {
                     Text(text = "주관 ${meeting.team.name}", fontSize = 13.sp, color = colorResource(id = R.color.gray))
                 }
                 Column {
-                    Row {
-                        Image(painter = painterResource(id = R.drawable.ic_circle), contentDescription = null)
-                        Spacer(modifier = Modifier.padding(5.dp))
-                        Text(text = "5", color = colorResource(id = R.color.gray), fontSize = 12.sp)
-                    }
-                    Row {
-                        Image(painter = painterResource(id = R.drawable.ic_triangle), contentDescription = null)
-                        Spacer(modifier = Modifier.padding(5.dp))
-                        Text(text = "5", color = colorResource(id = R.color.gray), fontSize = 12.sp)
-                    }
-                    Row {
-                        Image(painter = painterResource(id = R.drawable.ic_x), contentDescription = null)
-                        Spacer(modifier = Modifier.padding(5.dp))
-                        Text(text = "5", color = colorResource(id = R.color.gray), fontSize = 12.sp)
-                    }
-                    Row {
-                        Image(painter = painterResource(id = R.drawable.ic_qeustion_mark), contentDescription = null)
-                        Spacer(modifier = Modifier.padding(5.dp))
-                        Text(text = "5", color = colorResource(id = R.color.gray), fontSize = 12.sp)
-                    }
-                    //o x ?
+                    StateItem(resource = R.drawable.ic_circle, count = "${meeting.attends}")
+                    StateItem(resource = R.drawable.ic_x, count = "${meeting.absents}")
+                    StateItem(resource = R.drawable.ic_qeustion_mark, count = "${meeting.unknowns}")
                 }
             }
             Spacer(modifier = Modifier.padding(8.dp))
@@ -192,7 +182,7 @@ private fun PagerItem(meeting: Meeting, onClick: () -> Unit) {
                     .fillMaxWidth()
                     .padding(vertical = 34.dp, horizontal = 24.dp)
             ) {
-                Text(text = meeting.purpose, fontSize = 14.sp)
+                Text(text = meeting.mainAgenda.orEmpty(), fontSize = 14.sp)
             }
         }
 

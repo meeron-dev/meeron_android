@@ -1,6 +1,5 @@
 package fourtune.meeron.presentation.ui.detail
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -23,6 +23,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import forutune.meeron.domain.model.*
 import fourtune.meeron.presentation.R
+import fourtune.meeron.presentation.ui.common.StateItem
 
 @Composable
 fun MeetingDetailScreen(viewModel: MeetingDetailViewModel = hiltViewModel(), goToAgendaDetail: (Meeting) -> Unit) {
@@ -46,7 +47,7 @@ fun MeetingDetailTopBar(meeting: Meeting, ownerNames: String = "", onBack: () ->
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = colorResource(id = R.color.light_gray))
+            .background(color = Color(0xFFF5F7FA))
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             IconButton(modifier = Modifier.align(Alignment.CenterStart), onClick = onBack) {
@@ -60,20 +61,23 @@ fun MeetingDetailTopBar(meeting: Meeting, ownerNames: String = "", onBack: () ->
             )
         }
         Spacer(modifier = Modifier.padding(5.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "workspaceName", fontSize = 15.sp, color = colorResource(id = R.color.dark_gray))
-            Text(text = "회의 플랜", fontSize = 12.sp, color = colorResource(id = R.color.gray))
+        Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "workspaceName", fontSize = 15.sp, color = colorResource(id = R.color.dark_gray))
+                Text(text = "회의 플랜", fontSize = 12.sp, color = colorResource(id = R.color.gray))
+            }
+            Spacer(modifier = Modifier.padding(7.dp))
+            Text(text = "회의 제목", fontSize = 17.sp, color = colorResource(id = R.color.black))
+            Spacer(modifier = Modifier.padding(31.dp))
+            TopbarContent("주관", meeting.team.name, meeting.date.displayString())
+            Spacer(modifier = Modifier.padding(2.dp))
+            TopbarContent("관리자", ownerNames, meeting.time)
+            Spacer(modifier = Modifier.padding(8.dp))
         }
-        Spacer(modifier = Modifier.padding(7.dp))
-        Text(text = "회의 제목", fontSize = 17.sp, color = colorResource(id = R.color.black))
-        Spacer(modifier = Modifier.padding(31.dp))
-        TopbarContent("주관", meeting.team.name, meeting.date.displayString())
-        Spacer(modifier = Modifier.padding(2.dp))
-        TopbarContent("관리자", ownerNames, meeting.time)
     }
 
 }
@@ -255,9 +259,3 @@ private fun Preview3() {
     }
 }
 
-@Composable
-private fun StateItem(@DrawableRes resource: Int, count: String) {
-    Image(painter = painterResource(id = resource), contentDescription = null)
-    Spacer(modifier = Modifier.padding(2.dp))
-    Text(text = count, fontSize = 13.sp, color = colorResource(id = R.color.dark_gray))
-}

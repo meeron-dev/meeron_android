@@ -6,29 +6,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MeetingsResponse(
-    @SerialName("meetings") val meetings: List<MeetingResponse>
-) {
-    @Serializable
-    data class MeetingResponse(
-        @SerialName("meetingId") val meetingId: Long = -1,
-        @SerialName("meetingName") val meetingName: String = "",
-        @SerialName("meetingDate") val meetingDate: String = "",
-        @SerialName("startTime") val startTime: String = "",
-        @SerialName("endTime") val endTime: String = "",
-        @SerialName("operationTeamId") val operationTeamId: Long = -1,
-        @SerialName("operationTeamName") val operationTeamName: String = "",
-        @SerialName("workspaceId") val workspaceId: Long? = null,
-        @SerialName("workspaceName") val workspaceName: String? = null,
-    )
-}
-
-@Serializable
-data class MeetingIdResponse(
-    @SerialName("meetingId") val meetingId: Long
-)
-
-@Serializable
 data class CreateAgendaIdsResponse(
     @SerialName("createdAgendaIds") val createdAgendaIds: List<Long>
 )

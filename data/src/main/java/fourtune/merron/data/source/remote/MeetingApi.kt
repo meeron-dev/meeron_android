@@ -4,13 +4,15 @@ import fourtune.merron.data.model.dto.request.AgendaRequest
 import fourtune.merron.data.model.dto.request.MeetingRequest
 import fourtune.merron.data.model.dto.request.WorkSpaceUserIdsRequest
 import fourtune.merron.data.model.dto.response.*
+import fourtune.merron.data.model.dto.response.meeting.MeetingIdResponse
+import fourtune.merron.data.model.dto.response.meeting.MeetingsResponse
 import okhttp3.MultipartBody
 import retrofit2.http.*
 
 
 interface MeetingApi {
     @POST("/api/meetings")
-    suspend fun createMeeting(@Body meetingRequest: MeetingRequest): retrofit2.Response<fourtune.merron.data.model.dto.response.MeetingIdResponse>
+    suspend fun createMeeting(@Body meetingRequest: MeetingRequest): retrofit2.Response<MeetingIdResponse>
 
     @POST("/api/meetings/{meetingId}/attendees")
     suspend fun addParticipants(

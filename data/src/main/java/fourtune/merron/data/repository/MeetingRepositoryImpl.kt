@@ -72,6 +72,11 @@ class MeetingRepositoryImpl @Inject constructor(
                 date = Date(year.toInt(), month.toInt(), day.toInt()),
                 time = "${it.startTime} ~ ${it.endTime}",
                 team = Team(it.operationTeamId, it.operationTeamName),
+                mainAgendaId = it.mainAgendaId,
+                mainAgenda = it.mainAgenda,
+                attends = it.attends,
+                absents = it.absents,
+                unknowns = it.unknowns,
             )
         }
     }

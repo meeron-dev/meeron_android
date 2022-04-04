@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.common
+package fourtune.meeron.presentation.ui.common.topbar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

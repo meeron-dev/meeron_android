@@ -14,8 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fourtune.meeron.presentation.R
-import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
+import fourtune.meeron.presentation.ui.common.topbar.CenterTextTopAppBar
 
 @Composable
 fun JoinScreen(close: () -> Unit = {}) {

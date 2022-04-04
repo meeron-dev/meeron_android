@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import fourtune.meeron.presentation.R
-import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
+import fourtune.meeron.presentation.ui.common.topbar.CenterTextTopAppBar
 
 @Composable
 fun TeamCreateCompleteScreen(viewModel: TeamCreateCompleteViewModel = hiltViewModel(), onAction: () -> Unit) {

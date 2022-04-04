@@ -1,7 +1,6 @@
 package fourtune.meeron.presentation.ui.detail
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -26,15 +25,22 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import forutune.meeron.domain.model.*
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.StateItem
+import fourtune.meeron.presentation.ui.common.topbar.DetailTopBar
 
 @Composable
-fun MeetingDetailScreen(viewModel: MeetingDetailViewModel = hiltViewModel(), goToAgendaDetail: (Meeting) -> Unit) {
+fun MeetingDetailScreen(
+    viewModel: MeetingDetailViewModel = hiltViewModel(),
+    goToAgendaDetail: (Meeting) -> Unit,
+    onBack: () -> Unit
+) {
     val uiState by viewModel.uiState.collectAsState()
     Scaffold(
         topBar = {
             MeetingDetailTopBar(
+                workspaceName = uiState.workspaceInfo.workSpaceName,
                 meeting = uiState.meeting,
-                ownerNames = uiState.ownerNames
+                ownerNames = uiState.ownerNames,
+                onBack = onBack
             )
         },
         content = {
@@ -45,23 +51,13 @@ fun MeetingDetailScreen(viewModel: MeetingDetailViewModel = hiltViewModel(), goT
 }
 
 @Composable
-fun MeetingDetailTopBar(meeting: Meeting, ownerNames: String = "", onBack: () -> Unit = {}) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = colorResource(id = R.color.topbar_color))
-    ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            IconButton(modifier = Modifier.align(Alignment.CenterStart), onClick = onBack) {
-                Image(painter = painterResource(id = R.drawable.ic_back), contentDescription = null)
-            }
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = "회의",
-                fontSize = 18.sp,
-                color = colorResource(id = R.color.black)
-            )
-        }
+fun MeetingDetailTopBar(
+    workspaceName: String = "",
+    meeting: Meeting,
+    ownerNames: String = "",
+    onBack: () -> Unit = {}
+) {
+    DetailTopBar(title = "회의", onBack) {
         Spacer(modifier = Modifier.padding(5.dp))
         Column(modifier = Modifier.padding(horizontal = 20.dp)) {
             Row(
@@ -69,11 +65,16 @@ fun MeetingDetailTopBar(meeting: Meeting, ownerNames: String = "", onBack: () ->
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "workspaceName", fontSize = 15.sp, color = colorResource(id = R.color.dark_gray))
+                Text(text = workspaceName, fontSize = 15.sp, color = colorResource(id = R.color.dark_gray))
                 Text(text = "회의 플랜", fontSize = 12.sp, color = colorResource(id = R.color.gray))
             }
             Spacer(modifier = Modifier.padding(7.dp))
-            Text(text = "회의 제목", fontSize = 17.sp, color = colorResource(id = R.color.black))
+            Text(
+                text = meeting.title,
+                fontSize = 17.sp,
+                color = colorResource(id = R.color.black),
+                fontWeight = FontWeight.Bold
+            )
             Spacer(modifier = Modifier.padding(31.dp))
             TopbarContent("주관", meeting.team.name, meeting.date.displayString())
             Spacer(modifier = Modifier.padding(2.dp))
@@ -81,7 +82,6 @@ fun MeetingDetailTopBar(meeting: Meeting, ownerNames: String = "", onBack: () ->
             Spacer(modifier = Modifier.padding(8.dp))
         }
     }
-
 }
 
 @Composable
@@ -265,7 +265,8 @@ fun DetailItem(
 @Composable
 private fun Preview1() {
     MeetingDetailTopBar(
-        Meeting(
+        workspaceName = "워크스페이스 이름입니다.",
+        meeting = Meeting(
             title = "미팅 타이틀",
             date = Date(2022, 4, 4),
             time = "9:00AM~1:00PM",

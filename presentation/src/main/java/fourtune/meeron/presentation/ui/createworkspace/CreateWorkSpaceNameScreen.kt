@@ -12,10 +12,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
 import fourtune.meeron.presentation.ui.common.action.ContentFactory
 import fourtune.meeron.presentation.ui.common.action.MeeronActionBox
+import fourtune.meeron.presentation.ui.common.topbar.CenterTextTopAppBar
 
 @Composable
 fun CreateWorkSpaceNameScreen(onPrevious: () -> Unit = {}, onNext: (String) -> Unit = {}) {

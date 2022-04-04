@@ -31,10 +31,10 @@ import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import forutune.meeron.domain.model.Meeting
 import fourtune.meeron.presentation.R
-import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
 import fourtune.meeron.presentation.ui.common.action.ContentFactory
 import fourtune.meeron.presentation.ui.common.action.MeeronActionBox
+import fourtune.meeron.presentation.ui.common.topbar.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.createmeeting.CreateText
 import fourtune.meeron.presentation.ui.createmeeting.CreateTitle
 import fourtune.meeron.presentation.ui.createmeeting.agenda.CreateAgendaViewModel.Companion.MAX_AGENDA_SIZE

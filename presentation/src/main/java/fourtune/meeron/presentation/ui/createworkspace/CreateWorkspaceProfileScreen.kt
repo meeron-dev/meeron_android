@@ -32,10 +32,10 @@ import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import forutune.meeron.domain.model.WorkSpace
 import fourtune.meeron.presentation.R
-import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
 import fourtune.meeron.presentation.ui.common.action.ContentFactory
 import fourtune.meeron.presentation.ui.common.action.MeeronActionBox
+import fourtune.meeron.presentation.ui.common.topbar.CenterTextTopAppBar
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable

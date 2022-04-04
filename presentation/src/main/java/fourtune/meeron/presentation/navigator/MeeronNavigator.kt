@@ -227,14 +227,17 @@ fun MeeronNavigator(startDestination: Navigate) {
             route = Navigate.Detail.Meeting.destination(Const.Meeting),
             arguments = listOf(navArgument(Const.Meeting) { type = MeetingType() })
         ) {
-            MeetingDetailScreen(goToAgendaDetail = { navController.navigate(Navigate.Detail.Agenda.route(it.encodeJson())) })
+            MeetingDetailScreen(
+                goToAgendaDetail = { navController.navigate(Navigate.Detail.Agenda.route(it.encodeJson())) },
+                onBack = { navController.navigateUp() }
+            )
         }
 
         composable(
             route = Navigate.Detail.Agenda.destination(Const.Meeting),
             arguments = listOf(navArgument(Const.Meeting) { type = MeetingType() })
         ) {
-            AgendaDetailScreen()
+            AgendaDetailScreen(onBack = { navController.navigateUp() })
         }
 
         composable(

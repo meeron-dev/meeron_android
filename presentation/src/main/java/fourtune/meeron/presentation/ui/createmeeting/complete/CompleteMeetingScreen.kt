@@ -22,9 +22,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import forutune.meeron.domain.model.Meeting
 import fourtune.meeron.presentation.R
-import fourtune.meeron.presentation.ui.common.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.common.MeeronButtonBackGround
 import fourtune.meeron.presentation.ui.common.MeeronProgressIndicator
+import fourtune.meeron.presentation.ui.common.topbar.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.createmeeting.CreateTitle
 import kotlinx.coroutines.flow.collectLatest
 

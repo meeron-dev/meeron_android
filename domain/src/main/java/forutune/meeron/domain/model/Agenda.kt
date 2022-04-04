@@ -4,7 +4,7 @@ import java.io.Serializable
 
 @kotlinx.serialization.Serializable
 data class Agenda(
-    val order: Long = 0,
+    val order: Int = 0,
     val name: String = "",
     val issues: List<Issue> = emptyList(),
     val fileInfos: List<FileInfo> = emptyList()

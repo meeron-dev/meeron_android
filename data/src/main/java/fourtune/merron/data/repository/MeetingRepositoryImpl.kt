@@ -122,4 +122,15 @@ class MeetingRepositoryImpl @Inject constructor(
     override suspend fun getTeamStates(meetingId: Long): List<TeamState> {
         return meetingApi.getTeamState(meetingId).teamStates
     }
+
+    override suspend fun getAgenda(meetingId: Long, agendaOrder: Int): Agenda {
+        return with(meetingApi.getAgenda(meetingId, agendaOrder)) {
+            Agenda(
+                order = agendaOrder,
+                name = agendaName,
+                issues = issues.map { Issue(it.content) },
+                fileInfos = files.map { FileInfo(it.fileUrl, it.fileName) }
+            )
+        }
+    }
 }

@@ -8,7 +8,7 @@ import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.model.TeamState
 import forutune.meeron.domain.usecase.meeting.GetTeamStatesUseCase
-import forutune.meeron.domain.usecase.meeting.agenda.GetAgendasUseCase
+import forutune.meeron.domain.usecase.meeting.agenda.GetAgendaUseCase
 import forutune.meeron.domain.usecase.workspace.GetWorkspaceUserUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class MeetingDetailViewModel @Inject constructor(
     private val getWorkspaceUser: GetWorkspaceUserUseCase,
     private val getTeamStates: GetTeamStatesUseCase,
-    private val getAgendasUseCase: GetAgendasUseCase,
+    private val getAgenda: GetAgendaUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState(requireNotNull(savedStateHandle.get<Meeting>(Const.Meeting))))

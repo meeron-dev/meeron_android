@@ -26,8 +26,28 @@ data class MeetingsResponse(
     )
 }
 
-
 @Serializable
 data class MeetingIdResponse(
     @SerialName("meetingId") val meetingId: Long
+)
+
+@Serializable
+data class AgendaResponse(
+    @SerialName("agendaId") val agendaId: Long,
+    @SerialName("agendaName") val agendaName: String,
+    @SerialName("issues") val issues: List<IssuesResponse>,
+    @SerialName("files") val files: List<FilesResponse>,
+)
+
+@Serializable
+data class IssuesResponse(
+    @SerialName("issueId") val issueId: Long,
+    @SerialName("content") val content: String,
+)
+
+@Serializable
+data class FilesResponse(
+    @SerialName("fileId") val fileId: Long,
+    @SerialName("fileName") val fileName: String,
+    @SerialName("fileUrl") val fileUrl: String,
 )

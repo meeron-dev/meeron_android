@@ -98,7 +98,7 @@ class CreateAgendaViewModel @Inject constructor(
         return uiState.value.meeting.copy(
             agenda = agendas.mapIndexed { index, agenda ->
                 forutune.meeron.domain.model.Agenda(
-                    order = index.toLong(),
+                    order = index,
                     name = agenda.name,
                     issues = agenda.issue.map(::Issue),
                     fileInfos = agenda.file

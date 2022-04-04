@@ -4,6 +4,7 @@ import fourtune.merron.data.model.dto.request.AgendaRequest
 import fourtune.merron.data.model.dto.request.MeetingRequest
 import fourtune.merron.data.model.dto.request.WorkSpaceUserIdsRequest
 import fourtune.merron.data.model.dto.response.*
+import fourtune.merron.data.model.dto.response.meeting.AgendaResponse
 import fourtune.merron.data.model.dto.response.meeting.MeetingIdResponse
 import fourtune.merron.data.model.dto.response.meeting.MeetingsResponse
 import okhttp3.MultipartBody
@@ -68,4 +69,7 @@ interface MeetingApi {
 
     @GET("/api/meetings/{meetingId}/attendees/teams")
     suspend fun getTeamState(@Path("meetingId") meetingId: Long): ParticipantsResponse
+
+    @GET("/api/meetings/{meetingId}/agendas/{agendaOrder}")
+    suspend fun getAgenda(@Path("meetingId") meetingId: Long, @Path("agendaOrder") agendaOrder: Int): AgendaResponse
 }

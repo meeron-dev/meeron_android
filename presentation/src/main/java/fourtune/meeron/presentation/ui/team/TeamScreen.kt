@@ -144,7 +144,7 @@ fun TeamTopBar(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color(0xFFF5F7FA))
+            .background(color = colorResource(id = R.color.topbar_color))
             .padding(bottom = 18.dp)
     ) {
         Text(

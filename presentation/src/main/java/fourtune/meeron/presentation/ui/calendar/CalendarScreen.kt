@@ -285,7 +285,7 @@ private fun CalendarTitle(
         )
     }
     IconButton(onClick = nextEvent) {
-        Image(painter = painterResource(id = R.drawable.ic_right_arrow), contentDescription = null)
+        Image(painter = painterResource(id = R.drawable.ic_right_arrow_24), contentDescription = null)
     }
 }
 
@@ -335,7 +335,7 @@ fun CalendarDetail(
                         color = colorResource(id = R.color.medium_primary),
                     )
                 } else {
-                    Image(painter = painterResource(id = R.drawable.ic_right_arrow), contentDescription = null)
+                    Image(painter = painterResource(id = R.drawable.ic_right_arrow_24), contentDescription = null)
                 }
             }
         }

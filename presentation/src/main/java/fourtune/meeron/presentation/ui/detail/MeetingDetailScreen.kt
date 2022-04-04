@@ -3,6 +3,8 @@ package fourtune.meeron.presentation.ui.detail
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Divider
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -47,7 +49,7 @@ fun MeetingDetailTopBar(meeting: Meeting, ownerNames: String = "", onBack: () ->
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color(0xFFF5F7FA))
+            .background(color = colorResource(id = R.color.topbar_color))
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             IconButton(modifier = Modifier.align(Alignment.CenterStart), onClick = onBack) {
@@ -125,63 +127,102 @@ private fun TopbarContent(title: String, text: String, info: String) {
 @Composable
 fun MeetingDetailContent(uiState: MeetingDetailViewModel.UiState, onClickAgenda: () -> Unit = {}) {
     Column {
-        uiState.meeting.agenda.forEach { agenda ->
-            DetailItem(title = "아젠다", onClickDetail = onClickAgenda) {
-                Row {
-                    Image(painter = painterResource(id = R.drawable.ic_meeting_clip), contentDescription = null)
-                    Spacer(modifier = Modifier.padding(2.dp))
-                    Text(
-                        text = "${agenda.fileInfos.size}",
-                        fontSize = 12.sp,
-                        color = colorResource(id = R.color.dark_gray)
-                    )
-                }
-            }
-        }
-        Divider(color = colorResource(id = R.color.light_gray), thickness = 3.dp)
-
+        Agenda(onClickAgenda, uiState.meeting.agenda)
+        Divider(color = colorResource(id = R.color.topbar_color), thickness = 3.dp)
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Column(modifier = Modifier.padding(vertical = 20.dp, horizontal = 18.dp)) {
+            Participants(uiState.meeting.participants.size)
+            TeamStateLazyColumn(uiState.teamStates)
+        }
+    }
+}
+
+@Composable
+private fun Agenda(
+    onClickAgenda: () -> Unit,
+    agendas: List<Agenda>
+) {
+    val enable = agendas.isNotEmpty()
+    if (enable) {
+        agendas.forEach { agenda ->
+            AgendaDetailItem(onClickAgenda, agenda, enable)
+        }
+    } else {
+        AgendaDetailItem(onClickAgenda = onClickAgenda, agenda = Agenda(), enable = enable)
+    }
+}
+
+@Composable
+private fun AgendaDetailItem(onClickAgenda: () -> Unit, agenda: Agenda, enable: Boolean) {
+    DetailItem(title = "아젠다", enable = enable, onClickDetail = onClickAgenda) {
+        Row {
+            Image(
+                painter = painterResource(id = if (enable) R.drawable.ic_meeting_clip else R.drawable.ic_meeting_clip_disable),
+                contentDescription = null,
+            )
+            Spacer(modifier = Modifier.padding(2.dp))
+            Text(
+                text = if (enable) "${agenda.fileInfos.size}" else "0",
+                fontSize = 12.sp,
+                color = colorResource(id = if (enable) R.color.dark_gray else R.color.gray)
+            )
+        }
+    }
+}
+
+@Composable
+private fun TeamStateLazyColumn(teamStates: List<TeamState>) {
+    LazyColumn {
+        itemsIndexed(
+            items = teamStates,
+            key = { _, item -> item.teamId }
+        ) { index, teamState ->
+            DetailItem(title = teamState.teamName) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "참가자", fontSize = 20.sp, color = colorResource(id = R.color.black))
-                    IconButton(onClick = { }) {
-                        Image(painter = painterResource(id = R.drawable.ic_edit), contentDescription = null)
-                    }
-                }
-                Spacer(modifier = Modifier.padding(1.dp))
-                Text(
-                    text = "${uiState.meeting.participants.size}명 예정",
-                    fontSize = 16.sp,
-                    color = colorResource(id = R.color.dark_gray)
-                )
-            }
-            uiState.teamStates.forEach { teamState ->
-                DetailItem(title = teamState.teamName) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = "${teamState.attends + teamState.absents + teamState.unknowns}명 예정")
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            StateItem(R.drawable.ic_circle, "${teamState.attends}")
-                            StateItem(R.drawable.ic_x, "${teamState.absents}")
-                            StateItem(R.drawable.ic_qeustion_mark, "${teamState.unknowns}")
-                        }
+                    Text(
+                        text = "${teamState.attends + teamState.absents + teamState.unknowns}명 예정",
+                        fontSize = 16.sp,
+                        color = colorResource(id = R.color.gray)
+                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        StateItem(R.drawable.ic_circle, "${teamState.attends}")
+                        StateItem(R.drawable.ic_x, "${teamState.absents}")
+                        StateItem(R.drawable.ic_qeustion_mark, "${teamState.unknowns}")
                     }
                 }
             }
-
+            if (index != teamStates.lastIndex) {
+                Divider(color = Color(0xffe7e7e7))
+            }
         }
+    }
+}
 
-
+@Composable
+private fun Participants(participantSize: Int) {
+    Column(modifier = Modifier.padding(vertical = 20.dp, horizontal = 18.dp)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "참가자", fontSize = 20.sp, color = colorResource(id = R.color.black))
+            IconButton(onClick = { }) {
+                Image(painter = painterResource(id = R.drawable.ic_edit), contentDescription = null)
+            }
+        }
+        Spacer(modifier = Modifier.padding(1.dp))
+        Text(
+            text = "${participantSize}명 예정",
+            fontSize = 16.sp,
+            color = colorResource(id = R.color.dark_gray)
+        )
     }
 }
 
@@ -189,6 +230,7 @@ fun MeetingDetailContent(uiState: MeetingDetailViewModel.UiState, onClickAgenda:
 fun DetailItem(
     title: String,
     onClickDetail: () -> Unit = {},
+    enable: Boolean = true,
     content: @Composable () -> Unit = {}
 ) {
     Column(
@@ -201,9 +243,17 @@ fun DetailItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = title, fontSize = 17.sp, color = colorResource(id = R.color.black), lineHeight = 39.sp)
-            IconButton(onClick = onClickDetail) {
-                Image(painter = painterResource(id = R.drawable.ic_right_arrow), contentDescription = null)
+            Text(
+                text = title,
+                fontSize = 17.sp,
+                color = colorResource(id = if (enable) R.color.black else R.color.gray),
+                lineHeight = 39.sp
+            )
+            IconButton(onClick = onClickDetail, enabled = enable) {
+                Image(
+                    painter = painterResource(id = if (enable) R.drawable.ic_right_arrow_21 else R.drawable.ic_right_arrow_disable_21),
+                    contentDescription = null,
+                )
             }
         }
         Spacer(modifier = Modifier.padding(2.dp))

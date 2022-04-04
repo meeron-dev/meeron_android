@@ -127,7 +127,7 @@ private fun MeeronCheckBox(text: String, check: Boolean, onCheckedChange: (Boole
         }
         Image(
             modifier = Modifier.clickable(onClick = onDetail),
-            painter = painterResource(id = R.drawable.ic_right_arrow),
+            painter = painterResource(id = R.drawable.ic_right_arrow_24),
             contentDescription = null
         )
     }

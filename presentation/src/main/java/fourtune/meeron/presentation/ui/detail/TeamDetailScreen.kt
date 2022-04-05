@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import forutune.meeron.domain.model.MeetingState
 import forutune.meeron.domain.model.WorkspaceUser
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.UserItem
@@ -69,12 +70,16 @@ private fun TeamDetailContent(uiState: TeamDetailViewModel.UiState) {
             fontWeight = FontWeight.Medium
         )
         Spacer(modifier = Modifier.padding(8.dp))
-        Text(text = "${1}명 예정", fontSize = 20.sp, color = colorResource(id = R.color.dark_gray))
+        Text(
+            text = "${uiState.members.values.sumOf { it.size }}명 예정",
+            fontSize = 20.sp,
+            color = colorResource(id = R.color.dark_gray)
+        )
 
         Column {
-            StateItem("참여", R.drawable.ic_circle)
-            StateItem("불참", R.drawable.ic_x)
-            StateItem("미작성", R.drawable.ic_qeustion_mark)
+            StateItem("참여", R.drawable.ic_circle, uiState.members[MeetingState.Attends].orEmpty())
+            StateItem("불참", R.drawable.ic_x, uiState.members[MeetingState.Absents].orEmpty())
+            StateItem("미작성", R.drawable.ic_qeustion_mark, uiState.members[MeetingState.Unknowns].orEmpty())
         }
 
     }
@@ -131,7 +136,7 @@ private fun StateTitle(title: String, count: String, @DrawableRes drawable: Int)
 private fun Preview() {
     TeamDetailScreen(
         uiState = TeamDetailViewModel.UiState(
-            teamName = "팀 이름입니다."
+            teamName = "팀 이름입니다.",
         )
     )
 }

@@ -73,3 +73,10 @@ data class DuplicateResponse(
 data class ParticipantsResponse(
     @SerialName("attendees") val teamStates: List<TeamState>
 )
+
+@Serializable
+data class TeamMemberInMeetingResponse(
+    @SerialName("attends") val attends: List<WorkspaceUser>,
+    @SerialName("absents") val absents: List<WorkspaceUser>,
+    @SerialName("unknowns") val unknowns: List<WorkspaceUser>
+)

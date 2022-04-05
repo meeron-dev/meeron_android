@@ -234,7 +234,9 @@ fun MeeronNavigator(startDestination: Navigate) {
             MeetingDetailScreen(
                 goToAgendaDetail = { navController.navigate(Navigate.Detail.Agenda.route(it.encodeJson())) },
                 goToParticipantState = { navController.navigate(Navigate.Detail.ParticipantState.route(it.encodeJson())) },
-                goToTeamDetail = { navController.navigate(Navigate.Detail.Team.route(it)) },
+                goToTeamDetail = { meeting, teamId ->
+                    navController.navigate(Navigate.Detail.Team.route(meeting.encodeJson(), teamId))
+                },
                 onBack = { navController.navigateUp() }
             )
         }
@@ -254,8 +256,10 @@ fun MeeronNavigator(startDestination: Navigate) {
         }
 
         composable(
-            route = Navigate.Detail.Team.destination(Const.TeamId),
-            arguments = listOf(navArgument(Const.TeamId) { type = NavType.LongType })
+            route = Navigate.Detail.Team.destination(Const.Meeting, Const.TeamId),
+            arguments = listOf(
+                navArgument(Const.Meeting) { type = MeetingType() },
+                navArgument(Const.TeamId) { type = NavType.LongType })
         ) {
             TeamDetailScreen { navController.navigateUp() }
         }

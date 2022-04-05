@@ -142,4 +142,13 @@ class MeetingRepositoryImpl @Inject constructor(
     ) {
         meetingApi.changeMeetingState(workSpaceUserId, ChangeMeetingStateRequest(meetingId, state.name.lowercase()))
     }
+
+    override suspend fun getTeamMember(meetingId: Long, teamId: Long): Map<MeetingState, List<WorkspaceUser>> {
+        return mutableMapOf<MeetingState, List<WorkspaceUser>>().apply {
+            val teamMembers = meetingApi.getTeamMember(meetingId, teamId)
+            put(MeetingState.Attends, teamMembers.attends)
+            put(MeetingState.Absents, teamMembers.absents)
+            put(MeetingState.Unknowns, teamMembers.unknowns)
+        }
+    }
 }

@@ -80,4 +80,10 @@ interface MeetingApi {
         @Path("workspaceUserId") workspaceUserId: Long,
         @Body request: ChangeMeetingStateRequest
     ): Response<Unit>
+
+    @GET("/api/meetings/{meetingId}/attendees/teams/{teamId}")
+    suspend fun getTeamMember(
+        @Path("meetingId") meetingId: Long,
+        @Path("teamId") teamId: Long
+    ): TeamMemberInMeetingResponse
 }

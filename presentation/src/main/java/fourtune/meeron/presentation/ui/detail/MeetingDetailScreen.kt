@@ -32,7 +32,7 @@ fun MeetingDetailScreen(
     viewModel: MeetingDetailViewModel = hiltViewModel(),
     goToAgendaDetail: (Meeting) -> Unit,
     goToParticipantState: (Meeting) -> Unit,
-    goToTeamDetail: (teamId: Long) -> Unit,
+    goToTeamDetail: (Meeting, teamId: Long) -> Unit,
     onBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -50,7 +50,7 @@ fun MeetingDetailScreen(
                 uiState = uiState,
                 onClickAgenda = { goToAgendaDetail(uiState.meeting) },
                 onClickParticipantState = { goToParticipantState(uiState.meeting) },
-                onClickTeam = { goToTeamDetail(it) }
+                onClickTeam = { teamId -> goToTeamDetail(uiState.meeting, teamId) }
             )
         }
     )

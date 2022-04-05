@@ -24,19 +24,17 @@ import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
 
 @Composable
 fun ParticipantStateScreen(viewModel: ParticipantStateViewModel = hiltViewModel(), onAction: () -> Unit) {
-    val meeting by viewModel.meeting.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     ParticipantStateScreen(
-        meeting = meeting,
-        onClickButton = {
-            viewModel.changeState(it, onAction)
-        },
+        uiState = uiState,
+        onClickButton = { viewModel.changeState(it, onAction) },
         onAction = onAction
     )
 }
 
 @Composable
 private fun ParticipantStateScreen(
-    meeting: Meeting,
+    uiState: ParticipantStateViewModel.UiState,
     onClickButton: (MeetingState) -> Unit = {},
     onAction: () -> Unit = {}
 ) {
@@ -45,7 +43,7 @@ private fun ParticipantStateScreen(
             StateTopBar(onAction)
         },
         content = {
-            StateContent(meeting, onClickButton)
+            StateContent(uiState, onClickButton)
         }
     )
 }
@@ -69,7 +67,7 @@ private fun StateTopBar(onAction: () -> Unit) {
 }
 
 @Composable
-private fun StateContent(meeting: Meeting, onClickButton: (MeetingState) -> Unit = {}) {
+private fun StateContent(uiState: ParticipantStateViewModel.UiState, onClickButton: (MeetingState) -> Unit = {}) {
     var select by remember {
         mutableStateOf(MeetingState.Unknowns)
     }
@@ -77,9 +75,9 @@ private fun StateContent(meeting: Meeting, onClickButton: (MeetingState) -> Unit
     MeeronSingleButtonBackGround(onClick = { onClickButton(select) }, enable = select != MeetingState.Unknowns) {
         Spacer(modifier = Modifier.padding(12.dp))
         Column(modifier = Modifier.padding()) {
-            Text(text = meeting.title, fontSize = 15.sp, color = colorResource(id = R.color.dark_gray))
+            Text(text = uiState.workspaceName, fontSize = 15.sp, color = colorResource(id = R.color.dark_gray))
             Spacer(modifier = Modifier.padding(7.dp))
-            Text(text = meeting.purpose, fontSize = 17.sp, color = colorResource(id = R.color.dark_gray))
+            Text(text = uiState.meeting.title, fontSize = 17.sp, color = colorResource(id = R.color.dark_gray))
             Spacer(modifier = Modifier.padding(25.dp))
             Text(
                 text = "회의 참여 여부",
@@ -113,5 +111,10 @@ private fun StateContent(meeting: Meeting, onClickButton: (MeetingState) -> Unit
 @Preview
 @Composable
 private fun Preview() {
-    ParticipantStateScreen(Meeting(title = "회의 제목", purpose = "목적은 존나깁니다~~~"))
+    ParticipantStateScreen(
+        ParticipantStateViewModel.UiState(
+            Meeting(title = "회의 제목", purpose = "목적은 존나깁니다~~~"),
+            "워크스페이스 이름"
+        )
+    )
 }

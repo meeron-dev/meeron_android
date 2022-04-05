@@ -16,4 +16,5 @@ interface MeetingRepository {
     suspend fun getTeamStates(meetingId: Long): List<TeamState>
 
     suspend fun getAgenda(meetingId: Long, agendaOrder: Int): Agenda
+    suspend fun changeMeetingState(workSpaceUserId: Long, meetingId: Long, state: MeetingState)
 }

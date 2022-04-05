@@ -31,6 +31,7 @@ import fourtune.meeron.presentation.ui.common.topbar.DetailTopBar
 fun MeetingDetailScreen(
     viewModel: MeetingDetailViewModel = hiltViewModel(),
     goToAgendaDetail: (Meeting) -> Unit,
+    goToParticipantState: (Meeting) -> Unit,
     onBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -44,7 +45,11 @@ fun MeetingDetailScreen(
             )
         },
         content = {
-            MeetingDetailContent(uiState = uiState, onClickAgenda = { goToAgendaDetail(uiState.meeting) })
+            MeetingDetailContent(
+                uiState = uiState,
+                onClickAgenda = { goToAgendaDetail(uiState.meeting) },
+                onClickParticipantState = { goToParticipantState(uiState.meeting) }
+            )
         }
     )
 
@@ -125,14 +130,18 @@ private fun TopbarContent(title: String, text: String, info: String) {
 }
 
 @Composable
-fun MeetingDetailContent(uiState: MeetingDetailViewModel.UiState, onClickAgenda: () -> Unit = {}) {
+fun MeetingDetailContent(
+    uiState: MeetingDetailViewModel.UiState,
+    onClickAgenda: () -> Unit = {},
+    onClickParticipantState: () -> Unit = {}
+) {
     Column {
         Agenda(onClickAgenda, uiState.meeting.agenda)
         Divider(color = colorResource(id = R.color.topbar_color), thickness = 3.dp)
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Participants(uiState.meeting.participants.size)
+            Participants(uiState.meeting.participants.size, onClickParticipantState)
             TeamStateLazyColumn(uiState.teamStates)
         }
     }
@@ -204,7 +213,7 @@ private fun TeamStateLazyColumn(teamStates: List<TeamState>) {
 }
 
 @Composable
-private fun Participants(participantSize: Int) {
+private fun Participants(participantSize: Int, onClickParticipantState: () -> Unit = {}) {
     Column(modifier = Modifier.padding(vertical = 20.dp, horizontal = 18.dp)) {
         Row(
             modifier = Modifier
@@ -213,7 +222,7 @@ private fun Participants(participantSize: Int) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "참가자", fontSize = 20.sp, color = colorResource(id = R.color.black))
-            IconButton(onClick = { }) {
+            IconButton(onClick = onClickParticipantState) {
                 Image(painter = painterResource(id = R.drawable.ic_edit), contentDescription = null)
             }
         }

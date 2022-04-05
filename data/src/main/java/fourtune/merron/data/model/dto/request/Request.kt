@@ -46,3 +46,9 @@ data class AddTeamMemberRequest(
     @SerialName("adminWorkspaceUserId") val adminWorkspaceUserId: Long,
     @SerialName("joinTeamWorkspaceUserIds") val joinTeamWorkspaceUserIds: List<Long>
 )
+
+@Serializable
+data class ChangeMeetingStateRequest(
+    @SerialName("meetingId") val meetingId: Long,
+    @SerialName("status") val status: String,
+)

@@ -14,6 +14,7 @@ object Const {
     const val WorkSpace = "workspace"
 
     const val Meeting = "meeting"
+    const val MeetingId = "meeting_id"
     const val CalendarType = "calendar_type"
 
     const val DynamicLinkDomainUrl = "https://ronmee.page.link"

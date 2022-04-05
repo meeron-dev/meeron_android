@@ -31,6 +31,7 @@ import fourtune.meeron.presentation.ui.createmeeting.time.CreateMeetingTimeScree
 import fourtune.meeron.presentation.ui.createworkspace.*
 import fourtune.meeron.presentation.ui.detail.AgendaDetailScreen
 import fourtune.meeron.presentation.ui.detail.MeetingDetailScreen
+import fourtune.meeron.presentation.ui.detail.ParticipantStateScreen
 import fourtune.meeron.presentation.ui.home.MainScreen
 import fourtune.meeron.presentation.ui.login.LoginScreen
 import fourtune.meeron.presentation.ui.team.add.AddTeamScreen
@@ -89,6 +90,7 @@ sealed interface Navigate {
     sealed interface Detail : Navigate {
         object Meeting : Detail
         object Agenda : Detail
+        object ParticipantState : Detail
     }
 
     private fun queries(argument: Array<out String>): String = argument.mapIndexed { index, arg ->
@@ -229,8 +231,16 @@ fun MeeronNavigator(startDestination: Navigate) {
         ) {
             MeetingDetailScreen(
                 goToAgendaDetail = { navController.navigate(Navigate.Detail.Agenda.route(it.encodeJson())) },
+                goToParticipantState = { navController.navigate(Navigate.Detail.ParticipantState.route(it.encodeJson())) },
                 onBack = { navController.navigateUp() }
             )
+        }
+
+        composable(
+            route = Navigate.Detail.ParticipantState.destination(Const.Meeting),
+            arguments = listOf(navArgument(Const.Meeting) { type = MeetingType() })
+        ) {
+            ParticipantStateScreen(onAction = { navController.popBackStack() })
         }
 
         composable(

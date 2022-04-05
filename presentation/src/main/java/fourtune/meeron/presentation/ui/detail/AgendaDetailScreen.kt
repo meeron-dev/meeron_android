@@ -56,10 +56,18 @@ fun AgendaDetailScreen(viewModel: AgendaDetailViewModel = hiltViewModel(), onBac
     }
     Scaffold(
         topBar = {
-            AgendaDetailTopBar(uiState.meeting.agenda, selected, { selected = it }, onBack)
+            AgendaDetailTopBar(
+                agendas = uiState.meeting.agenda,
+                selectedIndex = selected,
+                onSelect = { selected = it },
+                onBack = onBack
+            )
         },
         content = {
-            AgendaDetailContent(uiState.meeting.agenda[selected], openFile = { launcher.launch("*/*") })
+            AgendaDetailContent(
+                agenda = uiState.meeting.agenda[selected],
+                openFile = { launcher.launch("*/*") }
+            )
         }
     )
 }

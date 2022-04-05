@@ -4,6 +4,7 @@ import forutune.meeron.domain.model.*
 import forutune.meeron.domain.provider.FileProvider
 import forutune.meeron.domain.repository.MeetingRepository
 import fourtune.merron.data.model.dto.request.AgendaRequest
+import fourtune.merron.data.model.dto.request.ChangeMeetingStateRequest
 import fourtune.merron.data.model.dto.request.MeetingRequest
 import fourtune.merron.data.model.dto.request.WorkSpaceUserIdsRequest
 import fourtune.merron.data.source.remote.MeetingApi
@@ -132,5 +133,13 @@ class MeetingRepositoryImpl @Inject constructor(
                 fileInfos = files.map { FileInfo(it.fileUrl, it.fileName) }
             )
         }
+    }
+
+    override suspend fun changeMeetingState(
+        workSpaceUserId: Long,
+        meetingId: Long,
+        state: MeetingState
+    ) {
+        meetingApi.changeMeetingState(workSpaceUserId, ChangeMeetingStateRequest(meetingId, state.name.lowercase()))
     }
 }

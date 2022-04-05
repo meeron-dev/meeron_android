@@ -1,6 +1,7 @@
 package fourtune.merron.data.source.remote
 
 import fourtune.merron.data.model.dto.request.AgendaRequest
+import fourtune.merron.data.model.dto.request.ChangeMeetingStateRequest
 import fourtune.merron.data.model.dto.request.MeetingRequest
 import fourtune.merron.data.model.dto.request.WorkSpaceUserIdsRequest
 import fourtune.merron.data.model.dto.response.*
@@ -8,12 +9,13 @@ import fourtune.merron.data.model.dto.response.meeting.AgendaResponse
 import fourtune.merron.data.model.dto.response.meeting.MeetingIdResponse
 import fourtune.merron.data.model.dto.response.meeting.MeetingsResponse
 import okhttp3.MultipartBody
+import retrofit2.Response
 import retrofit2.http.*
 
 
 interface MeetingApi {
     @POST("/api/meetings")
-    suspend fun createMeeting(@Body meetingRequest: MeetingRequest): retrofit2.Response<MeetingIdResponse>
+    suspend fun createMeeting(@Body meetingRequest: MeetingRequest): Response<MeetingIdResponse>
 
     @POST("/api/meetings/{meetingId}/attendees")
     suspend fun addParticipants(
@@ -72,4 +74,10 @@ interface MeetingApi {
 
     @GET("/api/meetings/{meetingId}/agendas/{agendaOrder}")
     suspend fun getAgenda(@Path("meetingId") meetingId: Long, @Path("agendaOrder") agendaOrder: Int): AgendaResponse
+
+    @PATCH("/api/attendees/{workspaceUserId}")
+    suspend fun changeMeetingState(
+        @Path("workspaceUserId") workspaceUserId: Long,
+        @Body request: ChangeMeetingStateRequest
+    ): Response<Unit>
 }

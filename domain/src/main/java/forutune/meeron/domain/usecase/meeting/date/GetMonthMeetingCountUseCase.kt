@@ -1,4 +1,4 @@
-package forutune.meeron.domain.usecase.meeting
+package forutune.meeron.domain.usecase.meeting.date
 
 import forutune.meeron.domain.model.CalendarType
 import forutune.meeron.domain.model.MonthCount

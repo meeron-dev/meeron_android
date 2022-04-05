@@ -10,8 +10,8 @@ import forutune.meeron.domain.model.Date
 import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.model.WorkSpaceInfo
 import forutune.meeron.domain.usecase.me.GetMyWorkSpaceUserUseCase
-import forutune.meeron.domain.usecase.meeting.GetDateMeetingCountUseCase
-import forutune.meeron.domain.usecase.meeting.GetDateMeetingUseCase
+import forutune.meeron.domain.usecase.meeting.date.GetDateMeetingCountUseCase
+import forutune.meeron.domain.usecase.meeting.date.GetDateMeetingUseCase
 import forutune.meeron.domain.usecase.time.DateFormat
 import forutune.meeron.domain.usecase.time.GetCurrentDayUseCase
 import kotlinx.coroutines.flow.*

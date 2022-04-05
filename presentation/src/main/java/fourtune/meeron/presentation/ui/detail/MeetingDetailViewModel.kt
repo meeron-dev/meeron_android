@@ -8,8 +8,8 @@ import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.model.TeamState
 import forutune.meeron.domain.model.WorkSpaceInfo
-import forutune.meeron.domain.usecase.meeting.GetTeamStatesUseCase
 import forutune.meeron.domain.usecase.meeting.agenda.GetAgendaUseCase
+import forutune.meeron.domain.usecase.meeting.team.GetTeamStatesUseCase
 import forutune.meeron.domain.usecase.workspace.GetCurrentWorkspaceInfoUseCase
 import forutune.meeron.domain.usecase.workspace.GetWorkspaceUserUseCase
 import kotlinx.coroutines.flow.MutableStateFlow

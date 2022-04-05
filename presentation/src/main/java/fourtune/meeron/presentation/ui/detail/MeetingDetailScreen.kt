@@ -32,6 +32,7 @@ fun MeetingDetailScreen(
     viewModel: MeetingDetailViewModel = hiltViewModel(),
     goToAgendaDetail: (Meeting) -> Unit,
     goToParticipantState: (Meeting) -> Unit,
+    goToTeamDetail: (teamId: Long) -> Unit,
     onBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -48,7 +49,8 @@ fun MeetingDetailScreen(
             MeetingDetailContent(
                 uiState = uiState,
                 onClickAgenda = { goToAgendaDetail(uiState.meeting) },
-                onClickParticipantState = { goToParticipantState(uiState.meeting) }
+                onClickParticipantState = { goToParticipantState(uiState.meeting) },
+                onClickTeam = { goToTeamDetail(it) }
             )
         }
     )
@@ -133,7 +135,8 @@ private fun TopbarContent(title: String, text: String, info: String) {
 fun MeetingDetailContent(
     uiState: MeetingDetailViewModel.UiState,
     onClickAgenda: () -> Unit = {},
-    onClickParticipantState: () -> Unit = {}
+    onClickParticipantState: () -> Unit = {},
+    onClickTeam: (teamId: Long) -> Unit = {}
 ) {
     Column {
         Agenda(onClickAgenda, uiState.meeting.agenda)
@@ -142,7 +145,7 @@ fun MeetingDetailContent(
             modifier = Modifier.fillMaxWidth()
         ) {
             Participants(uiState.meeting.participants.size, onClickParticipantState)
-            TeamStateLazyColumn(uiState.teamStates)
+            TeamStateLazyColumn(uiState.teamStates, onClickTeam)
         }
     }
 }
@@ -181,13 +184,13 @@ private fun AgendaDetailItem(onClickAgenda: () -> Unit, agenda: Agenda, enable: 
 }
 
 @Composable
-private fun TeamStateLazyColumn(teamStates: List<TeamState>) {
+private fun TeamStateLazyColumn(teamStates: List<TeamState>, onClickTeam: (teamId: Long) -> Unit = {}) {
     LazyColumn {
         itemsIndexed(
             items = teamStates,
             key = { _, item -> item.teamId }
         ) { index, teamState ->
-            DetailItem(title = teamState.teamName) {
+            DetailItem(title = teamState.teamName, onClickDetail = { onClickTeam(teamState.teamId) }) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,

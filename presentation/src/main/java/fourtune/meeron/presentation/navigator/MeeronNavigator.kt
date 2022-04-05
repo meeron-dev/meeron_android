@@ -32,6 +32,7 @@ import fourtune.meeron.presentation.ui.createworkspace.*
 import fourtune.meeron.presentation.ui.detail.AgendaDetailScreen
 import fourtune.meeron.presentation.ui.detail.MeetingDetailScreen
 import fourtune.meeron.presentation.ui.detail.ParticipantStateScreen
+import fourtune.meeron.presentation.ui.detail.TeamDetailScreen
 import fourtune.meeron.presentation.ui.home.MainScreen
 import fourtune.meeron.presentation.ui.login.LoginScreen
 import fourtune.meeron.presentation.ui.team.add.AddTeamScreen
@@ -91,6 +92,7 @@ sealed interface Navigate {
         object Meeting : Detail
         object Agenda : Detail
         object ParticipantState : Detail
+        object Team : Detail
     }
 
     private fun queries(argument: Array<out String>): String = argument.mapIndexed { index, arg ->
@@ -232,6 +234,7 @@ fun MeeronNavigator(startDestination: Navigate) {
             MeetingDetailScreen(
                 goToAgendaDetail = { navController.navigate(Navigate.Detail.Agenda.route(it.encodeJson())) },
                 goToParticipantState = { navController.navigate(Navigate.Detail.ParticipantState.route(it.encodeJson())) },
+                goToTeamDetail = { navController.navigate(Navigate.Detail.Team.route(it)) },
                 onBack = { navController.navigateUp() }
             )
         }
@@ -248,6 +251,13 @@ fun MeeronNavigator(startDestination: Navigate) {
             arguments = listOf(navArgument(Const.Meeting) { type = MeetingType() })
         ) {
             AgendaDetailScreen(onBack = { navController.navigateUp() })
+        }
+
+        composable(
+            route = Navigate.Detail.Team.destination(Const.TeamId),
+            arguments = listOf(navArgument(Const.TeamId) { type = NavType.LongType })
+        ) {
+            TeamDetailScreen(onBack = { navController.navigateUp() })
         }
 
         composable(
@@ -297,6 +307,7 @@ fun MeeronNavigator(startDestination: Navigate) {
                 goToTeamCreateComplete = { navController.navigate(Navigate.Team.TemCreateComplete.route(it)) }
             )
         }
+
         composable(
             route = Navigate.Team.TemCreateComplete.destination(Const.TeamId),
             arguments = listOf(navArgument(Const.TeamId) { type = NavType.LongType })

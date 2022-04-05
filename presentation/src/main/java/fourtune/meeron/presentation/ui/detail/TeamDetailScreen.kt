@@ -1,15 +1,137 @@
 package fourtune.meeron.presentation.ui.detail
 
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import forutune.meeron.domain.model.WorkspaceUser
+import fourtune.meeron.presentation.R
+import fourtune.meeron.presentation.ui.common.UserItem
+import fourtune.meeron.presentation.ui.common.topbar.CenterTextTopAppBar
 
 @Composable
-fun TeamDetailScreen() {
+fun TeamDetailScreen(viewModel: TeamDetailViewModel = hiltViewModel(), onBack: () -> Unit = {}) {
+    val uiState by viewModel.uiState.collectAsState()
+    TeamDetailScreen(uiState, onBack)
+}
 
+@Composable
+private fun TeamDetailScreen(uiState: TeamDetailViewModel.UiState, onBack: () -> Unit = {}) {
+    Scaffold(
+        topBar = {
+            TeamDetailTopBar(onBack)
+        },
+        content = {
+            TeamDetailContent(uiState)
+        }
+    )
+}
+
+@Composable
+private fun TeamDetailTopBar(onBack: () -> Unit) {
+    CenterTextTopAppBar(
+        text = {
+            Text(
+                text = "참가자",
+                fontSize = 18.sp,
+                color = colorResource(id = R.color.black),
+                fontWeight = FontWeight.Bold
+            )
+        },
+        onNavigation = onBack
+    )
+}
+
+@Composable
+private fun TeamDetailContent(uiState: TeamDetailViewModel.UiState) {
+    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+        Spacer(modifier = Modifier.padding(12.dp))
+        Text(
+            text = uiState.teamName,
+            fontSize = 22.sp,
+            color = colorResource(id = R.color.black),
+            fontWeight = FontWeight.Medium
+        )
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(text = "${1}명 예정", fontSize = 20.sp, color = colorResource(id = R.color.dark_gray))
+
+        Column {
+            StateItem("참여", R.drawable.ic_circle)
+            StateItem("불참", R.drawable.ic_x)
+            StateItem("미작성", R.drawable.ic_qeustion_mark)
+        }
+
+    }
+}
+
+@Composable
+private fun StateItem(title: String, @DrawableRes drawable: Int, workspaceUsers: List<WorkspaceUser> = emptyList()) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Spacer(modifier = Modifier.padding(20.dp))
+        StateTitle(title, "${workspaceUsers.size}", drawable)
+        if (workspaceUsers.isNotEmpty()) {
+            Spacer(modifier = Modifier.padding(12.dp))
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+                items(workspaceUsers) { user ->
+                    UserItem(user = user, selected = false, admin = false)
+                }
+            }
+        } else {
+            Text(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(vertical = 72.dp),
+                text = "참여하는 팀원이 존재하지 않습니다.",
+                fontSize = 15.sp,
+                color = Color(0xffbdbdbd)
+            )
+        }
+    }
+}
+
+@Composable
+private fun StateTitle(title: String, count: String, @DrawableRes drawable: Int) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Image(painter = painterResource(id = drawable), contentDescription = null)
+        Spacer(modifier = Modifier.padding(4.dp))
+        Text(
+            text = title,
+            fontSize = 17.sp,
+            color = colorResource(id = R.color.dark_gray),
+            fontWeight = FontWeight.Medium
+        )
+        Spacer(modifier = Modifier.padding(12.dp))
+        Text(
+            text = count,
+            fontSize = 17.sp,
+            color = colorResource(id = R.color.light_gray),
+            fontWeight = FontWeight.Medium
+        )
+    }
 }
 
 @Preview
 @Composable
 private fun Preview() {
-    TeamDetailScreen()
+    TeamDetailScreen(
+        uiState = TeamDetailViewModel.UiState(
+            teamName = "팀 이름입니다."
+        )
+    )
 }

@@ -257,7 +257,7 @@ fun MeeronNavigator(startDestination: Navigate) {
             route = Navigate.Detail.Team.destination(Const.TeamId),
             arguments = listOf(navArgument(Const.TeamId) { type = NavType.LongType })
         ) {
-            TeamDetailScreen(onBack = { navController.navigateUp() })
+            TeamDetailScreen { navController.navigateUp() }
         }
 
         composable(

@@ -71,7 +71,7 @@ fun MeetingDetailTopBar(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = workspaceName, fontSize = 15.sp, color = colorResource(id = R.color.dark_gray))
-                Text(text = "회의 플랜", fontSize = 12.sp, color = colorResource(id = R.color.gray))
+                Text(text = meeting.purpose, fontSize = 12.sp, color = colorResource(id = R.color.gray))
             }
             Spacer(modifier = Modifier.padding(7.dp))
             Text(

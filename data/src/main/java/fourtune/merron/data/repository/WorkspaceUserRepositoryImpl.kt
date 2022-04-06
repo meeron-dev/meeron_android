@@ -44,10 +44,14 @@ class WorkspaceUserRepositoryImpl @Inject constructor(
     }
 
 
-    override suspend fun setCurrentWorkspaceUserId(workspaceUserId: Long) {
+    override suspend fun setCurrentWorkspaceUserId(workspaceUserId: Long?) {
         Timber.tag("🔥setWorkspaceUserId").d("$workspaceUserId")
         dataStore.edit {
-            it[DataStoreKeys.Workspace.userId] = workspaceUserId
+            if (workspaceUserId == null) {
+                it.remove(DataStoreKeys.Workspace.userId)
+            } else {
+                it[DataStoreKeys.Workspace.userId] = workspaceUserId
+            }
         }
     }
 

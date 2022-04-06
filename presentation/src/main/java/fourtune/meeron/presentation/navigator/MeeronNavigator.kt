@@ -256,7 +256,7 @@ fun MeeronNavigator(startDestination: Navigate) {
                 goToTeamDetail = { meeting, teamId ->
                     navController.navigate(Navigate.Detail.Team.route(meeting.encodeJson(), teamId))
                 },
-                onBack = { navController.navigateUp() }
+                onBack = { navController.navigateUp() },
             )
         }
 
@@ -377,6 +377,9 @@ fun MeeronNavigator(startDestination: Navigate) {
             EditAccountScreen(
                 goToMyMeeron = {
                     navController.navigateUp()
+                },
+                goToLogin = {
+                    navController.popBackStack(Navigate.Login.route(), false)
                 }
             )
         }

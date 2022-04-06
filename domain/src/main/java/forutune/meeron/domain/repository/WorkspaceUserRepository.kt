@@ -9,7 +9,7 @@ interface WorkspaceUserRepository {
     suspend fun getWorkspaceUser(workspaceUserId: Long): WorkspaceUser
     suspend fun getWorkspaceUsers(teamId: Long): List<WorkspaceUser>
 
-    suspend fun setCurrentWorkspaceUserId(workspaceUserId: Long)
+    suspend fun setCurrentWorkspaceUserId(workspaceUserId: Long?)
     suspend fun getCurrentWorkspaceUserId(): Long?
 
     suspend fun createWorkspaceAdmin(workSpace: WorkSpace): WorkspaceUser

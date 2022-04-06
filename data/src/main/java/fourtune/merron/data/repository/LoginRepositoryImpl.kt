@@ -19,7 +19,7 @@ class LoginRepositoryImpl @Inject constructor(
     }
 
 
-    override suspend fun logout() = withContext(dispatcher) {
-        loginApi.logout()
+    override suspend fun logout(token: String,refreshToken:String) = withContext(dispatcher) {
+        loginApi.logout("Bearer $token","Bearer $refreshToken")
     }
 }

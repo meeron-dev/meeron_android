@@ -33,8 +33,8 @@ class TokenRepositoryImpl @Inject constructor(
 
     override suspend fun clearToken() {
         dataStore.edit {
-            it[DataStoreKeys.Token.accessToken] = ""
-            it[DataStoreKeys.Token.refreshToken] = ""
+            it.remove(DataStoreKeys.Token.accessToken)
+            it.remove(DataStoreKeys.Token.refreshToken)
         }
     }
 

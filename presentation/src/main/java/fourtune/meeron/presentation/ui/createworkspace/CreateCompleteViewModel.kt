@@ -25,7 +25,7 @@ class CreateCompleteViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val isFirstVisit = isFirstVisitUser()
-            dynamicLinkProvider(requireNotNull(savedStateHandle.get<String>(Const.WorkspaceId)).toLong()) { link ->
+            dynamicLinkProvider(requireNotNull(savedStateHandle.get<Long>(Const.WorkspaceId))) { link ->
                 _uiState.update {
                     it.copy(
                         link = link,

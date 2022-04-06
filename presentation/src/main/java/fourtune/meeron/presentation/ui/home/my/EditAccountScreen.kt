@@ -1,10 +1,10 @@
 package fourtune.meeron.presentation.ui.home.my
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +24,11 @@ internal sealed interface EditAccountEvent {
 }
 
 @Composable
-fun EditAccountScreen(viewModel: EditAccountViewModel = hiltViewModel(), goToMyMeeron: () -> Unit) {
+fun EditAccountScreen(
+    viewModel: EditAccountViewModel = hiltViewModel(),
+    goToMyMeeron: () -> Unit = {},
+    goToLogin: () -> Unit = {}
+) {
     val workspaceInfo by viewModel.workspaceInfo.collectAsState()
 
     var logoutDialog by remember {
@@ -38,7 +42,7 @@ fun EditAccountScreen(viewModel: EditAccountViewModel = hiltViewModel(), goToMyM
     if (logoutDialog) {
         LogoutDialog(
             onDismissRequest = { logoutDialog = it },
-            onLogout = { viewModel.logout() }
+            onLogout = { viewModel.logout(goToLogin) }
         )
     }
     if (withdrawalDialog) {
@@ -71,16 +75,20 @@ private fun WithdrawalDialog(
     onWithdrawal: () -> Unit
 ) {
     Dialog(onDismissRequest = { onDismissRequest(false) }) {
-        Box {
+
+        Column(
+            modifier = Modifier.background(colorResource(id = R.color.white), shape = RoundedCornerShape(5.dp)),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text(
-                modifier = Modifier.align(Alignment.TopStart),
+                modifier = Modifier.align(Alignment.Start),
                 text = workspaceName,
                 fontSize = 16.sp,
                 color = colorResource(id = R.color.dark_gray),
                 fontWeight = FontWeight.Medium
             )
             Column(
-                modifier = Modifier.align(Alignment.Center),
+                modifier = Modifier.padding(vertical = 40.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -98,7 +106,6 @@ private fun WithdrawalDialog(
             }
             Row(
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
                     .fillMaxWidth()
             ) {
                 Button(onClick = { onDismissRequest(false) }) {
@@ -118,7 +125,6 @@ private fun WithdrawalDialog(
             }
         }
     }
-
 }
 
 @Composable
@@ -127,9 +133,12 @@ private fun LogoutDialog(
     onLogout: () -> Unit
 ) {
     Dialog(onDismissRequest = { onDismissRequest(false) }) {
-        Box {
+        Column(
+            modifier = Modifier.background(colorResource(id = R.color.white), shape = RoundedCornerShape(5.dp)),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text(
-                modifier = Modifier.align(Alignment.Center),
+                modifier = Modifier.padding(vertical = 80.dp),
                 text = "로그아웃 하시겠습니까?",
                 fontSize = 16.sp,
                 color = colorResource(id = R.color.dark_gray),
@@ -137,17 +146,30 @@ private fun LogoutDialog(
             )
             Row(
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Button(onClick = { onDismissRequest(false) }) {
+                TextButton(
+                    modifier = Modifier
+                        .background(color = colorResource(id = R.color.dark_gray_white))
+                        .weight(1f),
+                    onClick = { onDismissRequest(false) },
+                    contentPadding = PaddingValues(vertical = 20.dp)
+                ) {
                     Text(
                         text = "취소",
                         fontSize = 16.sp,
                         color = colorResource(id = R.color.dark_gray),
                     )
                 }
-                Button(onClick = onLogout) {
+                Divider(modifier = Modifier.width(1.dp))
+                TextButton(
+                    modifier = Modifier
+                        .background(color = colorResource(id = R.color.dark_gray_white))
+                        .weight(1f),
+                    onClick = { onDismissRequest(false);onLogout() },
+                    contentPadding = PaddingValues(vertical = 20.dp)
+                ) {
                     Text(
                         text = "로그아웃",
                         fontSize = 16.sp,

@@ -47,6 +47,14 @@ class MeetingDetailViewModel @Inject constructor(
         }
     }
 
+    fun updateAgendaInfo() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(teamStates = getTeamStates(it.meeting.meetingId))
+            }
+        }
+    }
+
     data class UiState(
         val meeting: Meeting,
         val ownerNames: String = "",

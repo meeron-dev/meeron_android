@@ -9,11 +9,13 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.whenResumed
 import forutune.meeron.domain.model.*
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.DetailItem
@@ -34,8 +38,15 @@ fun MeetingDetailScreen(
     goToAgendaDetail: (Meeting) -> Unit,
     goToParticipantState: (Meeting) -> Unit,
     goToTeamDetail: (Meeting, teamId: Long) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    owner: LifecycleOwner = LocalLifecycleOwner.current
 ) {
+    LaunchedEffect(key1 = true) {
+        owner.whenResumed {
+            viewModel.updateAgendaInfo()
+        }
+    }
+
     val uiState by viewModel.uiState.collectAsState()
     Scaffold(
         topBar = {

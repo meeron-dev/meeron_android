@@ -26,31 +26,26 @@ import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.DetailItem
 import fourtune.meeron.presentation.ui.common.ProfileImage
 
-internal sealed interface MyMeeronEvent {
+sealed interface MyMeeronEvent {
     object EditProfile : MyMeeronEvent
     object EditWorkspace : MyMeeronEvent
     object EditAccount : MyMeeronEvent
     object InquiryOrHomepage : MyMeeronEvent
     object TermsOfUse : MyMeeronEvent
     object PrivacyPolicy : MyMeeronEvent
-
 }
+
 @Composable
-fun MyMeeronScreen(viewModel: MyMeeronViewModel = hiltViewModel(), bottomBarSize: Dp = 90.dp) {
+fun MyMeeronScreen(
+    viewModel: MyMeeronViewModel = hiltViewModel(),
+    bottomBarSize: Dp = 90.dp,
+    myMeeronEvent: (MyMeeronEvent) -> Unit = {}
+) {
     val uiState by viewModel.uiState.collectAsState()
     MyMeeronScreen(
         uiState = uiState,
         bottomBarSize = bottomBarSize,
-        event = { event ->
-            when (event) {
-                MyMeeronEvent.EditAccount -> {}
-                MyMeeronEvent.EditProfile -> {}
-                MyMeeronEvent.EditWorkspace -> {}
-                MyMeeronEvent.InquiryOrHomepage -> {}
-                MyMeeronEvent.PrivacyPolicy -> {}
-                MyMeeronEvent.TermsOfUse -> {}
-            }
-        }
+        event = myMeeronEvent
     )
 }
 

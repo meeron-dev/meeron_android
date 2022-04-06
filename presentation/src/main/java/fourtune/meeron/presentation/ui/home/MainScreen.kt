@@ -24,6 +24,7 @@ import androidx.lifecycle.whenStarted
 import com.google.accompanist.pager.ExperimentalPagerApi
 import forutune.meeron.domain.model.Meeting
 import fourtune.meeron.presentation.R
+import fourtune.meeron.presentation.ui.home.my.MyMeeronEvent
 import fourtune.meeron.presentation.ui.home.my.MyMeeronScreen
 import fourtune.meeron.presentation.ui.home.team.TeamScreen
 import fourtune.meeron.presentation.ui.home.team.TeamTopBar
@@ -48,6 +49,7 @@ fun MainScreen(
     goToAddTeamMember: () -> Unit = {},
     administerTeam: (team: TeamViewModel.TeamState.Normal) -> Unit = {},
     goToMeetingDetail: (meeting: Meeting) -> Unit = {},
+    myMeeronEvent: (MyMeeronEvent) -> Unit = {}
 ) {
 
     val homeUiState by homeViewModel.uiState.collectAsState()
@@ -116,7 +118,8 @@ fun MainScreen(
             )
             BottomNavi.My -> {
                 MyMeeronScreen(
-                    bottomBarSize = bottomBarSize
+                    bottomBarSize = bottomBarSize,
+                    myMeeronEvent = myMeeronEvent
                 )
             }
             BottomNavi.Team -> TeamScreen(

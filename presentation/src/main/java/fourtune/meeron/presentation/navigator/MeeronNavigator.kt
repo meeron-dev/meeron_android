@@ -29,6 +29,8 @@ import fourtune.meeron.presentation.ui.createmeeting.time.CreateMeetingTimeScree
 import fourtune.meeron.presentation.ui.createworkspace.*
 import fourtune.meeron.presentation.ui.detail.*
 import fourtune.meeron.presentation.ui.home.MainScreen
+import fourtune.meeron.presentation.ui.home.my.EditWorkspaceScreen
+import fourtune.meeron.presentation.ui.home.my.MyMeeronEvent
 import fourtune.meeron.presentation.ui.home.team.add.AddTeamScreen
 import fourtune.meeron.presentation.ui.home.team.admin.AdministerTeamScreen
 import fourtune.meeron.presentation.ui.home.team.createcomplete.TeamCreateCompleteScreen
@@ -89,6 +91,13 @@ sealed interface Navigate {
         object ParticipantState : Detail
         object Team : Detail
         object WorkspaceUser : Detail
+    }
+
+    sealed interface MyMeeron : Navigate {
+        object EditProfile : MyMeeron
+        object EditWorkspace : MyMeeron
+        object EditAccount : MyMeeron
+        object InquiryOrHomepage : MyMeeron
     }
 
     private fun queries(argument: Array<out String>): String = argument.mapIndexed { index, arg ->
@@ -221,7 +230,15 @@ fun MeeronNavigator(startDestination: Navigate) {
                 createWorkspace = { navController.navigate(Navigate.CreateWorkspace.CreateOrJoin.route()) },
                 administerTeam = { navController.navigate(route = Navigate.Team.Administer.route(it.team.encodeJson())) },
                 goToAddTeamMember = { navController.navigate(Navigate.Team.Add.route()) },
-                goToMeetingDetail = { navController.navigate(Navigate.Detail.Meeting.route(it.encodeJson())) }
+                goToMeetingDetail = { navController.navigate(Navigate.Detail.Meeting.route(it.encodeJson())) },
+                myMeeronEvent = { event ->
+                    when (event) {
+                        MyMeeronEvent.EditAccount -> {}
+                        MyMeeronEvent.EditProfile -> TODO()
+                        MyMeeronEvent.EditWorkspace -> navController.navigate(Navigate.MyMeeron.EditWorkspace.route())
+                        MyMeeronEvent.InquiryOrHomepage -> TODO()
+                    }
+                }
             )
         }
 
@@ -338,6 +355,16 @@ fun MeeronNavigator(startDestination: Navigate) {
             TeamCreateCompleteScreen {
                 navController.popBackStack(Navigate.Main.route(), false)
             }
+        }
+
+        composable(
+            route = Navigate.MyMeeron.EditWorkspace.destination()
+        ) {
+            EditWorkspaceScreen(
+                goToMyMeeron = {
+                    navController.navigateUp()
+                }
+            )
         }
 
         composable(

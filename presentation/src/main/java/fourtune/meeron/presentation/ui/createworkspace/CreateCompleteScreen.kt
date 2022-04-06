@@ -15,15 +15,13 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
+import fourtune.meeron.presentation.ui.common.text.LinkText
 import fourtune.meeron.presentation.ui.common.topbar.CenterTextTopAppBar
 
 @Composable
@@ -71,11 +69,7 @@ fun CreateCompleteScreen(
                             clipboardManager.setText(annotatedString = AnnotatedString(uiState.link))
                             Toast.makeText(context, "복사 되었습니다.", Toast.LENGTH_SHORT).show()
                         },
-                        text = buildAnnotatedString {
-                            val text = "복사하기"
-                            append(text)
-                            addStyle(SpanStyle(textDecoration = TextDecoration.Underline), 0, text.length)
-                        },
+                        text = LinkText("복사하기"),
                         fontSize = 13.sp,
                         color = colorResource(id = R.color.dark_primary)
                     )

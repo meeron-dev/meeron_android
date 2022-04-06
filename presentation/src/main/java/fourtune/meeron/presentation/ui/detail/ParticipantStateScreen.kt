@@ -69,10 +69,10 @@ private fun StateTopBar(onAction: () -> Unit) {
 @Composable
 private fun StateContent(uiState: ParticipantStateViewModel.UiState, onClickButton: (MeetingState) -> Unit = {}) {
     var select by remember {
-        mutableStateOf(MeetingState.Unknowns)
+        mutableStateOf(MeetingState.Unknown)
     }
 
-    MeeronSingleButtonBackGround(onClick = { onClickButton(select) }, enable = select != MeetingState.Unknowns) {
+    MeeronSingleButtonBackGround(onClick = { onClickButton(select) }, enable = select != MeetingState.Unknown) {
         Spacer(modifier = Modifier.padding(12.dp))
         Column(modifier = Modifier.padding()) {
             Text(text = uiState.workspaceName, fontSize = 15.sp, color = colorResource(id = R.color.dark_gray))
@@ -91,15 +91,15 @@ private fun StateContent(uiState: ParticipantStateViewModel.UiState, onClickButt
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                IconButton(onClick = { select = MeetingState.Attends }) {
+                IconButton(onClick = { select = MeetingState.Attend }) {
                     Image(
-                        painter = painterResource(id = if (select == MeetingState.Attends) R.drawable.ic_condition_circle_able else R.drawable.ic_condition_circle_disable),
+                        painter = painterResource(id = if (select == MeetingState.Attend) R.drawable.ic_condition_circle_able else R.drawable.ic_condition_circle_disable),
                         contentDescription = null
                     )
                 }
-                IconButton(onClick = { select = MeetingState.Absents }) {
+                IconButton(onClick = { select = MeetingState.Absent }) {
                     Image(
-                        painter = painterResource(id = if (select == MeetingState.Absents) R.drawable.ic_condition_x_able else R.drawable.ic_condition_x_disable),
+                        painter = painterResource(id = if (select == MeetingState.Absent) R.drawable.ic_condition_x_able else R.drawable.ic_condition_x_disable),
                         contentDescription = null
                     )
                 }

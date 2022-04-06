@@ -93,19 +93,19 @@ private fun TeamDetailContent(
             StateItem(
                 "참여",
                 R.drawable.ic_circle,
-                uiState.members[MeetingState.Attends].orEmpty(),
+                uiState.members[MeetingState.Attend].orEmpty(),
                 onClickWorkspaceUser
             )
             StateItem(
                 "불참",
                 R.drawable.ic_x,
-                uiState.members[MeetingState.Absents].orEmpty(),
+                uiState.members[MeetingState.Absent].orEmpty(),
                 onClickWorkspaceUser
             )
             StateItem(
                 "미작성",
                 R.drawable.ic_qeustion_mark,
-                uiState.members[MeetingState.Unknowns].orEmpty(),
+                uiState.members[MeetingState.Unknown].orEmpty(),
                 onClickWorkspaceUser
             )
         }

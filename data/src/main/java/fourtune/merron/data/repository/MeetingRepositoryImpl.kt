@@ -150,9 +150,9 @@ class MeetingRepositoryImpl @Inject constructor(
     override suspend fun getTeamMember(meetingId: Long, teamId: Long): Map<MeetingState, List<WorkspaceUser>> {
         return mutableMapOf<MeetingState, List<WorkspaceUser>>().apply {
             val teamMembers = meetingApi.getTeamMember(meetingId, teamId)
-            put(MeetingState.Attends, teamMembers.attends)
-            put(MeetingState.Absents, teamMembers.absents)
-            put(MeetingState.Unknowns, teamMembers.unknowns)
+            put(MeetingState.Attend, teamMembers.attends)
+            put(MeetingState.Absent, teamMembers.absents)
+            put(MeetingState.Unknown, teamMembers.unknowns)
         }
     }
 }

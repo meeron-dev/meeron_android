@@ -52,7 +52,7 @@ fun AgendaDetailScreen(viewModel: AgendaDetailViewModel = hiltViewModel(), onBac
 
     val uiState by viewModel.uiState.collectAsState()
     var selected by remember {
-        mutableStateOf(1)
+        mutableStateOf(0)
     }
     Scaffold(
         topBar = {
@@ -90,7 +90,7 @@ fun AgendaDetailTopBar(
             itemsIndexed(agendaOrder) { index, order ->
                 Text(
                     modifier = Modifier.clickable { onSelect(index) },
-                    text = "$order",
+                    text = "${order + 1}",
                     fontSize = 24.sp,
                     color = colorResource(id = if (index == selectedIndex) R.color.dark_primary else R.color.gray),
                     fontWeight = if (index == selectedIndex) FontWeight.Bold else FontWeight.ExtraLight

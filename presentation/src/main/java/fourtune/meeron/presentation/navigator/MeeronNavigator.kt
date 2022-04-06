@@ -301,7 +301,7 @@ fun MeeronNavigator(startDestination: Navigate) {
                 navArgument(Const.Team) { type = TeamType(context) }
             )
         ) {
-            WorkspaceUserDetailScreen()
+            WorkspaceUserDetailScreen(onAction = { navController.popBackStack() })
         }
 
         composable(

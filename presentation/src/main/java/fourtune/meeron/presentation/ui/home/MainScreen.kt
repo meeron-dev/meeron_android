@@ -70,9 +70,7 @@ fun MainScreen(
         topBar = {
             when (content) {
                 BottomNavi.Home -> HomeTopBar(scaffoldState, homeUiState, addMeeting)
-                BottomNavi.My -> {
-
-                }
+                BottomNavi.My -> {; }
                 BottomNavi.Team -> TeamTopBar(
                     teams = teamUiState.teams,
                     selectedTeam = teamUiState.selectedTeam,
@@ -118,7 +116,7 @@ fun MainScreen(
             )
             BottomNavi.My -> {
                 MyMeeronScreen(
-
+                    bottomBarSize = bottomBarSize
                 )
             }
             BottomNavi.Team -> TeamScreen(

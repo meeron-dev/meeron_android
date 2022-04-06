@@ -24,6 +24,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import forutune.meeron.domain.model.*
 import fourtune.meeron.presentation.R
+import fourtune.meeron.presentation.ui.common.DetailItem
 import fourtune.meeron.presentation.ui.common.StateItem
 import fourtune.meeron.presentation.ui.common.topbar.DetailTopBar
 
@@ -235,41 +236,6 @@ private fun Participants(participantSize: Int, onClickParticipantState: () -> Un
             fontSize = 16.sp,
             color = colorResource(id = R.color.dark_gray)
         )
-    }
-}
-
-@Composable
-fun DetailItem(
-    title: String,
-    onClickDetail: () -> Unit = {},
-    enable: Boolean = true,
-    content: @Composable () -> Unit = {}
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 20.dp, horizontal = 18.dp),
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = title,
-                fontSize = 17.sp,
-                color = colorResource(id = if (enable) R.color.black else R.color.gray),
-                lineHeight = 39.sp
-            )
-            IconButton(onClick = onClickDetail, enabled = enable) {
-                Image(
-                    painter = painterResource(id = if (enable) R.drawable.ic_right_arrow_21 else R.drawable.ic_right_arrow_disable_21),
-                    contentDescription = null,
-                )
-            }
-        }
-        Spacer(modifier = Modifier.padding(2.dp))
-        content()
     }
 }
 

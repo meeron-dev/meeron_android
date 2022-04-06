@@ -1,17 +1,22 @@
 package fourtune.meeron.presentation.navigator.type
 
+import android.content.Context
 import android.os.Bundle
 import androidx.navigation.NavType
 import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.Date
+import fourtune.meeron.presentation.di.TypeInjector
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import javax.inject.Inject
 
 
-class DateType : NavType<Date>(isNullableAllowed = false) {
-    private val json = Json {
-        ignoreUnknownKeys = true
-        prettyPrint = true
+class DateType constructor(context: Context) : NavType<Date>(isNullableAllowed = false) {
+    @Inject
+    lateinit var json: Json
+
+    init {
+        TypeInjector.invoke(context).inject(this)
     }
 
     override fun get(bundle: Bundle, key: String): Date? {

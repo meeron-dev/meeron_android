@@ -4,6 +4,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
@@ -12,10 +13,7 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import forutune.meeron.domain.Const
 import fourtune.meeron.presentation.navigator.ext.encodeJson
-import fourtune.meeron.presentation.navigator.type.DateType
-import fourtune.meeron.presentation.navigator.type.MeetingType
-import fourtune.meeron.presentation.navigator.type.TeamType
-import fourtune.meeron.presentation.navigator.type.WorkSpaceType
+import fourtune.meeron.presentation.navigator.type.*
 import fourtune.meeron.presentation.ui.DynamicLinkEntryScreen
 import fourtune.meeron.presentation.ui.NameInitScreen
 import fourtune.meeron.presentation.ui.OnBoardingScreen
@@ -93,6 +91,7 @@ sealed interface Navigate {
         object Agenda : Detail
         object ParticipantState : Detail
         object Team : Detail
+        object WorkspaceUser : Detail
     }
 
     private fun queries(argument: Array<out String>): String = argument.mapIndexed { index, arg ->
@@ -115,6 +114,8 @@ sealed interface Navigate {
 @Composable
 fun MeeronNavigator(startDestination: Navigate) {
     val navController = rememberAnimatedNavController()
+    val context = LocalContext.current
+
     AnimatedNavHost(
         navController = navController,
         startDestination = startDestination.route()
@@ -182,7 +183,7 @@ fun MeeronNavigator(startDestination: Navigate) {
 
         composable(
             route = Navigate.CreateWorkspace.Team.destination(Const.WorkSpace),
-            arguments = listOf(navArgument(Const.WorkSpace) { type = WorkSpaceType() })
+            arguments = listOf(navArgument(Const.WorkSpace) { type = WorkSpaceType(context) })
         ) {
             CreateTeamScreen(
                 onPrevious = { navController.navigateUp() },
@@ -229,7 +230,7 @@ fun MeeronNavigator(startDestination: Navigate) {
 
         composable(
             route = Navigate.Detail.Meeting.destination(Const.Meeting),
-            arguments = listOf(navArgument(Const.Meeting) { type = MeetingType() })
+            arguments = listOf(navArgument(Const.Meeting) { type = MeetingType(context) })
         ) {
             MeetingDetailScreen(
                 goToAgendaDetail = { navController.navigate(Navigate.Detail.Agenda.route(it.encodeJson())) },
@@ -243,14 +244,14 @@ fun MeeronNavigator(startDestination: Navigate) {
 
         composable(
             route = Navigate.Detail.ParticipantState.destination(Const.Meeting),
-            arguments = listOf(navArgument(Const.Meeting) { type = MeetingType() })
+            arguments = listOf(navArgument(Const.Meeting) { type = MeetingType(context) })
         ) {
             ParticipantStateScreen(onAction = { navController.popBackStack() })
         }
 
         composable(
             route = Navigate.Detail.Agenda.destination(Const.Meeting),
-            arguments = listOf(navArgument(Const.Meeting) { type = MeetingType() })
+            arguments = listOf(navArgument(Const.Meeting) { type = MeetingType(context) })
         ) {
             AgendaDetailScreen(onBack = { navController.navigateUp() })
         }
@@ -258,15 +259,28 @@ fun MeeronNavigator(startDestination: Navigate) {
         composable(
             route = Navigate.Detail.Team.destination(Const.Meeting, Const.TeamId),
             arguments = listOf(
-                navArgument(Const.Meeting) { type = MeetingType() },
-                navArgument(Const.TeamId) { type = NavType.LongType })
+                navArgument(Const.Meeting) { type = MeetingType(context) },
+                navArgument(Const.TeamId) { type = NavType.LongType }
+            )
         ) {
-            TeamDetailScreen { navController.navigateUp() }
+            TeamDetailScreen(
+                onBack = { navController.navigateUp() },
+                onClickWorkspaceUser = { navController.navigate(Navigate.Detail.WorkspaceUser.route()) }
+            )
+        }
+
+        composable(
+            route = Navigate.Detail.WorkspaceUser.destination(Const.WorkspaceUser),
+            arguments = listOf(
+                navArgument(Const.WorkspaceUser) { type = WorkspaceUserType(context) },
+            )
+        ) {
+
         }
 
         composable(
             route = Navigate.Team.Administer.destination(Const.Team),
-            arguments = listOf(navArgument(Const.Team) { type = TeamType() })
+            arguments = listOf(navArgument(Const.Team) { type = TeamType(context) })
         ) {
             AdministerTeamScreen(
                 onBack = { navController.popBackStack() },
@@ -362,7 +376,7 @@ fun MeeronNavigator(startDestination: Navigate) {
 
         composable(
             route = Navigate.ShowAll.destination(Const.Date),
-            arguments = listOf(element = navArgument(Const.Date) { type = DateType() })
+            arguments = listOf(element = navArgument(Const.Date) { type = DateType(context) })
         ) {
             ShowAllScreen(onAction = { navController.navigateUp() })
         }
@@ -376,7 +390,7 @@ fun MeeronNavigator(startDestination: Navigate) {
 
         composable(
             route = Navigate.CreateMeeting.Time.destination(Const.Meeting),
-            arguments = listOf(element = navArgument(Const.Meeting) { type = MeetingType() })
+            arguments = listOf(element = navArgument(Const.Meeting) { type = MeetingType(context) })
         ) {
             CreateMeetingTimeScreen(
                 onAction = { navController.popBackStack(route = Navigate.Main.route(), inclusive = false) },
@@ -388,7 +402,7 @@ fun MeeronNavigator(startDestination: Navigate) {
         composable(
             route = Navigate.CreateMeeting.Information.destination(Const.Meeting),
             arguments = listOf(
-                navArgument(Const.Meeting) { type = MeetingType() }
+                navArgument(Const.Meeting) { type = MeetingType(context) }
             )
         ) {
             CreateMeetingInfoScreen(
@@ -408,7 +422,7 @@ fun MeeronNavigator(startDestination: Navigate) {
         composable(
             route = Navigate.CreateMeeting.Agenda.destination(Const.Meeting),
             arguments = listOf(
-                navArgument(Const.Meeting) { type = MeetingType() },
+                navArgument(Const.Meeting) { type = MeetingType(context) },
             )
         ) {
             CreateAgendaScreen(
@@ -425,7 +439,7 @@ fun MeeronNavigator(startDestination: Navigate) {
         composable(
             route = Navigate.CreateMeeting.Participants.destination(Const.Meeting),
             arguments = listOf(
-                navArgument(Const.Meeting) { type = MeetingType() },
+                navArgument(Const.Meeting) { type = MeetingType(context) },
             )
         ) {
             CreateMeetingParticipantsScreen(
@@ -442,7 +456,7 @@ fun MeeronNavigator(startDestination: Navigate) {
         composable(
             route = Navigate.CreateMeeting.Complete.destination(Const.Meeting),
             arguments = listOf(
-                navArgument(Const.Meeting) { type = MeetingType() },
+                navArgument(Const.Meeting) { type = MeetingType(context) },
             )
         ) {
             CompleteMeetingScreen(

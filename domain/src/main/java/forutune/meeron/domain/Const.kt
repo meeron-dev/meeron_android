@@ -12,9 +12,9 @@ object Const {
     const val WorkspaceName = "workspace_name"
     const val WorkspaceId = "workspace_id"
     const val WorkSpace = "workspace"
+    const val WorkspaceUser = "workspace_user"
 
     const val Meeting = "meeting"
-    const val MeetingId = "meeting_id"
     const val CalendarType = "calendar_type"
 
     const val DynamicLinkDomainUrl = "https://ronmee.page.link"

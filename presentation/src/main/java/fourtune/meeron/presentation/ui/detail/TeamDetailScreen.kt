@@ -2,6 +2,7 @@ package fourtune.meeron.presentation.ui.detail
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -27,19 +28,27 @@ import fourtune.meeron.presentation.ui.common.UserItem
 import fourtune.meeron.presentation.ui.common.topbar.CenterTextTopAppBar
 
 @Composable
-fun TeamDetailScreen(viewModel: TeamDetailViewModel = hiltViewModel(), onBack: () -> Unit = {}) {
+fun TeamDetailScreen(
+    viewModel: TeamDetailViewModel = hiltViewModel(),
+    onBack: () -> Unit = {},
+    onClickWorkspaceUser: (WorkspaceUser) -> Unit = {}
+) {
     val uiState by viewModel.uiState.collectAsState()
     TeamDetailScreen(uiState, onBack)
 }
 
 @Composable
-private fun TeamDetailScreen(uiState: TeamDetailViewModel.UiState, onBack: () -> Unit = {}) {
+private fun TeamDetailScreen(
+    uiState: TeamDetailViewModel.UiState,
+    onBack: () -> Unit = {},
+    onClickWorkspaceUser: (WorkspaceUser) -> Unit = {}
+) {
     Scaffold(
         topBar = {
             TeamDetailTopBar(onBack)
         },
         content = {
-            TeamDetailContent(uiState)
+            TeamDetailContent(uiState, onClickWorkspaceUser)
         }
     )
 }
@@ -60,7 +69,10 @@ private fun TeamDetailTopBar(onBack: () -> Unit) {
 }
 
 @Composable
-private fun TeamDetailContent(uiState: TeamDetailViewModel.UiState) {
+private fun TeamDetailContent(
+    uiState: TeamDetailViewModel.UiState,
+    onClickWorkspaceUser: (WorkspaceUser) -> Unit = {}
+) {
     Column(modifier = Modifier.padding(horizontal = 20.dp)) {
         Spacer(modifier = Modifier.padding(12.dp))
         Text(
@@ -77,24 +89,52 @@ private fun TeamDetailContent(uiState: TeamDetailViewModel.UiState) {
         )
 
         Column {
-            StateItem("참여", R.drawable.ic_circle, uiState.members[MeetingState.Attends].orEmpty())
-            StateItem("불참", R.drawable.ic_x, uiState.members[MeetingState.Absents].orEmpty())
-            StateItem("미작성", R.drawable.ic_qeustion_mark, uiState.members[MeetingState.Unknowns].orEmpty())
+            StateItem(
+                "참여",
+                R.drawable.ic_circle,
+                uiState.members[MeetingState.Attends].orEmpty(),
+                onClickWorkspaceUser
+            )
+            StateItem(
+                "불참",
+                R.drawable.ic_x,
+                uiState.members[MeetingState.Absents].orEmpty(),
+                onClickWorkspaceUser
+            )
+            StateItem(
+                "미작성",
+                R.drawable.ic_qeustion_mark,
+                uiState.members[MeetingState.Unknowns].orEmpty(),
+                onClickWorkspaceUser
+            )
         }
 
     }
 }
 
 @Composable
-private fun StateItem(title: String, @DrawableRes drawable: Int, workspaceUsers: List<WorkspaceUser> = emptyList()) {
+private fun StateItem(
+    title: String,
+    @DrawableRes drawable: Int,
+    workspaceUsers: List<WorkspaceUser> = emptyList(),
+    onClickWorkspaceUser: (WorkspaceUser) -> Unit = {}
+) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.padding(20.dp))
         StateTitle(title, "${workspaceUsers.size}", drawable)
         if (workspaceUsers.isNotEmpty()) {
             Spacer(modifier = Modifier.padding(12.dp))
             LazyRow(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-                items(workspaceUsers) { user ->
-                    UserItem(user = user, selected = false, admin = false)
+                items(
+                    items = workspaceUsers,
+                    key = { it.workspaceUserId }
+                ) { user ->
+                    UserItem(
+                        modifier = Modifier.clickable { onClickWorkspaceUser(user) },
+                        user = user,
+                        selected = false,
+                        admin = false
+                    )
                 }
             }
         } else {

@@ -54,6 +54,11 @@ fun AgendaDetailScreen(viewModel: AgendaDetailViewModel = hiltViewModel(), onBac
     var selected by remember {
         mutableStateOf(0)
     }
+
+    LaunchedEffect(key1 = selected) {
+        viewModel.updateAgenda(selected)
+    }
+
     Scaffold(
         topBar = {
             AgendaDetailTopBar(
@@ -65,7 +70,8 @@ fun AgendaDetailScreen(viewModel: AgendaDetailViewModel = hiltViewModel(), onBac
         },
         content = {
             AgendaDetailContent(
-                agenda = uiState.meeting.agenda[selected],
+//                agenda = uiState.meeting.agenda[selected], todo 추후 meeting정보에 아젠다 담겨오면 이놈으로..
+                agenda = uiState.selectedAgenda,
                 openFile = { launcher.launch("*/*") }
             )
         }

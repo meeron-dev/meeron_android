@@ -76,7 +76,7 @@ fun CompleteMeetingScreen(
 private fun Content(meeting: Meeting, owners: String, agendaSize: Int, participants: Int) {
     Column {
         CreateTitle(title = R.string.complete_create)
-        Text(text = meeting.title, fontSize = 18.sp, color = colorResource(id = R.color.dark_gray))
+        Text(text = meeting.meetingName, fontSize = 18.sp, color = colorResource(id = R.color.dark_gray))
         Spacer(modifier = Modifier.padding(8.dp))
         TextGuideLineItem("회의 날짜", meeting.date.displayString())
         TextGuideLineItem("회의 성격", meeting.purpose)

@@ -141,7 +141,7 @@ private fun PagerItem(meeting: Meeting, onClick: () -> Unit) {
                     .padding(horizontal = 24.dp)
             ) {
                 Text(
-                    text = meeting.title,
+                    text = meeting.meetingName,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     color = colorResource(id = R.color.black),
@@ -182,7 +182,7 @@ private fun PagerItem(meeting: Meeting, onClick: () -> Unit) {
                     .fillMaxWidth()
                     .padding(vertical = 34.dp, horizontal = 24.dp)
             ) {
-                Text(text = meeting.mainAgenda.orEmpty(), fontSize = 14.sp)
+                Text(text = meeting.agenda.firstOrNull()?.name.orEmpty(), fontSize = 14.sp)
             }
         }
 

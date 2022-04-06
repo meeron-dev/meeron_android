@@ -26,7 +26,7 @@ class MeetingRepositoryImpl @Inject constructor(
             meetingDate = meeting.date.formattedString(),
             startTime = start.trim(),
             endTime = end.trim(),
-            meetingName = meeting.title,
+            meetingName = meeting.meetingName,
             meetingPurpose = meeting.purpose,
             operationTeamId = meeting.team.id,
             meetingAdminIds = meeting.ownerIds
@@ -66,18 +66,22 @@ class MeetingRepositoryImpl @Inject constructor(
 
     override suspend fun getTodayMeetings(workSpaceId: Long, workSpaceUserId: Long): List<Meeting> {
         return meetingApi.getTodayMeeting(workSpaceId, workSpaceUserId).meetings.map {
-            val (year, month, day) = it.meetingDate.split("/")
+            val (year, month, day) = it.meeting.startDate.split("/")
             Meeting(
-                meetingId = it.meetingId,
-                title = it.meetingName,
+                meetingId = it.meeting.meetingId,
+                startDate = it.meeting.startDate,
+                startTime = it.meeting.startTime,
+                meetingName = it.meeting.meetingName,
+                purpose = it.meeting.purpose,
+                place = it.meeting.place,
                 date = Date(year.toInt(), month.toInt(), day.toInt()),
-                time = "${it.startTime} ~ ${it.endTime}",
-                team = Team(it.operationTeamId, it.operationTeamName),
-                mainAgendaId = it.mainAgendaId,
-                mainAgenda = it.mainAgenda,
-                attends = it.attends,
-                absents = it.absents,
-                unknowns = it.unknowns,
+                time = "${it.meeting.startTime} ~ ${it.meeting.endTime}",
+                team = it.team,
+                ownerIds = it.admins.map { it.workspaceUserId },
+                agenda = it.agendas.map { Agenda(it.agendaOrder, it.agendaName) },
+                attends = it.attendCount.attend,
+                absents = it.attendCount.absent,
+                unknowns = it.attendCount.unknown,
             )
         }
     }
@@ -108,7 +112,7 @@ class MeetingRepositoryImpl @Inject constructor(
                 with(resp) {
                     val meeting = Meeting(
                         meetingId = id,
-                        title = meetingName,
+                        meetingName = meetingName,
                         time = "$startTime ~ $endTime",
                     )
                     val workSpaceInfo = if (workspaceId != null && workspaceName != null) WorkSpaceInfo(

@@ -16,7 +16,7 @@ data class MeetingEntity(
         fun from(meeting: Meeting) =
             with(meeting) {
                 MeetingEntity(
-                    title = title,
+                    title = meetingName,
                     date = date.displayString(),
                     time = time,
                     purpose = purpose,

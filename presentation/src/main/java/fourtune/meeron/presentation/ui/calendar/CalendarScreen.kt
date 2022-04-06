@@ -316,7 +316,7 @@ fun CalendarDetail(
         )
         Column(modifier = Modifier.padding(horizontal = 20.dp)) {
             Text(
-                text = meeting.title,
+                text = meeting.meetingName,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = colorResource(id = R.color.dark_primary)

@@ -8,6 +8,7 @@ import fourtune.merron.data.model.dto.response.*
 import fourtune.merron.data.model.dto.response.meeting.AgendaResponse
 import fourtune.merron.data.model.dto.response.meeting.MeetingIdResponse
 import fourtune.merron.data.model.dto.response.meeting.MeetingsResponse
+import fourtune.merron.data.model.dto.response.meeting.TodayMeeting
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.*
@@ -40,7 +41,7 @@ interface MeetingApi {
     suspend fun getTodayMeeting(
         @Query("workspaceId") workspaceId: Long,
         @Query("workspaceUserId") workspaceUserId: Long,
-    ): MeetingsResponse
+    ): TodayMeeting
 
     @GET("/api/meetings/years")
     suspend fun getYearMeetingCount(

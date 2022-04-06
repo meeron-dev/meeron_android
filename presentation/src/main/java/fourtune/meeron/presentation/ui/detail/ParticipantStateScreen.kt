@@ -77,7 +77,7 @@ private fun StateContent(uiState: ParticipantStateViewModel.UiState, onClickButt
         Column(modifier = Modifier.padding()) {
             Text(text = uiState.workspaceName, fontSize = 15.sp, color = colorResource(id = R.color.dark_gray))
             Spacer(modifier = Modifier.padding(7.dp))
-            Text(text = uiState.meeting.title, fontSize = 17.sp, color = colorResource(id = R.color.dark_gray))
+            Text(text = uiState.meeting.meetingName, fontSize = 17.sp, color = colorResource(id = R.color.dark_gray))
             Spacer(modifier = Modifier.padding(25.dp))
             Text(
                 text = "회의 참여 여부",
@@ -113,7 +113,7 @@ private fun StateContent(uiState: ParticipantStateViewModel.UiState, onClickButt
 private fun Preview() {
     ParticipantStateScreen(
         ParticipantStateViewModel.UiState(
-            Meeting(title = "회의 제목", purpose = "목적은 존나깁니다~~~"),
+            Meeting(meetingName = "회의 제목", purpose = "목적은 존나깁니다~~~"),
             "워크스페이스 이름"
         )
     )

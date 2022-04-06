@@ -91,7 +91,7 @@ class CreateMeetingInfoViewModel @Inject constructor(
             val fixedParticipants = getWorkspaceUserUseCase(*ownerIds)
             onCreate(
                 uiState().value.meeting.copy(
-                    title = listState[Info.Title].orEmpty(),
+                    meetingName = listState[Info.Title].orEmpty(),
                     purpose = listState[Info.Purpose].orEmpty(),
                     participants = fixedParticipants
                 )

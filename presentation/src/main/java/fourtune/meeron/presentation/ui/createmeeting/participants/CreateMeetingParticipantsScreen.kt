@@ -146,7 +146,7 @@ private fun CreateMeetingParticipantsScreen(
                     selectedTime = meeting.time,
                     selectedDate = meeting.date.displayString(),
                     extraContents = {
-                        CreateText(text = meeting.title)
+                        CreateText(text = meeting.meetingName)
                     }
                 )
                 Spacer(modifier = Modifier.padding(10.dp))

@@ -78,7 +78,7 @@ fun MeetingDetailTopBar(
             }
             Spacer(modifier = Modifier.padding(7.dp))
             Text(
-                text = meeting.title,
+                text = meeting.meetingName,
                 fontSize = 17.sp,
                 color = colorResource(id = R.color.black),
                 fontWeight = FontWeight.Bold
@@ -245,7 +245,7 @@ private fun Preview1() {
     MeetingDetailTopBar(
         workspaceName = "워크스페이스 이름입니다.",
         meeting = Meeting(
-            title = "미팅 타이틀",
+            meetingName = "미팅 타이틀",
             date = Date(2022, 4, 4),
             time = "9:00AM~1:00PM",
             purpose = "목적은 이것입니다.",
@@ -262,7 +262,7 @@ private fun Preview2() {
     MeetingDetailContent(
         MeetingDetailViewModel.UiState(
             meeting = Meeting(
-                title = "미팅 타이틀",
+                meetingName = "미팅 타이틀",
                 date = Date(2022, 4, 4),
                 time = "9:00AM~1:00PM",
                 purpose = "목적은 이것입니다.",

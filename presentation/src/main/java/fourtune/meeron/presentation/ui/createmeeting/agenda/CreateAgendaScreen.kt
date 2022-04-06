@@ -140,7 +140,7 @@ private fun CreateAgendaScreen(
                     title = R.string.info_title,
                     selectedDate = uiState.meeting.date.displayString(),
                     selectedTime = uiState.meeting.time,
-                    extraContents = { CreateText(text = uiState.meeting.title) }
+                    extraContents = { CreateText(text = uiState.meeting.meetingName) }
                 )
                 Spacer(modifier = Modifier.padding(15.dp))
                 AgendaBody(

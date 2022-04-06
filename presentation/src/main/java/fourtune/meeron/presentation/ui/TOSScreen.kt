@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import forutune.meeron.domain.Const
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.MeeronSingleButton
 import fourtune.meeron.presentation.ui.common.text.MeeronLogoText
@@ -84,7 +85,7 @@ private fun TOSOptions(
             context.startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse("https://ryuyxxn.notion.site/29115494f9324509ba21416bbb1c7ef1")
+                    Uri.parse(Const.TermsOfUse)
                 )
             )
         }
@@ -100,7 +101,7 @@ private fun TOSOptions(
             context.startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse("https://ryuyxxn.notion.site/502b6e5487664faab875f7b4e5383a7b")
+                    Uri.parse(Const.PrivacyPolicy)
                 )
             )
         }

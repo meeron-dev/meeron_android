@@ -1,5 +1,7 @@
 package fourtune.meeron.presentation.ui.home.my
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -22,6 +25,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import forutune.meeron.domain.Const
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.DetailItem
 import fourtune.meeron.presentation.ui.common.ProfileImage
@@ -31,8 +35,6 @@ sealed interface MyMeeronEvent {
     object EditWorkspace : MyMeeronEvent
     object EditAccount : MyMeeronEvent
     object InquiryOrHomepage : MyMeeronEvent
-    object TermsOfUse : MyMeeronEvent
-    object PrivacyPolicy : MyMeeronEvent
 }
 
 @Composable
@@ -94,6 +96,7 @@ private fun ProfileItem(name: String) {
 
 @Composable
 private fun ActionItems(event: (MyMeeronEvent) -> Unit = {}) {
+    val context = LocalContext.current
     LazyColumn {
         item {
             Divider(thickness = 20.dp, color = colorResource(id = R.color.topbar_color))
@@ -108,8 +111,22 @@ private fun ActionItems(event: (MyMeeronEvent) -> Unit = {}) {
         }
         item {
             DetailItem(title = "문의 및 홈페이지", onClickDetail = { event(MyMeeronEvent.InquiryOrHomepage) })
-            DetailItem(title = "이용약관", onClickDetail = { event(MyMeeronEvent.TermsOfUse) })
-            DetailItem(title = "개인정보 처리방침", onClickDetail = { event(MyMeeronEvent.PrivacyPolicy) })
+            DetailItem(title = "이용약관", onClickDetail = {
+                context.startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(Const.TermsOfUse)
+                    )
+                )
+            })
+            DetailItem(title = "개인정보 처리방침", onClickDetail = {
+                context.startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(Const.PrivacyPolicy)
+                    )
+                )
+            })
         }
     }
 }

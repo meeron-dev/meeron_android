@@ -1,5 +1,6 @@
 package fourtune.merron.data.source.remote
 
+import forutune.meeron.domain.model.AgendaInfo
 import fourtune.merron.data.model.dto.request.AgendaRequest
 import fourtune.merron.data.model.dto.request.ChangeMeetingStateRequest
 import fourtune.merron.data.model.dto.request.MeetingRequest
@@ -87,4 +88,7 @@ interface MeetingApi {
         @Path("meetingId") meetingId: Long,
         @Path("teamId") teamId: Long
     ): TeamMemberInMeetingResponse
+
+    @GET("api/meetings/{meetingId}/agendas/count")
+    suspend fun getAgendaInfo(@Path("meetingId") meetingId: Long): AgendaInfo
 }

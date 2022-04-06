@@ -9,3 +9,10 @@ data class Agenda(
     val issues: List<Issue> = emptyList(),
     val fileInfos: List<FileInfo> = emptyList()
 ) : Serializable
+
+@kotlinx.serialization.Serializable
+data class AgendaInfo(
+    val agendas: Int = 0,
+    val checks: Int = 0,
+    val files: Int = 0
+) : Serializable

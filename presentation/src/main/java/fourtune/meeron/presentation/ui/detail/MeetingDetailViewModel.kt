@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
+import forutune.meeron.domain.model.AgendaInfo
 import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.model.TeamState
 import forutune.meeron.domain.model.WorkSpaceInfo
+import forutune.meeron.domain.usecase.meeting.agenda.GetAgendaInfoUseCase
 import forutune.meeron.domain.usecase.meeting.agenda.GetAgendaUseCase
 import forutune.meeron.domain.usecase.meeting.team.GetTeamStatesUseCase
 import forutune.meeron.domain.usecase.workspace.GetCurrentWorkspaceInfoUseCase
@@ -24,6 +26,7 @@ class MeetingDetailViewModel @Inject constructor(
     private val getTeamStates: GetTeamStatesUseCase,
     private val getAgenda: GetAgendaUseCase,
     private val getCurrentWorkspaceInfo: GetCurrentWorkspaceInfoUseCase,
+    private val getAgendaInfo: GetAgendaInfoUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState(requireNotNull(savedStateHandle.get<Meeting>(Const.Meeting))))
@@ -37,7 +40,8 @@ class MeetingDetailViewModel @Inject constructor(
                 it.copy(
                     ownerNames = ownersName.joinToString(),
                     teamStates = getTeamStates(it.meeting.meetingId),
-                    workspaceInfo = getCurrentWorkspaceInfo()
+                    workspaceInfo = getCurrentWorkspaceInfo(),
+                    agendaInfo = getAgendaInfo(it.meeting.meetingId)
                 )
             }
         }
@@ -47,6 +51,7 @@ class MeetingDetailViewModel @Inject constructor(
         val meeting: Meeting,
         val ownerNames: String = "",
         val teamStates: List<TeamState> = emptyList(),
-        val workspaceInfo: WorkSpaceInfo = WorkSpaceInfo()
+        val workspaceInfo: WorkSpaceInfo = WorkSpaceInfo(),
+        val agendaInfo: AgendaInfo = AgendaInfo()
     )
 }

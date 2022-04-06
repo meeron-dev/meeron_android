@@ -155,4 +155,8 @@ class MeetingRepositoryImpl @Inject constructor(
             put(MeetingState.Unknown, teamMembers.unknowns)
         }
     }
+
+    override suspend fun getAgendaInfo(meetingId: Long): AgendaInfo {
+        return meetingApi.getAgendaInfo(meetingId)
+    }
 }

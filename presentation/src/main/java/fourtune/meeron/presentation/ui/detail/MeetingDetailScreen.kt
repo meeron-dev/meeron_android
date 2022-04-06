@@ -140,7 +140,7 @@ fun MeetingDetailContent(
     onClickTeam: (teamId: Long) -> Unit = {}
 ) {
     Column {
-        Agenda(onClickAgenda, uiState.meeting.agenda)
+        Agenda(onClickAgenda, uiState.agendaInfo)
         Divider(color = colorResource(id = R.color.topbar_color), thickness = 3.dp)
         Column(
             modifier = Modifier.fillMaxWidth()
@@ -154,25 +154,20 @@ fun MeetingDetailContent(
 @Composable
 private fun Agenda(
     onClickAgenda: () -> Unit,
-    agendas: List<Agenda>
+    agendaInfo: AgendaInfo
 ) {
-    val enable = agendas.isNotEmpty()
-    AgendaDetailItem(onClickAgenda, agendas, enable)
-}
-
-@Composable
-private fun AgendaDetailItem(onClickAgenda: () -> Unit, agenda: List<Agenda>, enable: Boolean) {
-    DetailItem(title = "아젠다", enable = enable, onClickDetail = onClickAgenda) {
+    val enable1 = agendaInfo.agendas != 0
+    DetailItem(title = "아젠다", enable = enable1, onClickDetail = onClickAgenda) {
         Row {
             Image(
-                painter = painterResource(id = if (enable) R.drawable.ic_meeting_clip else R.drawable.ic_meeting_clip_disable),
+                painter = painterResource(id = if (enable1) R.drawable.ic_meeting_clip else R.drawable.ic_meeting_clip_disable),
                 contentDescription = null,
             )
             Spacer(modifier = Modifier.padding(2.dp))
             Text(
-                text = if (enable) "${agenda.sumOf { it.fileInfos.size }}" else "0",
+                text = "${agendaInfo.files}",
                 fontSize = 12.sp,
-                color = colorResource(id = if (enable) R.color.dark_gray else R.color.gray)
+                color = colorResource(id = if (enable1) R.color.dark_gray else R.color.gray)
             )
         }
     }
@@ -244,8 +239,8 @@ private fun Preview1() {
             time = "9:00AM~1:00PM",
             purpose = "목적은 이것입니다.",
             agenda = listOf(
-                Agenda(1, "agenda1", issues = emptyList(), fileInfos = listOf(FileInfo("", "")))
-            )
+                Agenda(order = 1, name = "agenda1", issues = emptyList(), fileInfos = listOf(FileInfo("", "")))
+            ),
         )
     )
 }

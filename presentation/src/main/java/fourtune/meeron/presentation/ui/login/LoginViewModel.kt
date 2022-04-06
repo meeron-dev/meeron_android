@@ -13,6 +13,7 @@ import forutune.meeron.domain.usecase.IsFirstVisitUserUseCase
 import forutune.meeron.domain.usecase.login.LoginUseCase
 import forutune.meeron.domain.usecase.login.LogoutUseCase
 import forutune.meeron.domain.usecase.workspace.GetUserWorkspacesUseCase
+import forutune.meeron.domain.usecase.workspace.SetCurrentWorkspaceInfoUseCase
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -35,7 +36,8 @@ class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val logoutUseCase: LogoutUseCase,
     private val getUserWorkspaces: GetUserWorkspacesUseCase,
-    private val isFirstVisitUser: IsFirstVisitUserUseCase
+    private val isFirstVisitUser: IsFirstVisitUserUseCase,
+    private val setCurrentWorkspaceInfo: SetCurrentWorkspaceInfoUseCase
 ) : ViewModel() {
     private val _loginSuccess = MutableSharedFlow<Event>()
     fun loginSuccess() = _loginSuccess.asSharedFlow()
@@ -92,9 +94,11 @@ class LoginViewModel @Inject constructor(
     private fun redirectLoginEvent() {
         viewModelScope.launch {
             val isFirstVisit = isFirstVisitUser()
-            val event = if (getUserWorkspaces().isEmpty()) {
+            val userWorkspaces = getUserWorkspaces()
+            val event = if (userWorkspaces.isEmpty()) {
                 Event.GoToSignIn
             } else {
+                setCurrentWorkspaceInfo(userWorkspaces)
                 if (isFirstVisit) Event.ShowOnBoarding
                 else Event.GoToHome
 

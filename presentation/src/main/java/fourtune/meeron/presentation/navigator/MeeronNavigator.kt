@@ -29,6 +29,7 @@ import fourtune.meeron.presentation.ui.createmeeting.time.CreateMeetingTimeScree
 import fourtune.meeron.presentation.ui.createworkspace.*
 import fourtune.meeron.presentation.ui.detail.*
 import fourtune.meeron.presentation.ui.home.MainScreen
+import fourtune.meeron.presentation.ui.home.my.EditAccountScreen
 import fourtune.meeron.presentation.ui.home.my.EditWorkspaceScreen
 import fourtune.meeron.presentation.ui.home.my.MyMeeronEvent
 import fourtune.meeron.presentation.ui.home.team.add.AddTeamScreen
@@ -233,10 +234,13 @@ fun MeeronNavigator(startDestination: Navigate) {
                 goToMeetingDetail = { navController.navigate(Navigate.Detail.Meeting.route(it.encodeJson())) },
                 myMeeronEvent = { event ->
                     when (event) {
-                        MyMeeronEvent.EditAccount -> {}
-                        MyMeeronEvent.EditProfile -> TODO()
+                        MyMeeronEvent.EditAccount -> navController.navigate(Navigate.MyMeeron.EditAccount.route())
+                        MyMeeronEvent.EditProfile -> {
+
+                        }
                         MyMeeronEvent.EditWorkspace -> navController.navigate(Navigate.MyMeeron.EditWorkspace.route())
-                        MyMeeronEvent.InquiryOrHomepage -> TODO()
+                        MyMeeronEvent.InquiryOrHomepage -> {
+                        }
                     }
                 }
             )
@@ -361,6 +365,16 @@ fun MeeronNavigator(startDestination: Navigate) {
             route = Navigate.MyMeeron.EditWorkspace.destination()
         ) {
             EditWorkspaceScreen(
+                goToMyMeeron = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
+        composable(
+            route = Navigate.MyMeeron.EditAccount.destination()
+        ) {
+            EditAccountScreen(
                 goToMyMeeron = {
                     navController.navigateUp()
                 }

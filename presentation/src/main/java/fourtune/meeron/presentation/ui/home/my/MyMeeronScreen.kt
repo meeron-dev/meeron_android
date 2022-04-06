@@ -26,21 +26,47 @@ import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.DetailItem
 import fourtune.meeron.presentation.ui.common.ProfileImage
 
+internal sealed interface MyMeeronEvent {
+    object EditProfile : MyMeeronEvent
+    object EditWorkspace : MyMeeronEvent
+    object EditAccount : MyMeeronEvent
+    object InquiryOrHomepage : MyMeeronEvent
+    object TermsOfUse : MyMeeronEvent
+    object PrivacyPolicy : MyMeeronEvent
+
+}
 @Composable
 fun MyMeeronScreen(viewModel: MyMeeronViewModel = hiltViewModel(), bottomBarSize: Dp = 90.dp) {
     val uiState by viewModel.uiState.collectAsState()
-    MyMeeronScreen(uiState = uiState, bottomBarSize)
+    MyMeeronScreen(
+        uiState = uiState,
+        bottomBarSize = bottomBarSize,
+        event = { event ->
+            when (event) {
+                MyMeeronEvent.EditAccount -> {}
+                MyMeeronEvent.EditProfile -> {}
+                MyMeeronEvent.EditWorkspace -> {}
+                MyMeeronEvent.InquiryOrHomepage -> {}
+                MyMeeronEvent.PrivacyPolicy -> {}
+                MyMeeronEvent.TermsOfUse -> {}
+            }
+        }
+    )
 }
 
 @Composable
-private fun MyMeeronScreen(uiState: MyMeeronViewModel.UiState, bottomBarSize: Dp = 90.dp) {
+private fun MyMeeronScreen(
+    uiState: MyMeeronViewModel.UiState,
+    bottomBarSize: Dp = 90.dp,
+    event: (MyMeeronEvent) -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .padding(top = 40.dp, bottom = bottomBarSize)
             .fillMaxWidth()
     ) {
         ProfileItem(uiState.myName)
-        ActionItems()
+        ActionItems(event)
     }
 }
 
@@ -72,23 +98,23 @@ private fun ProfileItem(name: String) {
 }
 
 @Composable
-private fun ActionItems() {
+private fun ActionItems(event: (MyMeeronEvent) -> Unit = {}) {
     LazyColumn {
         item {
             Divider(thickness = 20.dp, color = colorResource(id = R.color.topbar_color))
         }
         item {
-            DetailItem(title = "프로필 관리")
-            DetailItem(title = "워크 스페이스 관리")
-            DetailItem(title = "계정 관리")
+            DetailItem(title = "프로필 관리", onClickDetail = { event(MyMeeronEvent.EditProfile) })
+            DetailItem(title = "워크 스페이스 관리", onClickDetail = { event(MyMeeronEvent.EditWorkspace) })
+            DetailItem(title = "계정 관리", onClickDetail = { event(MyMeeronEvent.EditAccount) })
         }
         item {
             Divider(thickness = 20.dp, color = colorResource(id = R.color.topbar_color))
         }
         item {
-            DetailItem(title = "문의 및 홈페이지")
-            DetailItem(title = "이용약관")
-            DetailItem(title = "개인정보 처리방침")
+            DetailItem(title = "문의 및 홈페이지", onClickDetail = { event(MyMeeronEvent.InquiryOrHomepage) })
+            DetailItem(title = "이용약관", onClickDetail = { event(MyMeeronEvent.TermsOfUse) })
+            DetailItem(title = "개인정보 처리방침", onClickDetail = { event(MyMeeronEvent.PrivacyPolicy) })
         }
     }
 }

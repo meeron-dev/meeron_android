@@ -47,7 +47,7 @@ fun MainScreen(
     createWorkspace: () -> Unit = {},
     goToAddTeamMember: () -> Unit = {},
     administerTeam: (team: TeamViewModel.TeamState.Normal) -> Unit = {},
-    goToMeetingDetail: (meeting: Meeting) -> Unit = {}
+    goToMeetingDetail: (meeting: Meeting) -> Unit = {},
 ) {
 
     val homeUiState by homeViewModel.uiState.collectAsState()

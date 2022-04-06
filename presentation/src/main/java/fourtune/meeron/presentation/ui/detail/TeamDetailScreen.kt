@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import forutune.meeron.domain.model.MeetingState
+import forutune.meeron.domain.model.Team
 import forutune.meeron.domain.model.WorkspaceUser
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.UserItem
@@ -31,10 +32,10 @@ import fourtune.meeron.presentation.ui.common.topbar.CenterTextTopAppBar
 fun TeamDetailScreen(
     viewModel: TeamDetailViewModel = hiltViewModel(),
     onBack: () -> Unit = {},
-    onClickWorkspaceUser: (WorkspaceUser) -> Unit = {}
+    onClickWorkspaceUser: (WorkspaceUser, Team) -> Unit = { _, _ -> }
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    TeamDetailScreen(uiState, onBack)
+    TeamDetailScreen(uiState, onBack) { onClickWorkspaceUser(it, uiState.team) }
 }
 
 @Composable
@@ -76,7 +77,7 @@ private fun TeamDetailContent(
     Column(modifier = Modifier.padding(horizontal = 20.dp)) {
         Spacer(modifier = Modifier.padding(12.dp))
         Text(
-            text = uiState.teamName,
+            text = uiState.team.name,
             fontSize = 22.sp,
             color = colorResource(id = R.color.black),
             fontWeight = FontWeight.Medium
@@ -176,7 +177,7 @@ private fun StateTitle(title: String, count: String, @DrawableRes drawable: Int)
 private fun Preview() {
     TeamDetailScreen(
         uiState = TeamDetailViewModel.UiState(
-            teamName = "팀 이름입니다.",
+            team = Team(name = "팀 이름입니다."),
         )
     )
 }

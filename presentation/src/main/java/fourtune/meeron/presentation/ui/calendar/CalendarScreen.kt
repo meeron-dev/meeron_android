@@ -35,7 +35,7 @@ import forutune.meeron.domain.model.WorkSpaceInfo
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.calendar.decorator.EventDecorator
 import fourtune.meeron.presentation.ui.calendar.decorator.SelectionDecorator
-import fourtune.meeron.presentation.ui.common.CircleBackgroundText
+import fourtune.meeron.presentation.ui.common.text.CircleBackgroundText
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow

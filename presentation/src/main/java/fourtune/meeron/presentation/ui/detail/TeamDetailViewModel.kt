@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
 import forutune.meeron.domain.model.Meeting
 import forutune.meeron.domain.model.MeetingState
+import forutune.meeron.domain.model.Team
 import forutune.meeron.domain.model.WorkspaceUser
 import forutune.meeron.domain.usecase.meeting.team.GetTeamMemberInMeetingUseCase
 import forutune.meeron.domain.usecase.team.GetTeamUseCase
@@ -34,7 +35,7 @@ class TeamDetailViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    teamName = getTeamUseCase(teamId).name,
+                    team = getTeamUseCase(teamId),
                     members = getTeamMemberInMeeting.invoke(
                         meetingId = uiState.value.meeting.meetingId,
                         teamId = teamId
@@ -47,7 +48,7 @@ class TeamDetailViewModel @Inject constructor(
 
     data class UiState(
         val meeting: Meeting = Meeting(),
-        val teamName: String = "",
+        val team: Team = Team(),
         val members: Map<MeetingState, List<WorkspaceUser>> = emptyMap()
     )
 }

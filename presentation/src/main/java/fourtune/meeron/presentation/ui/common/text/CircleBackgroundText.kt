@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.common
+package fourtune.meeron.presentation.ui.common.text
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

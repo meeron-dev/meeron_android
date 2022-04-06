@@ -19,8 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fourtune.meeron.presentation.R
-import fourtune.meeron.presentation.ui.common.MeeronLogoText
 import fourtune.meeron.presentation.ui.common.MeeronSingleButton
+import fourtune.meeron.presentation.ui.common.text.MeeronLogoText
 
 @Composable
 fun TOSScreen(onNext: () -> Unit = {}) {

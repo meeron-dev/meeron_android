@@ -27,10 +27,7 @@ import fourtune.meeron.presentation.ui.createmeeting.information.CreateMeetingIn
 import fourtune.meeron.presentation.ui.createmeeting.participants.CreateMeetingParticipantsScreen
 import fourtune.meeron.presentation.ui.createmeeting.time.CreateMeetingTimeScreen
 import fourtune.meeron.presentation.ui.createworkspace.*
-import fourtune.meeron.presentation.ui.detail.AgendaDetailScreen
-import fourtune.meeron.presentation.ui.detail.MeetingDetailScreen
-import fourtune.meeron.presentation.ui.detail.ParticipantStateScreen
-import fourtune.meeron.presentation.ui.detail.TeamDetailScreen
+import fourtune.meeron.presentation.ui.detail.*
 import fourtune.meeron.presentation.ui.home.MainScreen
 import fourtune.meeron.presentation.ui.login.LoginScreen
 import fourtune.meeron.presentation.ui.team.add.AddTeamScreen
@@ -265,17 +262,25 @@ fun MeeronNavigator(startDestination: Navigate) {
         ) {
             TeamDetailScreen(
                 onBack = { navController.navigateUp() },
-                onClickWorkspaceUser = { navController.navigate(Navigate.Detail.WorkspaceUser.route()) }
+                onClickWorkspaceUser = { workspaceUser, team ->
+                    navController.navigate(
+                        Navigate.Detail.WorkspaceUser.route(
+                            workspaceUser.encodeJson(),
+                            team.encodeJson()
+                        )
+                    )
+                }
             )
         }
 
         composable(
-            route = Navigate.Detail.WorkspaceUser.destination(Const.WorkspaceUser),
+            route = Navigate.Detail.WorkspaceUser.destination(Const.WorkspaceUser, Const.Team),
             arguments = listOf(
                 navArgument(Const.WorkspaceUser) { type = WorkspaceUserType(context) },
+                navArgument(Const.Team) { type = TeamType(context) }
             )
         ) {
-
+            WorkspaceUserDetailScreen()
         }
 
         composable(

@@ -3,36 +3,30 @@ package fourtune.meeron.presentation.ui.createworkspace
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.rememberImagePainter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
 import forutune.meeron.domain.model.WorkSpace
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
+import fourtune.meeron.presentation.ui.common.ProfileImage
 import fourtune.meeron.presentation.ui.common.action.ContentFactory
 import fourtune.meeron.presentation.ui.common.action.MeeronActionBox
 import fourtune.meeron.presentation.ui.common.topbar.CenterTextTopAppBar
@@ -123,33 +117,6 @@ fun CreateWorkspaceProfileScreen(
             }
         }
     )
-}
-
-@Composable
-private fun ProfileImage(image: String, onClick: () -> Unit = {}) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center
-    ) {
-        Box(
-            modifier = Modifier
-                .size(170.dp)
-                .clip(CircleShape)
-                .background(color = Color(0xfff2f5f9)),
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                painter = rememberImagePainter(data = image, builder = {
-                    placeholder(R.drawable.ic_profile_non)
-                    error(R.drawable.ic_profile_non)
-                }),
-                contentDescription = null,
-                contentScale = ContentScale.Fit
-            )
-        }
-    }
 }
 
 @Preview

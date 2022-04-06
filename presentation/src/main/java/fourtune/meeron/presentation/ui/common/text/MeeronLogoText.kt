@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.common
+package fourtune.meeron.presentation.ui.common.text
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
@@ -10,6 +10,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fourtune.meeron.presentation.R
@@ -30,4 +31,10 @@ fun MeeronLogoText(text: String) {
         fontSize = 24.sp,
         color = colorResource(id = R.color.black),
     )
+}
+
+@Preview
+@Composable
+private fun Preview() {
+    MeeronLogoText(text = "logotext")
 }

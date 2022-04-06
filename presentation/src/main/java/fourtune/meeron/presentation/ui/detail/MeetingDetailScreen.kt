@@ -157,17 +157,11 @@ private fun Agenda(
     agendas: List<Agenda>
 ) {
     val enable = agendas.isNotEmpty()
-    if (enable) {
-        agendas.forEach { agenda ->
-            AgendaDetailItem(onClickAgenda, agenda, enable)
-        }
-    } else {
-        AgendaDetailItem(onClickAgenda = onClickAgenda, agenda = Agenda(), enable = enable)
-    }
+    AgendaDetailItem(onClickAgenda, agendas, enable)
 }
 
 @Composable
-private fun AgendaDetailItem(onClickAgenda: () -> Unit, agenda: Agenda, enable: Boolean) {
+private fun AgendaDetailItem(onClickAgenda: () -> Unit, agenda: List<Agenda>, enable: Boolean) {
     DetailItem(title = "아젠다", enable = enable, onClickDetail = onClickAgenda) {
         Row {
             Image(
@@ -176,7 +170,7 @@ private fun AgendaDetailItem(onClickAgenda: () -> Unit, agenda: Agenda, enable: 
             )
             Spacer(modifier = Modifier.padding(2.dp))
             Text(
-                text = if (enable) "${agenda.fileInfos.size}" else "0",
+                text = if (enable) "${agenda.sumOf { it.fileInfos.size }}" else "0",
                 fontSize = 12.sp,
                 color = colorResource(id = if (enable) R.color.dark_gray else R.color.gray)
             )

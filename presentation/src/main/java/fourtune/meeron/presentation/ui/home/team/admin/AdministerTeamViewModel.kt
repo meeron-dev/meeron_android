@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.team.admin
+package fourtune.meeron.presentation.ui.home.team.admin
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

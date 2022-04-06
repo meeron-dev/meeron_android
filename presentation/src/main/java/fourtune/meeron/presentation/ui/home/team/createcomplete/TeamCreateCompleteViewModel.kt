@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.team.createcomplete
+package fourtune.meeron.presentation.ui.home.team.createcomplete
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

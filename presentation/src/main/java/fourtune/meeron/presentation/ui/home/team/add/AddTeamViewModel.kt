@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.team.add
+package fourtune.meeron.presentation.ui.home.team.add
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

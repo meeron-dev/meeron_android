@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.team.admin
+package fourtune.meeron.presentation.ui.home.team.admin
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

@@ -24,9 +24,10 @@ import androidx.lifecycle.whenStarted
 import com.google.accompanist.pager.ExperimentalPagerApi
 import forutune.meeron.domain.model.Meeting
 import fourtune.meeron.presentation.R
-import fourtune.meeron.presentation.ui.team.TeamScreen
-import fourtune.meeron.presentation.ui.team.TeamTopBar
-import fourtune.meeron.presentation.ui.team.TeamViewModel
+import fourtune.meeron.presentation.ui.home.my.MyMeeronScreen
+import fourtune.meeron.presentation.ui.home.team.TeamScreen
+import fourtune.meeron.presentation.ui.home.team.TeamTopBar
+import fourtune.meeron.presentation.ui.home.team.TeamViewModel
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
 sealed class BottomNavi(@DrawableRes val image: Int, @StringRes val text: Int) : java.io.Serializable {
@@ -69,7 +70,9 @@ fun MainScreen(
         topBar = {
             when (content) {
                 BottomNavi.Home -> HomeTopBar(scaffoldState, homeUiState, addMeeting)
-                BottomNavi.My -> {}
+                BottomNavi.My -> {
+
+                }
                 BottomNavi.Team -> TeamTopBar(
                     teams = teamUiState.teams,
                     selectedTeam = teamUiState.selectedTeam,
@@ -113,7 +116,11 @@ fun MainScreen(
                 openCalendar = openCalendar,
                 onClickMeeting = goToMeetingDetail
             )
-            BottomNavi.My -> {}
+            BottomNavi.My -> {
+                MyMeeronScreen(
+
+                )
+            }
             BottomNavi.Team -> TeamScreen(
                 viewModel = teamViewModel,
                 administerTeam = {

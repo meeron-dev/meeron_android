@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.team.picker
+package fourtune.meeron.presentation.ui.home.team.picker
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

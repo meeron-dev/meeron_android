@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui.team.createcomplete
+package fourtune.meeron.presentation.ui.home.team.createcomplete
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold

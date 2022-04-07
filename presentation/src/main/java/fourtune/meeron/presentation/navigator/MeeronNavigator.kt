@@ -259,9 +259,8 @@ fun MeeronNavigator(startDestination: String) {
 
         composable(route = Navigate.OnBoarding.route()) {
             OnBoardingScreen(goToHome = {
-                navController.navigate(Navigate.Main.route()) {
-                    popUpTo(Navigate.Login.route()) { inclusive = true }
-                }
+                navController.popBackStack()
+                navController.navigate(Navigate.Main.route())
             })
         }
 

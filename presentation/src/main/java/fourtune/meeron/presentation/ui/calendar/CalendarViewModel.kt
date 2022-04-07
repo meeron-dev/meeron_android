@@ -48,7 +48,8 @@ class CalendarViewModel @Inject constructor(
                         calendarType,
                         currentDay
                     ),
-                    myWorkSpaceId = getMyWorkSpaceUserUseCase().workspaceId
+                    myWorkSpaceId = getMyWorkSpaceUserUseCase().workspaceId,
+                    selectedMeetings = getDateMeetingUseCase(calendarType, date = currentDay)
                 )
             }
 

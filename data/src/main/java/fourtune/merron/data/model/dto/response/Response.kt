@@ -50,8 +50,8 @@ data class MyWorkspaceUserResponse(
 @Serializable
 data class WorkSpaceResponse(
     @SerialName("workspaceId") val workspaceId: Long,
-    @SerialName("workspaceName") val workspaceName: String,
-    @SerialName("workspaceLogoUrl") val workspaceLogoUrl: String,
+    @SerialName("workspaceName") val workspaceName: String = "",
+    @SerialName("workspaceLogoUrl") val workspaceLogoUrl: String = "",
 )
 
 @Serializable

@@ -2,7 +2,6 @@ package fourtune.meeron.presentation.ui.createmeeting.information
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -216,20 +215,20 @@ private fun InformationTitle(selectedDate: String, selectedTime: String, onClick
         title = R.string.info_title,
         selectedDate = selectedDate,
         selectedTime = selectedTime,
-        extraContents = {
-            Button(
-                onClick = onClick,
-                contentPadding = PaddingValues(vertical = 3.dp, horizontal = 12.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.medium_primary)),
-                shape = RoundedCornerShape(30.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.load),
-                    fontSize = 15.sp,
-                    color = colorResource(id = R.color.light_gray_white)
-                )
-            }
-        }
+//        extraContents = {
+//            Button(
+//                onClick = onClick,
+//                contentPadding = PaddingValues(vertical = 3.dp, horizontal = 12.dp),
+//                colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.medium_primary)),
+//                shape = RoundedCornerShape(30.dp)
+//            ) {
+//                Text(
+//                    text = stringResource(R.string.load),
+//                    fontSize = 15.sp,
+//                    color = colorResource(id = R.color.light_gray_white)
+//                )
+//            }
+//        }
     )
 }
 
@@ -237,4 +236,12 @@ private fun InformationTitle(selectedDate: String, selectedTime: String, onClick
 @Composable
 private fun CreateMeetingPrev() {
     CreateMeetingInfoScreen()
+}
+
+@Preview
+@Composable
+private fun Preview() {
+    InformationTitle(selectedDate = "asdasd", selectedTime = "asdsad") {
+
+    }
 }

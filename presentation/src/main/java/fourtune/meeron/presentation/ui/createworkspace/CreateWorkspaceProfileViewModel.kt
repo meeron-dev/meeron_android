@@ -12,6 +12,7 @@ import forutune.meeron.domain.model.EntryPointType
 import forutune.meeron.domain.model.MeeronError
 import forutune.meeron.domain.model.WorkSpace
 import forutune.meeron.domain.repository.AccountRepository
+import forutune.meeron.domain.usecase.workspace.ChangeWorkspaceUserUseCase
 import forutune.meeron.domain.usecase.workspace.CreateWorkspaceUserUseCase
 import forutune.meeron.domain.usecase.workspace.IsDuplicateNicknameUseCase
 import fourtune.meeron.presentation.R
@@ -27,6 +28,7 @@ class CreateWorkspaceProfileViewModel @Inject constructor(
     private val accountRepository: AccountRepository,
     private val isDuplicateNickname: IsDuplicateNicknameUseCase,
     private val createWorkspaceUser: CreateWorkspaceUserUseCase,
+    private val changeWorkspaceUser: ChangeWorkspaceUserUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val entryPointType = savedStateHandle.get<EntryPointType>(Const.EntryPointType) ?: EntryPointType.Normal
@@ -114,6 +116,22 @@ class CreateWorkspaceProfileViewModel @Inject constructor(
                     }
                 }
                 .onSuccess { goToHome() }
+        }
+    }
+
+    fun changeWorkspaceUser(onBack: () -> Unit) {
+        viewModelScope.launch {
+            runCatching {
+                changeWorkspaceUser.invoke(uiState.value.workSpace)
+            }.onSuccess {
+                onBack()
+            }.onFailure {
+                if (it is MeeronError) {
+                    _toast.emit(it.errorMessage)
+                } else {
+                    _toast.emit("${it.message} ?: $it")
+                }
+            }
         }
     }
 

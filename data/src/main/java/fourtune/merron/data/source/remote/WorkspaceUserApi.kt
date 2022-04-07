@@ -49,4 +49,12 @@ interface WorkspaceUserApi {
         @Query("workspaceId") workspaceId: Long
     ): WorkspaceUsers
 
+    @Multipart
+    @PUT("/api/workspace-users/{workspaceUserId}")
+    suspend fun changeWorkspaceUser(
+        @Path("workspaceUserId") workspaceUserId: Long,
+        @Part files: MultipartBody.Part? = null,
+        @Part request: MultipartBody.Part
+    ): WorkspaceUser
+
 }

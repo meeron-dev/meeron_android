@@ -15,7 +15,6 @@ class WithdrawalUseCase @Inject constructor(
     suspend operator fun invoke(kakaoLogout: suspend () -> Unit) {
         withContext(ioDispatcher) {
             userRepository.withdrawal()
-            userRepository.setUserId(null)
             clearData.invoke()
             kakaoLogout()
         }

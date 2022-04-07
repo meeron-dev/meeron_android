@@ -12,6 +12,7 @@ import fourtune.merron.data.source.local.preference.DataStoreKeys
 import fourtune.merron.data.source.remote.UserApi
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -37,7 +38,21 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun setUser(user: User, token: Token) {
+        userDao.insert(
+            UserEntity(
+                id = user.userId,
+                name = user.name.orEmpty(),
+                email = user.loginEmail,
+                profile = user.profileImageUrl.orEmpty(),
+                token = token
+            )
+        )
+        setUserId(user.userId)
+    }
+
     override suspend fun setUserId(userId: Long?) {
+        Timber.tag("🔥setUserId").d("$userId")
         dataStore.edit {
             if (userId == null) {
                 it.remove(DataStoreKeys.User.id)
@@ -59,22 +74,9 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setUser(user: User, token: Token) {
-        userDao.insert(
-            UserEntity(
-                id = user.userId,
-                name = user.name.orEmpty(),
-                email = user.loginEmail,
-                profile = user.profileImageUrl.orEmpty(),
-                token = token
-            )
-        )
-        dataStore.edit {
-            it[DataStoreKeys.User.id] = user.userId
-        }
-    }
-
     override suspend fun withdrawal() {
+        userDao.clear()
+        setUserId(null)
         userApi.quit()
     }
 

@@ -135,6 +135,7 @@ private fun TeamScreen(uiState: TeamViewModel.UiState, event: (TeamViewModel.Eve
 
 @Composable
 fun TeamTopBar(
+    isAdmin: Boolean,
     teams: List<Team>,
     selectedTeam: TeamViewModel.TeamState,
     onClickTeam: (team: Team) -> Unit = {},
@@ -158,12 +159,14 @@ fun TeamTopBar(
         )
         LazyRow(modifier = Modifier.fillMaxWidth(), contentPadding = PaddingValues(horizontal = 20.dp)) {
             item {
-                TeamCircleItem(
-                    drawable = R.drawable.ic_team_plus,
-                    teamName = "",
-                    enable = teams.size < 5,
-                    onClick = onClickCreate
-                )
+                if (isAdmin) {
+                    TeamCircleItem(
+                        drawable = R.drawable.ic_team_plus,
+                        teamName = "",
+                        enable = teams.size < 5,
+                        onClick = onClickCreate
+                    )
+                }
             }
             itemsIndexed(teams) { index, team ->
                 TeamCircleItem(
@@ -238,6 +241,7 @@ private fun Preview2() {
 @Composable
 private fun Preview3() {
     TeamTopBar(
+        isAdmin = true,
         teams = listOf(Team(id = 1, name = "team1"), Team(id = 2, name = "team2")),
         selectedTeam = TeamViewModel.TeamState.Normal(Team(name = "team1"))
     )

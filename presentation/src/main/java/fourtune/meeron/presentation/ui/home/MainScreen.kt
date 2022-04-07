@@ -72,10 +72,12 @@ fun MainScreen(
     Scaffold(
 //        scaffoldState = scaffoldState,
         topBar = {
+
             when (content) {
                 BottomNavi.Home -> HomeTopBar(homeUiState, addMeeting)
                 BottomNavi.My -> {; }
                 BottomNavi.Team -> TeamTopBar(
+                    isAdmin=teamUiState.isAdmin,
                     teams = teamUiState.teams,
                     selectedTeam = teamUiState.selectedTeam,
                     onClickTeam = { teamViewModel.changeTeam(it) },

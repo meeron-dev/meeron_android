@@ -4,11 +4,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.IconButton
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,8 +34,8 @@ import com.prolificinteractive.materialcalendarview.CalendarDay
 import forutune.meeron.domain.model.Meeting
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.StateItem
+import fourtune.meeron.presentation.ui.common.topbar.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -193,35 +194,22 @@ private fun PagerItem(meeting: Meeting, onClick: () -> Unit) {
 
 @Composable
 fun HomeTopBar(
-    scaffoldState: ScaffoldState,
     uiState: HomeViewModel.UiState,
     addMeeting: () -> Unit
 ) {
-    val scope = rememberCoroutineScope()
-
-    TopAppBar(
-        navigationIcon = {
-            IconButton(onClick = {
-                if (scaffoldState.drawerState.isOpen) {
-                    scope.launch { scaffoldState.drawerState.close() }
-                } else {
-                    scope.launch { scaffoldState.drawerState.open() }
-                }
-
-            }) {
-                Image(painter = painterResource(id = R.drawable.ic_home_menu), contentDescription = "title")
-            }
-        },
-        title = { TitleText(Modifier.fillMaxWidth(), uiState.workspaceName) },
-        actions = {
-            Image(
-                modifier = Modifier
-                    .padding(horizontal = 18.dp)
-                    .clickable(onClick = addMeeting),
-                painter = painterResource(id = R.drawable.ic_plus),
-                contentDescription = null
-            )
-        },
+//    val scope = rememberCoroutineScope()
+    CenterTextTopAppBar(
+        actionIcon = painterResource(id = R.drawable.ic_plus),
+        onAction = addMeeting,
+        text = {TitleText(Modifier.fillMaxWidth(), uiState.workspaceName)}
+//        navigationIcon = painterResource(id = R.drawable.ic_home_menu),
+//        onNavigation = {
+//            if (scaffoldState.drawerState.isOpen) {
+//                scope.launch { scaffoldState.drawerState.close() }
+//            } else {
+//                scope.launch { scaffoldState.drawerState.open() }
+//            }
+//        }
     )
 }
 

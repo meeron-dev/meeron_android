@@ -31,7 +31,10 @@ import kotlinx.coroutines.launch
 
 
 private enum class OnBoard {
-    First, Second, Third, Forth
+    First,
+    Second,
+    Third,
+//    Forth
 }
 
 @OptIn(ExperimentalPagerApi::class)
@@ -99,19 +102,19 @@ fun OnBoardingScreen(viewModel: OnBoardingViewModel = hiltViewModel(), goToHome:
                         )
                     }
                 }
-                OnBoard.Forth.ordinal -> {
-                    OnBoardingScreen(
-                        title = buildAnnotatedString {
-                            append("마무리까지\n")
-                            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append("완벽하게")
-                            }
-                        },
-                        mainDesc = "이번 회의도 문제없이",
-                        subDesc = "회의 결과를 확인하고\n부담없이 피드백을 남겨보아요",
-                        image = R.drawable.ic_illustration_onboarding_4
-                    )
-                }
+//                OnBoard.Forth.ordinal -> {
+//                    OnBoardingScreen(
+//                        title = buildAnnotatedString {
+//                            append("마무리까지\n")
+//                            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+//                                append("완벽하게")
+//                            }
+//                        },
+//                        mainDesc = "이번 회의도 문제없이",
+//                        subDesc = "회의 결과를 확인하고\n부담없이 피드백을 남겨보아요",
+//                        image = R.drawable.ic_illustration_onboarding_4
+//                    )
+//                }
             }
 
         }

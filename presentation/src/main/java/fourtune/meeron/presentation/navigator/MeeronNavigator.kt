@@ -228,22 +228,20 @@ fun MeeronNavigator(startDestination: Navigate) {
             MainScreen(
                 openCalendar = { navController.navigate(Navigate.Calendar.route()) },
                 addMeeting = { navController.navigate(Navigate.CreateMeeting.Date.route()) },
-                createWorkspace = { navController.navigate(Navigate.CreateWorkspace.CreateOrJoin.route()) },
-                administerTeam = { navController.navigate(route = Navigate.Team.Administer.route(it.team.encodeJson())) },
                 goToAddTeamMember = { navController.navigate(Navigate.Team.Add.route()) },
-                goToMeetingDetail = { navController.navigate(Navigate.Detail.Meeting.route(it.encodeJson())) },
-                myMeeronEvent = { event ->
-                    when (event) {
-                        MyMeeronEvent.EditAccount -> navController.navigate(Navigate.MyMeeron.EditAccount.route())
-                        MyMeeronEvent.EditProfile -> {
+                administerTeam = { navController.navigate(route = Navigate.Team.Administer.route(it.team.encodeJson())) },
+                goToMeetingDetail = { navController.navigate(Navigate.Detail.Meeting.route(it.encodeJson())) }
+            ) { event ->
+                when (event) {
+                    MyMeeronEvent.EditAccount -> navController.navigate(Navigate.MyMeeron.EditAccount.route())
+                    MyMeeronEvent.EditProfile -> {
 
-                        }
-                        MyMeeronEvent.EditWorkspace -> navController.navigate(Navigate.MyMeeron.EditWorkspace.route())
-                        MyMeeronEvent.InquiryOrHomepage -> {
-                        }
+                    }
+                    MyMeeronEvent.EditWorkspace -> navController.navigate(Navigate.MyMeeron.EditWorkspace.route())
+                    MyMeeronEvent.InquiryOrHomepage -> {
                     }
                 }
-            )
+            }
         }
 
         composable(

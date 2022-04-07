@@ -5,7 +5,10 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -45,7 +48,6 @@ fun MainScreen(
     teamViewModel: TeamViewModel = hiltViewModel(),
     openCalendar: () -> Unit = {},
     addMeeting: () -> Unit = {},
-    createWorkspace: () -> Unit = {},
     goToAddTeamMember: () -> Unit = {},
     administerTeam: (team: TeamViewModel.TeamState.Normal) -> Unit = {},
     goToMeetingDetail: (meeting: Meeting) -> Unit = {},
@@ -66,12 +68,12 @@ fun MainScreen(
     }
 
     val bottomBarSize = 90.dp
-    val scaffoldState = rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Closed))
+//    val scaffoldState = rememberScaffoldState(rememberDrawerState(initialValue = DrawerValue.Closed))
     Scaffold(
-        scaffoldState = scaffoldState,
+//        scaffoldState = scaffoldState,
         topBar = {
             when (content) {
-                BottomNavi.Home -> HomeTopBar(scaffoldState, homeUiState, addMeeting)
+                BottomNavi.Home -> HomeTopBar(homeUiState, addMeeting)
                 BottomNavi.My -> {; }
                 BottomNavi.Team -> TeamTopBar(
                     teams = teamUiState.teams,
@@ -94,19 +96,6 @@ fun MainScreen(
                     content = bottomNavi
                 }
             )
-        },
-        drawerContent = {
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(300.dp)
-            ) {
-                Text(
-                    text = "워크스페이스 추가",
-                    color = colorResource(id = R.color.primary),
-                    modifier = Modifier.clickable(onClick = createWorkspace)
-                )
-            }
         }
     ) {
         when (content) {

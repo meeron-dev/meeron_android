@@ -179,7 +179,7 @@ fun MeetingDetailContent(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Participants(uiState.meeting.participants.size, onClickParticipantState)
+            Participants(uiState.participantsCount, onClickParticipantState)
             TeamStateLazyColumn(uiState.teamStates, onClickTeam)
         }
     }
@@ -240,7 +240,7 @@ private fun TeamStateLazyColumn(teamStates: List<TeamState>, onClickTeam: (teamI
 }
 
 @Composable
-private fun Participants(participantSize: Int, onClickParticipantState: () -> Unit = {}) {
+private fun Participants(participantsCount: Int, onClickParticipantState: () -> Unit = {}) {
     Column(modifier = Modifier.padding(vertical = 20.dp, horizontal = 18.dp)) {
         Row(
             modifier = Modifier
@@ -255,7 +255,7 @@ private fun Participants(participantSize: Int, onClickParticipantState: () -> Un
         }
         Spacer(modifier = Modifier.padding(1.dp))
         Text(
-            text = "${participantSize}명 예정",
+            text = "${participantsCount}명 예정",
             fontSize = 16.sp,
             color = colorResource(id = R.color.dark_gray)
         )

@@ -47,7 +47,8 @@ class MeetingDetailViewModel @Inject constructor(
                     teamStates = getTeamStates(it.meeting.meetingId),
                     workspaceInfo = getCurrentWorkspaceInfo(),
                     agendaInfo = getAgendaInfo(it.meeting.meetingId),
-                    isAdmin = getMyWorkSpaceUser().workspaceAdmin
+                    isAdmin = getMyWorkSpaceUser().workspaceAdmin,
+                    participantsCount = it.meeting.attends + it.meeting.absents + it.meeting.unknowns
                 )
             }
         }
@@ -79,6 +80,7 @@ class MeetingDetailViewModel @Inject constructor(
         val teamStates: List<TeamState> = emptyList(),
         val workspaceInfo: WorkSpaceInfo = WorkSpaceInfo(),
         val agendaInfo: AgendaInfo = AgendaInfo(),
-        val isAdmin: Boolean = false
+        val isAdmin: Boolean = false,
+        val participantsCount: Int = 0
     )
 }

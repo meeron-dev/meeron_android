@@ -4,7 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Divider
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -81,7 +84,9 @@ private fun WithdrawalDialog(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                modifier = Modifier.align(Alignment.Start),
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .padding(top = 12.dp, start = 17.dp),
                 text = workspaceName,
                 fontSize = 16.sp,
                 color = colorResource(id = R.color.dark_gray),
@@ -104,25 +109,7 @@ private fun WithdrawalDialog(
                     color = colorResource(id = R.color.gray),
                 )
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Button(onClick = { onDismissRequest(false) }) {
-                    Text(
-                        text = "취소",
-                        fontSize = 16.sp,
-                        color = colorResource(id = R.color.dark_gray),
-                    )
-                }
-                Button(onClick = onWithdrawal) {
-                    Text(
-                        text = "탈퇴하기",
-                        fontSize = 16.sp,
-                        color = colorResource(id = R.color.dark_gray),
-                    )
-                }
-            }
+            DialogButton(onDismissRequest, "탈퇴하기", onWithdrawal)
         }
     }
 }
@@ -144,39 +131,44 @@ private fun LogoutDialog(
                 color = colorResource(id = R.color.dark_gray),
                 fontWeight = FontWeight.Medium
             )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextButton(
-                    modifier = Modifier
-                        .background(color = colorResource(id = R.color.dark_gray_white))
-                        .weight(1f),
-                    onClick = { onDismissRequest(false) },
-                    contentPadding = PaddingValues(vertical = 20.dp)
-                ) {
-                    Text(
-                        text = "취소",
-                        fontSize = 16.sp,
-                        color = colorResource(id = R.color.dark_gray),
-                    )
-                }
-                Divider(modifier = Modifier.width(1.dp))
-                TextButton(
-                    modifier = Modifier
-                        .background(color = colorResource(id = R.color.dark_gray_white))
-                        .weight(1f),
-                    onClick = { onDismissRequest(false);onLogout() },
-                    contentPadding = PaddingValues(vertical = 20.dp)
-                ) {
-                    Text(
-                        text = "로그아웃",
-                        fontSize = 16.sp,
-                        color = colorResource(id = R.color.dark_gray),
-                    )
-                }
-            }
+            DialogButton(onDismissRequest, "로그아웃", onLogout)
+        }
+    }
+}
+
+@Composable
+private fun DialogButton(onDismissRequest: (Boolean) -> Unit, actionText: String, onAction: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TextButton(
+            modifier = Modifier
+                .background(color = colorResource(id = R.color.dark_gray_white))
+                .weight(1f),
+            onClick = { onDismissRequest(false) },
+            contentPadding = PaddingValues(vertical = 20.dp)
+        ) {
+            Text(
+                text = "취소",
+                fontSize = 16.sp,
+                color = colorResource(id = R.color.dark_gray),
+            )
+        }
+        Divider(modifier = Modifier.width(1.dp))
+        TextButton(
+            modifier = Modifier
+                .background(color = colorResource(id = R.color.dark_gray_white))
+                .weight(1f),
+            onClick = { onDismissRequest(false);onAction() },
+            contentPadding = PaddingValues(vertical = 20.dp)
+        ) {
+            Text(
+                text = actionText,
+                fontSize = 16.sp,
+                color = colorResource(id = R.color.dark_gray),
+            )
         }
     }
 }

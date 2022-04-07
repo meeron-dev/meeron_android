@@ -195,7 +195,7 @@ private fun AgendaCountRow(
         ) {
             itemsIndexed(
                 items = agendaStates,
-                key = { _, item -> item.name }
+                key = { index, item -> "[$index]${item.name}" }
             ) { index, _ ->
                 AgendaCountItem(index = index, isSelected = selected, onClick = onClick)
             }

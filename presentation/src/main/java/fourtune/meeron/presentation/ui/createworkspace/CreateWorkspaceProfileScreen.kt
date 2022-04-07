@@ -40,6 +40,7 @@ fun CreateWorkspaceProfileScreen(
     viewModel: CreateWorkspaceProfileViewModel = hiltViewModel(),
     goToCreateTeam: (WorkSpace) -> Unit = {},
     goToHome: () -> Unit = {},
+    onBack: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -65,6 +66,7 @@ fun CreateWorkspaceProfileScreen(
                     when (viewModel.entryPointType) {
                         EntryPointType.Normal -> goToCreateTeam(uiState.workSpace)
                         EntryPointType.DynamicLink -> viewModel.createWorkspaceUser(goToHome)
+                        EntryPointType.Edit -> viewModel.changeWorkspaceUser(onBack)
                     }
                 }
             ) {

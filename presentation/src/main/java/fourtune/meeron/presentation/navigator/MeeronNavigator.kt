@@ -221,10 +221,11 @@ fun MeeronNavigator(startDestination: String) {
                     navController.navigate(Navigate.CreateWorkspace.Team.route(workspace.encodeJson()))
                 },
                 goToHome = {
-                    navController.navigate(Navigate.Main.route()){
+                    navController.navigate(Navigate.Main.route()) {
                         popUpTo(Navigate.Login.route())
                     }
-                }
+                },
+                onBack = { navController.popBackStack() }
             )
         }
 
@@ -275,7 +276,7 @@ fun MeeronNavigator(startDestination: String) {
                 when (event) {
                     MyMeeronEvent.EditAccount -> navController.navigate(Navigate.MyMeeron.EditAccount.route())
                     MyMeeronEvent.EditProfile -> {
-
+                        navController.navigate(Navigate.CreateWorkspace.Profile.route("edit", EntryPointType.Edit))
                     }
                     MyMeeronEvent.EditWorkspace -> navController.navigate(Navigate.MyMeeron.EditWorkspace.route())
                     MyMeeronEvent.InquiryOrHomepage -> {

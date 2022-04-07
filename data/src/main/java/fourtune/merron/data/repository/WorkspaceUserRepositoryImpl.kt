@@ -88,6 +88,16 @@ class WorkspaceUserRepositoryImpl @Inject constructor(
         return workspaceUserApi.getNotJoinedTeamWorkspaceUser(workspaceId).workspaceUsers
     }
 
+    override suspend fun changeWorkspaceUser(workspaceUserId: Long, workspace: WorkSpace) {
+        val files = createFileData(workspace)
+        val requestBody = createWorkspaceRequestBody(workspace)
+        workspaceUserApi.changeWorkspaceUser(
+            workspaceUserId = workspaceUserId,
+            files = files,
+            request = MultipartBody.Part.createFormData(name = "request", body = requestBody, filename = "request")
+        )
+    }
+
     private fun createWorkspaceRequestBody(workSpace: WorkSpace) = Json.encodeToString(
         WorkSpaceRequest(
             workspaceId = workSpace.workspaceId,

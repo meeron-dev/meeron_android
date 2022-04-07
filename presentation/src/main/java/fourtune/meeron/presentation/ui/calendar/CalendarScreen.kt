@@ -41,14 +41,14 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun CalendarScreen(
     viewModel: CalendarViewModel = hiltViewModel(),
     onBack: () -> Unit = {},
-    showAll: (Date) -> Unit = {}
+    showAll: (Date) -> Unit = {},
+    goToMeetingDetail: (Meeting) -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -84,9 +84,7 @@ fun CalendarScreen(
                     is CalendarViewModel.Event.ChangeMonth -> viewModel.changeMonth(event.date)
                     is CalendarViewModel.Event.ChangeDay -> viewModel.changeDay(event.date)
                     is CalendarViewModel.Event.ShowAll -> showAll(event.date)
-                    is CalendarViewModel.Event.SelectMeeting -> {
-                        Timber.tag("🔥zero:CalendarScreen").d("click")
-                    }
+                    is CalendarViewModel.Event.SelectMeeting -> goToMeetingDetail(event.meeting)
                 }
             }
         )
@@ -301,9 +299,7 @@ fun CalendarDetail(
         modifier = Modifier.clickable(
             interactionSource = MutableInteractionSource(),
             indication = rememberRipple(color = colorResource(id = R.color.primary)),
-            onClick = {
-                event(CalendarViewModel.Event.SelectMeeting(meeting))
-            },
+            onClick = { event(CalendarViewModel.Event.SelectMeeting(meeting)) },
             enabled = myWorkSpaceId == info?.workSpaceId
         )
     ) {

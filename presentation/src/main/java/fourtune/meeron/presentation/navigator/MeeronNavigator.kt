@@ -466,7 +466,8 @@ fun MeeronNavigator(startDestination: String) {
                 onBack = { navController.navigateUp() },
                 showAll = { date ->
                     navController.navigate(Navigate.ShowAll.route(date.encodeJson()))
-                }
+                },
+                goToMeetingDetail = { meeting -> navController.navigate(Navigate.Detail.Meeting.route(meeting.encodeJson())) }
             )
         }
 

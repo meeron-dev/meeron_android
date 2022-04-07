@@ -1,16 +1,12 @@
 package fourtune.meeron.presentation.ui.home.my
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -18,9 +14,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import fourtune.meeron.presentation.R
+import fourtune.meeron.presentation.ui.common.dialog.MultiTextDialog
+import fourtune.meeron.presentation.ui.common.dialog.SingleTextDialog
 import fourtune.meeron.presentation.ui.common.topbar.CenterTextTopAppBar
 
 internal sealed interface EditAccountEvent {
@@ -46,19 +43,23 @@ fun EditAccountScreen(
     }
 
     if (logoutDialog) {
-        LogoutDialog(
-            onDismissRequest = { logoutDialog = it },
-            onLogout = {
-                viewModel.logout {
-                    Toast.makeText(context, "로그아웃되셨습니다.", Toast.LENGTH_SHORT).show()
-                    goToLogin()
-                }
+        SingleTextDialog(
+            buttonText = "로그아웃",
+            text = "로그아웃 하시겠습니까?",
+            onDismissRequest = { logoutDialog = it }
+        ) {
+            viewModel.logout {
+                Toast.makeText(context, "로그아웃되셨습니다.", Toast.LENGTH_SHORT).show()
+                goToLogin()
             }
-        )
+        }
     }
     if (withdrawalDialog) {
-        WithdrawalDialog(
-            uiState = uiState,
+        MultiTextDialog(
+            title = "정말 회원 탈퇴하시겠습니까?",
+            text = if (uiState.me.workspaceAdmin) "관리 중인 워크스페이스가 삭제됩니다." else "저장되어 있던 정보가 삭제될 수 있습니다.",
+            topText = uiState.workspaceInfo.workSpaceName,
+            "탈퇴하기",
             onDismissRequest = { withdrawalDialog = it }
         ) {
             viewModel.withdrawal {
@@ -81,108 +82,6 @@ fun EditAccountScreen(
         }
     )
 
-}
-
-@Composable
-private fun WithdrawalDialog(
-    uiState: EditAccountViewModel.UiState,
-    onDismissRequest: (Boolean) -> Unit,
-    onWithdrawal: () -> Unit
-) {
-    Dialog(onDismissRequest = { onDismissRequest(false) }) {
-
-        Column(
-            modifier = Modifier.background(colorResource(id = R.color.white), shape = RoundedCornerShape(5.dp)),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(top = 12.dp, start = 17.dp),
-                text = uiState.workspaceInfo.workSpaceName,
-                fontSize = 16.sp,
-                color = colorResource(id = R.color.dark_gray),
-                fontWeight = FontWeight.Medium
-            )
-            Column(
-                modifier = Modifier.padding(vertical = 40.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "정말 회원 탈퇴하시겠습니까?",
-                    fontSize = 14.sp,
-                    color = colorResource(id = R.color.dark_gray),
-                    fontWeight = FontWeight.Medium
-                )
-                Spacer(modifier = Modifier.padding(3.dp))
-                Text(
-                    text = if (uiState.me.workspaceAdmin) "관리 중인 워크스페이스가 삭제됩니다." else "저장되어 있던 정보가 삭제될 수 있습니다.",
-                    fontSize = 13.sp,
-                    color = colorResource(id = R.color.gray),
-                )
-            }
-            DialogButton(onDismissRequest, "탈퇴하기", onWithdrawal)
-        }
-    }
-}
-
-@Composable
-private fun LogoutDialog(
-    onDismissRequest: (Boolean) -> Unit,
-    onLogout: () -> Unit
-) {
-    Dialog(onDismissRequest = { onDismissRequest(false) }) {
-        Column(
-            modifier = Modifier.background(colorResource(id = R.color.white), shape = RoundedCornerShape(5.dp)),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                modifier = Modifier.padding(vertical = 80.dp),
-                text = "로그아웃 하시겠습니까?",
-                fontSize = 16.sp,
-                color = colorResource(id = R.color.dark_gray),
-                fontWeight = FontWeight.Medium
-            )
-            DialogButton(onDismissRequest, "로그아웃", onLogout)
-        }
-    }
-}
-
-@Composable
-private fun DialogButton(onDismissRequest: (Boolean) -> Unit, actionText: String, onAction: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        TextButton(
-            modifier = Modifier
-                .background(color = colorResource(id = R.color.dark_gray_white))
-                .weight(1f),
-            onClick = { onDismissRequest(false) },
-            contentPadding = PaddingValues(vertical = 20.dp)
-        ) {
-            Text(
-                text = "취소",
-                fontSize = 16.sp,
-                color = colorResource(id = R.color.dark_gray),
-            )
-        }
-        Divider(modifier = Modifier.width(1.dp))
-        TextButton(
-            modifier = Modifier
-                .background(color = colorResource(id = R.color.dark_gray_white))
-                .weight(1f),
-            onClick = { onDismissRequest(false);onAction() },
-            contentPadding = PaddingValues(vertical = 20.dp)
-        ) {
-            Text(
-                text = actionText,
-                fontSize = 16.sp,
-                color = colorResource(id = R.color.dark_gray),
-            )
-        }
-    }
 }
 
 @Composable

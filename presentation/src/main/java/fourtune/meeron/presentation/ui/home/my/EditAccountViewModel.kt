@@ -2,6 +2,8 @@ package fourtune.meeron.presentation.ui.home.my
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kakao.sdk.user.UserApiClient
+import com.kakao.sdk.user.rx
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.model.WorkSpaceInfo
 import forutune.meeron.domain.usecase.login.LogoutUseCase
@@ -10,6 +12,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx2.await
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,8 +33,10 @@ class EditAccountViewModel @Inject constructor(
     fun logout(goToLogin: () -> Unit) {
         viewModelScope.launch {
             kotlin.runCatching {
-                logout.invoke()
-            }.onSuccess { goToLogin() }
+                logout.invoke { UserApiClient.rx.unlink().await() }
+            }.onSuccess {
+                goToLogin()
+            }.onFailure { Timber.tag("🔥zero:logout").e("$it") }
         }
     }
 

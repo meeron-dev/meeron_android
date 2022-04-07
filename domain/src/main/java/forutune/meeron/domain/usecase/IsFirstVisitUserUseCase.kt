@@ -8,7 +8,7 @@ class IsFirstVisitUserUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(): Boolean {
         val firstVisit = accountRepository.isFirstVisitor()
-        if (!firstVisit) accountRepository.updateFirstVisitor()
+        if (firstVisit) accountRepository.updateFirstVisitor()
         return firstVisit
     }
 }

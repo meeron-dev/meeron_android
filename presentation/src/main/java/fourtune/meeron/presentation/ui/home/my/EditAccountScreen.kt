@@ -1,5 +1,6 @@
 package fourtune.meeron.presentation.ui.home.my
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,6 +12,7 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +34,7 @@ fun EditAccountScreen(
     goToMyMeeron: () -> Unit = {},
     goToLogin: () -> Unit = {}
 ) {
+    val context = LocalContext.current
     val workspaceInfo by viewModel.workspaceInfo.collectAsState()
 
     var logoutDialog by remember {
@@ -45,7 +48,12 @@ fun EditAccountScreen(
     if (logoutDialog) {
         LogoutDialog(
             onDismissRequest = { logoutDialog = it },
-            onLogout = { viewModel.logout(goToLogin) }
+            onLogout = {
+                viewModel.logout {
+                    Toast.makeText(context, "로그아웃되셨습니다.", Toast.LENGTH_SHORT).show()
+                    goToLogin()
+                }
+            }
         )
     }
     if (withdrawalDialog) {

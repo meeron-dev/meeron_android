@@ -11,10 +11,10 @@ import javax.inject.Inject
 
 class AccountRepositoryImpl @Inject constructor(private val dataStore: DataStore<Preferences>) : AccountRepository {
     override suspend fun isFirstVisitor(): Boolean {
-        return dataStore.data.map { it[DataStoreKeys.Account.isFirstVisitor] }.firstOrNull() ?: false
+        return dataStore.data.map { it[DataStoreKeys.Account.isFirstVisitor] }.firstOrNull() ?: true
     }
 
     override suspend fun updateFirstVisitor() {
-        dataStore.edit { it[DataStoreKeys.Account.isFirstVisitor] = true }
+        dataStore.edit { it[DataStoreKeys.Account.isFirstVisitor] = false }
     }
 }

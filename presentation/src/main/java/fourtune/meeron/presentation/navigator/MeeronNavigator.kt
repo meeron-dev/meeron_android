@@ -379,7 +379,9 @@ fun MeeronNavigator(startDestination: Navigate) {
                     navController.navigateUp()
                 },
                 goToLogin = {
-                    navController.popBackStack(Navigate.Login.route(), false)
+                    navController.navigate(Navigate.Login.route()){
+                        popUpTo(Navigate.Main.route())
+                    }
                 }
             )
         }

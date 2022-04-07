@@ -93,13 +93,12 @@ class LoginViewModel @Inject constructor(
 
     private fun redirectLoginEvent() {
         viewModelScope.launch {
-            val isFirstVisit = isFirstVisitUser()
             val userWorkspaces = getUserWorkspaces()
             val event = if (userWorkspaces.isEmpty()) {
                 Event.GoToSignIn
             } else {
                 setCurrentWorkspaceInfo(userWorkspaces)
-                if (isFirstVisit) Event.ShowOnBoarding
+                if (isFirstVisitUser()) Event.ShowOnBoarding
                 else Event.GoToHome
 
             }

@@ -19,8 +19,9 @@ class CreateMeetingUseCase @Inject constructor(
             meeting.copy(ownerIds = meeting.ownerIds - getMyWorkSpaceUser().workspaceUserId)
         )
 
-        if (meeting.participants.isNotEmpty()) {
-            meetingRepository.addParticipants(meetingId, meeting)
+        val participantsExceptOwners = meeting.participants.map { it.workspaceUserId } - meeting.ownerIds
+        if (participantsExceptOwners.isNotEmpty()) {
+            meetingRepository.addParticipants(meetingId, participantsExceptOwners)
         }
 
         if (meeting.agenda.all { it.name.isNotEmpty() }) {

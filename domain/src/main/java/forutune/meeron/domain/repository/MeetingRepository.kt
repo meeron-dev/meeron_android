@@ -10,7 +10,7 @@ interface MeetingRepository {
     suspend fun getDateMeetingCount(type: CalendarType, id: Long, date: Date): List<Int>
     suspend fun getDateMeeting(type: CalendarType, id: Long, date: Date): List<Pair<Meeting, WorkSpaceInfo?>>
     suspend fun addAgenda(meetingId: Long, meeting: Meeting): List<Long>
-    suspend fun addParticipants(meetingId: Long, meeting: Meeting)
+    suspend fun addParticipants(meetingId: Long, workspaceUserIds: List<Long>)
     suspend fun addFiles(agendaId: Long, fileInfo: FileInfo)
 
     suspend fun getTeamStates(meetingId: Long): List<TeamState>

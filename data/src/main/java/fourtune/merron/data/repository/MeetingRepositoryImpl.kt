@@ -36,10 +36,10 @@ class MeetingRepositoryImpl @Inject constructor(
         return response.body()?.meetingId ?: throw IOException(response.message())
     }
 
-    override suspend fun addParticipants(meetingId: Long, meeting: Meeting) {
+    override suspend fun addParticipants(meetingId: Long, workspaceUserIds: List<Long>) {
         meetingApi.addParticipants(
             meetingId = meetingId,
-            workspaceUserIds = WorkSpaceUserIdsRequest(meeting.participants.map { it.workspaceUserId } - meeting.ownerIds)
+            workspaceUserIds = WorkSpaceUserIdsRequest(workspaceUserIds)
         )
     }
 

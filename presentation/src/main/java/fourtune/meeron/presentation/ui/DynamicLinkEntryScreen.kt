@@ -20,7 +20,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.MeeronProgressIndicator
 import fourtune.meeron.presentation.ui.common.MeeronSingleButton
-import fourtune.meeron.presentation.ui.createworkspace.CreateWorkspaceProfileScreen
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -28,9 +27,9 @@ import kotlinx.coroutines.flow.onEach
 @Composable
 fun DynamicLinkEntryScreen(
     viewModel: DynamicLinkEntryViewModel = hiltViewModel(),
-    goToLogin: (workspaceId: Long) -> Unit,
+    goToLogin: () -> Unit,
     goToTOS: () -> Unit,
-    goToHome: () -> Unit
+    goToCreateProfile: () -> Unit
 ) {
     val activity = LocalContext.current as? Activity
     val context = LocalContext.current
@@ -48,6 +47,7 @@ fun DynamicLinkEntryScreen(
         viewModel.event.collectLatest { event ->
             when (event) {
                 DynamicLinkEntryViewModel.Event.GoToTOS -> goToTOS()
+                DynamicLinkEntryViewModel.Event.GoToCreateProfile -> goToCreateProfile()
             }
         }
     }
@@ -65,15 +65,9 @@ fun DynamicLinkEntryScreen(
                 title = "귀하의 회원 정보가\n조회되지 않습니다.",
                 subTitle = "회원가입 후 다시 시도해주시길 바랍니다.",
                 buttonText = "가입하러 가기"
-            ) { goToLogin(viewModel.workspaceId.toLong()) }
-        }
-        DynamicLinkEntryViewModel.UiState.GoToCreateProfile -> {
-            CreateWorkspaceProfileScreen(onNext = { workSpace ->
-                viewModel.createWorkspaceUser(workSpace, goToHome)
-            })
+            ) { goToLogin() }
         }
     }
-
 }
 
 @Composable

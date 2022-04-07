@@ -17,7 +17,8 @@ class SetCurrentWorkspaceInfoUseCase @Inject constructor(
         val me = getMe()
         workSpaceRepository.setCurrentWorkspaceId(workspaceId)
         val workspaceUser =
-            workspaceUserRepository.getMyWorkspaceUsers(me.userId).first { it.workspaceId == workspaceId }
+            workspaceUserRepository.getMyWorkspaceUsers(me.userId)
+                .firstOrNull { it.workspaceId == workspaceId } ?: return
         workspaceUserRepository.setCurrentWorkspaceUserId(workspaceUser.workspaceUserId)
     }
 }

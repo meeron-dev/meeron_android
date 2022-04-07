@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui
+package fourtune.meeron.presentation.ui.start
 
 import android.content.Context
 import android.content.Intent
@@ -18,13 +18,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import forutune.meeron.domain.Const
+import forutune.meeron.domain.model.EntryPointType
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.MeeronSingleButton
 import fourtune.meeron.presentation.ui.common.text.MeeronLogoText
 
 @Composable
-fun TOSScreen(onNext: () -> Unit = {}) {
+fun TOSScreen(viewModel: TOSViewModel = hiltViewModel(), onNext: (EntryPointType) -> Unit = {}) {
     val context = LocalContext.current
     var allAgree by remember {
         mutableStateOf(false)
@@ -36,7 +38,11 @@ fun TOSScreen(onNext: () -> Unit = {}) {
             Spacer(modifier = Modifier.padding(55.dp))
             TOSOptions(context) { allAgree = it }
         }
-        MeeronSingleButton(Modifier.padding(bottom = 50.dp, start = 38.dp, end = 38.dp), onNext, allAgree)
+        MeeronSingleButton(
+            modifier = Modifier.padding(bottom = 50.dp, start = 38.dp, end = 38.dp),
+            onClick = { onNext(viewModel.entryPointType) },
+            enable = allAgree
+        )
     }
 }
 

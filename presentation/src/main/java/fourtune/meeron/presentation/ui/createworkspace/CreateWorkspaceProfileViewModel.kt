@@ -8,25 +8,35 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
+import forutune.meeron.domain.model.EntryPointType
+import forutune.meeron.domain.model.MeeronError
 import forutune.meeron.domain.model.WorkSpace
+import forutune.meeron.domain.repository.AccountRepository
+import forutune.meeron.domain.usecase.workspace.CreateWorkspaceUserUseCase
 import forutune.meeron.domain.usecase.workspace.IsDuplicateNicknameUseCase
 import fourtune.meeron.presentation.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateWorkspaceProfileViewModel @Inject constructor(
+    private val accountRepository: AccountRepository,
     private val isDuplicateNickname: IsDuplicateNicknameUseCase,
+    private val createWorkspaceUser: CreateWorkspaceUserUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    val entryPointType = savedStateHandle.get<EntryPointType>(Const.EntryPointType) ?: EntryPointType.Normal
+
     private val _uiState =
         MutableStateFlow(UiState(workSpace = WorkSpace(workspaceName = savedStateHandle[Const.WorkspaceName] ?: "")))
     val uiState = _uiState.asStateFlow()
+
+    private val _toast = MutableSharedFlow<String>()
+    val toast = _toast.asSharedFlow()
 
     private var searchJob: Job? = null
 
@@ -86,6 +96,24 @@ class CreateWorkspaceProfileViewModel @Inject constructor(
                 fileName = uri.toString(),
                 workSpace = it.workSpace.copy(image = uri.toString())
             )
+        }
+    }
+
+    fun createWorkspaceUser(goToHome: () -> Unit) {
+        viewModelScope.launch {
+            kotlin.runCatching {
+                val workspaceId = accountRepository.getDynamicLink()
+                createWorkspaceUser.invoke(uiState.value.workSpace.copy(workspaceId))
+            }
+                .onFailure {
+                    Timber.tag("🔥createWUser(DL)").e("$it")
+                    if (it is MeeronError) {
+                        _toast.emit(it.errorMessage)
+                    } else {
+                        _toast.emit("${it.message} ?: $it")
+                    }
+                }
+                .onSuccess { goToHome() }
         }
     }
 

@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 object DataStoreKeys {
     object Account {
         val isFirstVisitor = booleanPreferencesKey("isFirstVisitor")
+        val dynamicWorkspaceId = longPreferencesKey("dynamic_workspace_id")
     }
 
     object Token {

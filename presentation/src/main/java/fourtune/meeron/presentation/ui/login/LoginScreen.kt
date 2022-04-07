@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -16,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import forutune.meeron.domain.model.EntryPointType
 import fourtune.meeron.presentation.R
 import kotlinx.coroutines.flow.collectLatest
 
@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.collectLatest
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
     goToHome: () -> Unit = {},
-    goToSignIn: () -> Unit = {},
+    goToSignIn: (EntryPointType) -> Unit = {},
     showOnBoarding: () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -36,7 +36,7 @@ fun LoginScreen(
         viewModel.loginSuccess().collectLatest { isLoginSuccess ->
             when (isLoginSuccess) {
                 LoginViewModel.Event.GoToHome -> goToHome()
-                LoginViewModel.Event.GoToSignIn -> goToSignIn()
+                LoginViewModel.Event.GoToSignIn -> goToSignIn(viewModel.entryPointType)
                 LoginViewModel.Event.ShowOnBoarding -> showOnBoarding()
             }
         }

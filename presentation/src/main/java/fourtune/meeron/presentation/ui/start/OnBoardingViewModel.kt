@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui
+package fourtune.meeron.presentation.ui.start
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

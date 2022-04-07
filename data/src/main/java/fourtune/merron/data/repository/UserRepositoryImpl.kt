@@ -17,7 +17,7 @@ import javax.inject.Inject
 class UserRepositoryImpl @Inject constructor(
     private val userApi: UserApi,
     private val dataStore: DataStore<Preferences>,
-    private val userDao: UserDao
+    private val userDao: UserDao,
 ) : UserRepository {
     override suspend fun getUser(): User {
         return userApi.getMe()
@@ -37,9 +37,13 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setUserId(userId: Long) {
+    override suspend fun setUserId(userId: Long?) {
         dataStore.edit {
-            it[DataStoreKeys.User.id] = userId
+            if (userId == null) {
+                it.remove(DataStoreKeys.User.id)
+            } else {
+                it[DataStoreKeys.User.id] = userId
+            }
         }
     }
 

@@ -3,8 +3,7 @@ package forutune.meeron.domain.usecase.login
 import forutune.meeron.domain.di.IoDispatcher
 import forutune.meeron.domain.repository.LoginRepository
 import forutune.meeron.domain.repository.TokenRepository
-import forutune.meeron.domain.repository.WorkSpaceRepository
-import forutune.meeron.domain.repository.WorkspaceUserRepository
+import forutune.meeron.domain.usecase.ClearDataUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
@@ -14,13 +13,12 @@ class LogoutUseCase @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val loginRepository: LoginRepository,
     private val tokenRepository: TokenRepository,
-    private val workspaceUserRepository: WorkspaceUserRepository,
-    private val workSpaceRepository: WorkSpaceRepository,
+    private val clearData: ClearDataUseCase
 ) {
     suspend operator fun invoke(kakaoLogout: suspend () -> Unit) = withContext(dispatcher) {
         kakaoLogout()
         logout()
-        clearData()
+        clearData.invoke()
     }
 
     private suspend fun logout() {
@@ -30,14 +28,9 @@ class LogoutUseCase @Inject constructor(
         loginRepository.logout(token, refreshToken)
     }
 
-    private suspend fun clearData() {
-        workspaceUserRepository.setCurrentWorkspaceUserId(null)
-        workSpaceRepository.setCurrentWorkspaceId(null)
-        tokenRepository.clearToken()
-    }
 
     suspend operator fun invoke() = withContext(dispatcher) {
         logout()
-        clearData()
+        clearData.invoke()
     }
 }

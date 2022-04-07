@@ -16,9 +16,6 @@ import forutune.meeron.domain.model.EntryPointType
 import fourtune.meeron.presentation.navigator.ext.encodeJson
 import fourtune.meeron.presentation.navigator.type.*
 import fourtune.meeron.presentation.ui.DynamicLinkEntryScreen
-import fourtune.meeron.presentation.ui.NameInitScreen
-import fourtune.meeron.presentation.ui.OnBoardingScreen
-import fourtune.meeron.presentation.ui.TOSScreen
 import fourtune.meeron.presentation.ui.calendar.CalendarScreen
 import fourtune.meeron.presentation.ui.calendar.all.ShowAllScreen
 import fourtune.meeron.presentation.ui.createmeeting.agenda.CreateAgendaScreen
@@ -39,6 +36,9 @@ import fourtune.meeron.presentation.ui.home.team.createcomplete.TeamCreateComple
 import fourtune.meeron.presentation.ui.home.team.picker.TeamMemberPickerScreen
 import fourtune.meeron.presentation.ui.home.team.picker.TeamMemberPickerViewModel
 import fourtune.meeron.presentation.ui.login.LoginScreen
+import fourtune.meeron.presentation.ui.start.NameInitScreen
+import fourtune.meeron.presentation.ui.start.OnBoardingScreen
+import fourtune.meeron.presentation.ui.start.TOSScreen
 
 sealed interface Navigate {
     fun route() = requireNotNull(this::class.qualifiedName)
@@ -143,7 +143,7 @@ fun MeeronNavigator(startDestination: String) {
                 },
                 goToSignIn = {
                     navController.popBackStack()
-                    navController.navigate(Navigate.SignIn.TOS.route())
+                    navController.navigate(Navigate.SignIn.TOS.route(it))
                 },
                 showOnBoarding = {
                     navController.popBackStack()
@@ -152,17 +152,41 @@ fun MeeronNavigator(startDestination: String) {
             )
         }
 
-        composable(route = Navigate.SignIn.TOS.route()) {
+        composable(
+            route = Navigate.SignIn.TOS.destination(Const.EntryPointType),
+            arguments = listOf(
+                navArgument(Const.EntryPointType) {
+                    type = NavType.EnumType(EntryPointType::class.java)
+                }
+            )
+        ) {
             TOSScreen(
-                onNext = { navController.navigate(Navigate.SignIn.NameInit.route()) }
+                onNext = { navController.navigate(Navigate.SignIn.NameInit.route(it)) }
             )
         }
 
-        composable(route = Navigate.SignIn.NameInit.route()) {
-            NameInitScreen(onNext = { navController.navigate(Navigate.CreateWorkspace.CreateOrJoin.route()) })
+        composable(
+            route = Navigate.SignIn.NameInit.destination(Const.EntryPointType),
+            arguments = listOf(
+                navArgument(Const.EntryPointType) {
+                    type = NavType.EnumType(EntryPointType::class.java)
+                }
+            )
+        ) {
+            NameInitScreen(
+                goToCreateOrJoin = { navController.navigate(Navigate.CreateWorkspace.CreateOrJoin.route()) },
+                goToCreateWorkspaceProfile = {
+                    navController.navigate(
+                        Navigate.CreateWorkspace.Profile.route(
+                            "dynamic",
+                            EntryPointType.DynamicLink
+                        )
+                    )
+                }
+            )
         }
 
-        composable(route = Navigate.CreateWorkspace.CreateOrJoin.route()) {
+        composable(route = Navigate.CreateWorkspace.CreateOrJoin.destination()) {
             CreateOrJoinScreen(
                 onCreate = { navController.navigate(Navigate.CreateWorkspace.Name.route()) },
                 onJoin = { navController.navigate(Navigate.CreateWorkspace.Join.route()) }
@@ -176,22 +200,30 @@ fun MeeronNavigator(startDestination: String) {
         composable(route = Navigate.CreateWorkspace.Name.route()) {
             CreateWorkSpaceNameScreen(
                 onPrevious = { navController.navigateUp() },
-                onNext = { navController.navigate(Navigate.CreateWorkspace.Profile.route(it)) }
+                onNext = { navController.navigate(Navigate.CreateWorkspace.Profile.route(it, EntryPointType.Normal)) }
             )
         }
 
         composable(
-            route = Navigate.CreateWorkspace.Profile.destination(Const.WorkspaceName),
+            route = Navigate.CreateWorkspace.Profile.destination(Const.WorkspaceName, Const.EntryPointType),
             arguments = listOf(
                 navArgument(Const.WorkspaceName) {
                     type = NavType.StringType
                     nullable = true
+                },
+                navArgument(Const.EntryPointType) {
+                    type = NavType.EnumType(EntryPointType::class.java)
                 }
             )
         ) {
             CreateWorkspaceProfileScreen(
-                onNext = { workspace ->
+                goToCreateTeam = { workspace ->
                     navController.navigate(Navigate.CreateWorkspace.Team.route(workspace.encodeJson()))
+                },
+                goToHome = {
+                    navController.navigate(Navigate.Main.route()){
+                        popUpTo(Navigate.Login.route())
+                    }
                 }
             )
         }
@@ -410,10 +442,13 @@ fun MeeronNavigator(startDestination: String) {
                         popUpTo(Navigate.Main.route()) { inclusive = true }
                     }
                 },
-                goToHome = {
-                    navController.navigate(Navigate.Main.route()) {
-                        popUpTo(Navigate.Main.route()) { inclusive = true }
-                    }
+                goToCreateProfile = {
+                    navController.navigate(
+                        Navigate.CreateWorkspace.Profile.route(
+                            "dynamic",
+                            EntryPointType.DynamicLink
+                        )
+                    )
                 }
             )
         }

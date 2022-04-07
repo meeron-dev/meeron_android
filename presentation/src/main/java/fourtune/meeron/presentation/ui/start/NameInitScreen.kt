@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui
+package fourtune.meeron.presentation.ui.start
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,13 +9,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import forutune.meeron.domain.model.EntryPointType
 import fourtune.meeron.presentation.ui.common.MeeronSingleButton
 import fourtune.meeron.presentation.ui.common.action.ContentFactory
 import fourtune.meeron.presentation.ui.common.action.MeeronActionBox
 import fourtune.meeron.presentation.ui.common.text.MeeronLogoText
 
 @Composable
-fun NameInitScreen(viewModel: NameInitViewModel = hiltViewModel(), onNext: () -> Unit = {}) {
+fun NameInitScreen(
+    viewModel: NameInitViewModel = hiltViewModel(),
+    goToCreateOrJoin: () -> Unit = {},
+    goToCreateWorkspaceProfile: () -> Unit={}
+) {
     var text by remember {
         mutableStateOf("")
     }
@@ -37,7 +42,11 @@ fun NameInitScreen(viewModel: NameInitViewModel = hiltViewModel(), onNext: () ->
             modifier = Modifier.padding(bottom = 50.dp, start = 38.dp, end = 38.dp),
             onClick = {
                 viewModel.saveName(text)
-                onNext()
+                when (viewModel.entryPointType) {
+                    EntryPointType.Normal -> goToCreateOrJoin()
+                    EntryPointType.DynamicLink -> goToCreateWorkspaceProfile()
+                }
+
             },
             enable = text.isNotEmpty()
         )

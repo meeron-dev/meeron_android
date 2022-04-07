@@ -41,7 +41,7 @@ class LoginViewModel @Inject constructor(
     private val setCurrentWorkspaceInfo: SetCurrentWorkspaceInfoUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val entryPointType = savedStateHandle.get<EntryPointType>(Const.EntryPointType) ?: EntryPointType.Normal
+    val entryPointType = savedStateHandle.get<EntryPointType>(Const.EntryPointType) ?: EntryPointType.Normal
 
     private val _loginSuccess = MutableSharedFlow<Event>()
     fun loginSuccess() = _loginSuccess.asSharedFlow()

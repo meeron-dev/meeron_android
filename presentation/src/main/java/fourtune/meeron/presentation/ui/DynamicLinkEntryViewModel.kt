@@ -5,9 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.model.MeeronError
-import forutune.meeron.domain.model.WorkSpace
+import forutune.meeron.domain.repository.AccountRepository
 import forutune.meeron.domain.usecase.me.GetMeUseCase
-import forutune.meeron.domain.usecase.workspace.CreateWorkspaceUserUseCase
 import forutune.meeron.domain.usecase.workspace.GetUserWorkspacesUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -16,9 +15,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DynamicLinkEntryViewModel @Inject constructor(
+    private val accountRepository: AccountRepository,
     getMe: GetMeUseCase,
     getUserWorkspaces: GetUserWorkspacesUseCase,
-    private val createWorkspaceUser: CreateWorkspaceUserUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val workspaceId = savedStateHandle.get<String?>("id").orEmpty()
@@ -33,6 +32,7 @@ class DynamicLinkEntryViewModel @Inject constructor(
     val toast = _toast.asSharedFlow()
 
     init {
+
         /**
          * 1. 카카오 로그인 x
          * 2. 유저 이름 x
@@ -41,6 +41,7 @@ class DynamicLinkEntryViewModel @Inject constructor(
          */
         viewModelScope.launch {
             runCatching {
+                accountRepository.setDynamicLink(workspaceId.toLong())
                 getMe()
             }.onFailure {
                 if (it is MeeronError) {
@@ -48,7 +49,7 @@ class DynamicLinkEntryViewModel @Inject constructor(
                     _uiState.update { UiState.NotFound }
                 } else {
                     //워크스페이스 가입 안된 동선
-                    _uiState.update { UiState.GoToCreateProfile }
+                    _event.emit(Event.GoToCreateProfile)
                     Timber.tag("🔥zero:DynamicLink").d("$it")
                 }
 
@@ -62,7 +63,7 @@ class DynamicLinkEntryViewModel @Inject constructor(
                         if (alreadyJoin) {
                             _uiState.update { UiState.AlreadyJoinOrDeleted }
                         } else {
-                            _uiState.update { UiState.GoToCreateProfile }
+                            _event.emit(Event.GoToCreateProfile)
                         }
                     }.onFailure {
                         Timber.tag("🔥zero:동선 확인 필요(DM)").e("$it")
@@ -74,32 +75,15 @@ class DynamicLinkEntryViewModel @Inject constructor(
         }
     }
 
-    fun createWorkspaceUser(workSpace: WorkSpace, onCreate: () -> Unit = {}) {
-        viewModelScope.launch {
-            kotlin.runCatching {
-                createWorkspaceUser.invoke(workSpace.copy(workspaceId.toLong()))
-            }
-                .onFailure {
-                    Timber.tag("🔥createWUser(DL)").e("$it")
-                    if (it is MeeronError) {
-                        _toast.emit(it.errorMessage)
-                    } else {
-                        _toast.emit("${it.message} ?: $it")
-                    }
-                }
-                .onSuccess { onCreate() }
-        }
-    }
-
 
     sealed interface UiState {
         object Loading : UiState
         object NotFound : UiState
         object AlreadyJoinOrDeleted : UiState
-        object GoToCreateProfile : UiState
     }
 
     sealed interface Event {
         object GoToTOS : Event
+        object GoToCreateProfile : Event
     }
 }

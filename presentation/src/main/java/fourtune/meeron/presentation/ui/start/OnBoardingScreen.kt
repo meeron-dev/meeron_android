@@ -1,4 +1,4 @@
-package fourtune.meeron.presentation.ui
+package fourtune.meeron.presentation.ui.start
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image

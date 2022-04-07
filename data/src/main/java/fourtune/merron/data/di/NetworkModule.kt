@@ -8,6 +8,7 @@ import dagger.hilt.components.SingletonComponent
 import forutune.meeron.domain.di.OK_HTTP_CLIENT
 import forutune.meeron.domain.di.OK_HTTP_CLIENT_NO_AUTH
 import forutune.meeron.domain.repository.TokenRepository
+import fourtune.merron.data.BuildConfig
 import fourtune.merron.data.source.remote.*
 import fourtune.merron.data.source.remote.interceptor.TokenAuthenticator
 import fourtune.merron.data.source.remote.interceptor.TokenHeaderInterceptor
@@ -82,7 +83,7 @@ class NetworkModule {
 
     private fun createRetrofit(convertFactory: Converter.Factory, okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(convertFactory)
             .addCallAdapterFactory(ErrorHandlingCallAdapterFactory)
             .client(okHttpClient)
@@ -141,7 +142,4 @@ class NetworkModule {
         convertFactory: Converter.Factory
     ): OauthApi = createRetrofit(convertFactory, okHttpClient).create(OauthApi::class.java)
 
-    companion object {
-        private const val BASE_URL = "https://dev.meeron.net/"
-    }
 }

@@ -11,6 +11,15 @@ android {
     defaultConfig {
         minSdk = Versions.minSdk
     }
+
+    buildTypes {
+        debug {
+            buildConfigField("String", "BASE_URL", "\"https://dev.meeron.click/\"")
+        }
+        release {
+            buildConfigField("String", "BASE_URL", "\"https://prod.meeron.click/\"")
+        }
+    }
 }
 
 dependencies {

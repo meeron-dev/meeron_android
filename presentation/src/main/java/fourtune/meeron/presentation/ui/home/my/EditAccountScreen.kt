@@ -35,7 +35,7 @@ fun EditAccountScreen(
     goToLogin: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    val workspaceInfo by viewModel.workspaceInfo.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
     var logoutDialog by remember {
         mutableStateOf(false)
@@ -58,15 +58,14 @@ fun EditAccountScreen(
     }
     if (withdrawalDialog) {
         WithdrawalDialog(
-            workspaceName = workspaceInfo.workSpaceName,
-            onDismissRequest = { withdrawalDialog = it },
-            onWithdrawal = {
-                viewModel.withdrawal {
-                    Toast.makeText(context, "회원 탈퇴 되셨습니다.", Toast.LENGTH_SHORT).show()
-                    goToLogin()
-                }
+            uiState = uiState,
+            onDismissRequest = { withdrawalDialog = it }
+        ) {
+            viewModel.withdrawal {
+                Toast.makeText(context, "회원 탈퇴 되셨습니다.", Toast.LENGTH_SHORT).show()
+                goToLogin()
             }
-        )
+        }
     }
     EditAccountScreen(
         goToMyMeeron = goToMyMeeron,
@@ -86,7 +85,7 @@ fun EditAccountScreen(
 
 @Composable
 private fun WithdrawalDialog(
-    workspaceName: String,
+    uiState: EditAccountViewModel.UiState,
     onDismissRequest: (Boolean) -> Unit,
     onWithdrawal: () -> Unit
 ) {
@@ -100,7 +99,7 @@ private fun WithdrawalDialog(
                 modifier = Modifier
                     .align(Alignment.Start)
                     .padding(top = 12.dp, start = 17.dp),
-                text = workspaceName,
+                text = uiState.workspaceInfo.workSpaceName,
                 fontSize = 16.sp,
                 color = colorResource(id = R.color.dark_gray),
                 fontWeight = FontWeight.Medium
@@ -117,7 +116,7 @@ private fun WithdrawalDialog(
                 )
                 Spacer(modifier = Modifier.padding(3.dp))
                 Text(
-                    text = "관리 중인 워크스페이스가 삭제됩니다.",
+                    text = if (uiState.me.workspaceAdmin) "관리 중인 워크스페이스가 삭제됩니다." else "저장되어 있던 정보가 삭제될 수 있습니다.",
                     fontSize = 13.sp,
                     color = colorResource(id = R.color.gray),
                 )

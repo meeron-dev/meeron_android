@@ -60,7 +60,12 @@ fun EditAccountScreen(
         WithdrawalDialog(
             workspaceName = workspaceInfo.workSpaceName,
             onDismissRequest = { withdrawalDialog = it },
-            onWithdrawal = { viewModel.withdrawal() }
+            onWithdrawal = {
+                viewModel.withdrawal {
+                    Toast.makeText(context, "회원 탈퇴 되셨습니다.", Toast.LENGTH_SHORT).show()
+                    goToLogin()
+                }
+            }
         )
     }
     EditAccountScreen(

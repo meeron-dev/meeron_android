@@ -3,6 +3,7 @@ package fourtune.merron.data.source.remote
 import forutune.meeron.domain.model.User
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 
@@ -12,4 +13,7 @@ interface UserApi {
 
     @PATCH("/api/users/name")
     suspend fun saveUserName(@Body name: String): Response<Unit>
+
+    @DELETE("/api/users/quit")
+    suspend fun quit(): Response<Unit>
 }

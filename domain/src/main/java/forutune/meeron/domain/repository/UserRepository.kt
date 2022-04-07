@@ -10,4 +10,5 @@ interface UserRepository {
     suspend fun getUserId(): Long
     suspend fun createUserName(userName: String)
     suspend fun setUser(user: User, token: Token)
+    suspend fun withdrawal()
 }

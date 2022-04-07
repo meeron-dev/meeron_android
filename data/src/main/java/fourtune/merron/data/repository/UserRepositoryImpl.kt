@@ -70,4 +70,8 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun withdrawal() {
+        userApi.quit()
+    }
+
 }

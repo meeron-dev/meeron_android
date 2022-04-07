@@ -29,6 +29,7 @@ import fourtune.meeron.presentation.ui.detail.*
 import fourtune.meeron.presentation.ui.home.MainScreen
 import fourtune.meeron.presentation.ui.home.my.EditAccountScreen
 import fourtune.meeron.presentation.ui.home.my.EditWorkspaceScreen
+import fourtune.meeron.presentation.ui.home.my.InquiryOrHomepageScreen
 import fourtune.meeron.presentation.ui.home.my.MyMeeronEvent
 import fourtune.meeron.presentation.ui.home.team.add.AddTeamScreen
 import fourtune.meeron.presentation.ui.home.team.admin.AdministerTeamScreen
@@ -96,7 +97,6 @@ sealed interface Navigate {
     }
 
     sealed interface MyMeeron : Navigate {
-        object EditProfile : MyMeeron
         object EditWorkspace : MyMeeron
         object EditAccount : MyMeeron
         object InquiryOrHomepage : MyMeeron
@@ -279,8 +279,7 @@ fun MeeronNavigator(startDestination: String) {
                         navController.navigate(Navigate.CreateWorkspace.Profile.route("edit", EntryPointType.Edit))
                     }
                     MyMeeronEvent.EditWorkspace -> navController.navigate(Navigate.MyMeeron.EditWorkspace.route())
-                    MyMeeronEvent.InquiryOrHomepage -> {
-                    }
+                    MyMeeronEvent.InquiryOrHomepage -> navController.navigate(Navigate.MyMeeron.InquiryOrHomepage.route())
                 }
             }
         }
@@ -423,6 +422,10 @@ fun MeeronNavigator(startDestination: String) {
                     }
                 }
             )
+        }
+
+        composable(Navigate.MyMeeron.InquiryOrHomepage.destination()) {
+            InquiryOrHomepageScreen(onBack = { navController.navigateUp() })
         }
 
         composable(

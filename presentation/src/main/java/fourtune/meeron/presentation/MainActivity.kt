@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import forutune.meeron.domain.Const
 import fourtune.meeron.presentation.navigator.MeeronNavigator
 import fourtune.meeron.presentation.navigator.Navigate
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
@@ -53,15 +54,15 @@ class MainActivity : ComponentActivity() {
         }
 
         viewModel.event.onEach { event ->
-            val navigate = when (event) {
-                MainViewModel.Event.GoToHome -> Navigate.Main
-                MainViewModel.Event.GoToLogin -> Navigate.Login
-                MainViewModel.Event.GoToCreateOrJoin -> Navigate.CreateWorkspace.CreateOrJoin
+            val destination = when (event) {
+                MainViewModel.Event.GoToHome -> Navigate.Main.destination()
+                MainViewModel.Event.GoToLogin -> Navigate.Login.destination(Const.EntryPointType)
+                MainViewModel.Event.GoToCreateOrJoin -> Navigate.CreateWorkspace.CreateOrJoin.destination()
             }
             isReady = true
             setContent {
                 MeeronTheme {
-                    MeeronNavigator(navigate)
+                    MeeronNavigator(destination)
                 }
             }
         }.launchIn(lifecycleScope)

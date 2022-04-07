@@ -17,6 +17,7 @@ object Const {
     const val Meeting = "meeting"
     const val CalendarType = "calendar_type"
 
+    const val EntryPointType = "entrypoint_type"
     const val DynamicLinkDomainUrl = "https://ronmee.page.link"
     const val TermsOfUse = "https://ryuyxxn.notion.site/29115494f9324509ba21416bbb1c7ef1"
     const val PrivacyPolicy = "https://ryuyxxn.notion.site/502b6e5487664faab875f7b4e5383a7b"

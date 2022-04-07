@@ -1,12 +1,15 @@
 package fourtune.meeron.presentation.ui.login
 
 import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kakao.sdk.user.UserApiClient
 import com.kakao.sdk.user.model.User
 import com.kakao.sdk.user.rx
 import dagger.hilt.android.lifecycle.HiltViewModel
+import forutune.meeron.domain.Const
+import forutune.meeron.domain.model.EntryPointType
 import forutune.meeron.domain.model.LoginUser
 import forutune.meeron.domain.model.MeeronError
 import forutune.meeron.domain.usecase.IsFirstVisitUserUseCase
@@ -37,8 +40,11 @@ class LoginViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
     private val getUserWorkspaces: GetUserWorkspacesUseCase,
     private val isFirstVisitUser: IsFirstVisitUserUseCase,
-    private val setCurrentWorkspaceInfo: SetCurrentWorkspaceInfoUseCase
+    private val setCurrentWorkspaceInfo: SetCurrentWorkspaceInfoUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    private val entryPointType = savedStateHandle.get<EntryPointType>(Const.EntryPointType) ?: EntryPointType.Normal
+
     private val _loginSuccess = MutableSharedFlow<Event>()
     fun loginSuccess() = _loginSuccess.asSharedFlow()
 
@@ -51,6 +57,7 @@ class LoginViewModel @Inject constructor(
     }
 
     init {
+        Timber.tag("🔥zero:login").d("$entryPointType")
         viewModelScope.launch(loginContext) {
             runCatching {
                 loginUseCase(getMe = { UserApiClient.rx.me().await().toLoginUser() })

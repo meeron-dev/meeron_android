@@ -12,6 +12,7 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import forutune.meeron.domain.Const
+import forutune.meeron.domain.model.EntryPointType
 import fourtune.meeron.presentation.navigator.ext.encodeJson
 import fourtune.meeron.presentation.navigator.type.*
 import fourtune.meeron.presentation.ui.DynamicLinkEntryScreen
@@ -119,15 +120,22 @@ sealed interface Navigate {
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun MeeronNavigator(startDestination: Navigate) {
+fun MeeronNavigator(startDestination: String) {
     val navController = rememberAnimatedNavController()
     val context = LocalContext.current
 
     AnimatedNavHost(
         navController = navController,
-        startDestination = startDestination.route()
+        startDestination = startDestination
     ) {
-        composable(route = Navigate.Login.route()) {
+        composable(
+            route = Navigate.Login.destination(Const.EntryPointType),
+            arguments = listOf(
+                navArgument(Const.EntryPointType) {
+                    type = NavType.EnumType(EntryPointType::class.java)
+                }
+            )
+        ) {
             LoginScreen(
                 goToHome = {
                     navController.popBackStack()
@@ -377,7 +385,7 @@ fun MeeronNavigator(startDestination: Navigate) {
                     navController.navigateUp()
                 },
                 goToLogin = {
-                    navController.navigate(Navigate.Login.route()){
+                    navController.navigate(Navigate.Login.route(EntryPointType.Normal)) {
                         popUpTo(Navigate.Main.route())
                     }
                 }
@@ -398,7 +406,7 @@ fun MeeronNavigator(startDestination: Navigate) {
                     }
                 },
                 goToLogin = {
-                    navController.navigate(Navigate.Login.route()) {
+                    navController.navigate(Navigate.Login.route(EntryPointType.DynamicLink)) {
                         popUpTo(Navigate.Main.route()) { inclusive = true }
                     }
                 },

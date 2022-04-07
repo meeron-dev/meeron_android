@@ -14,7 +14,6 @@ import forutune.meeron.domain.model.LoginUser
 import forutune.meeron.domain.model.MeeronError
 import forutune.meeron.domain.usecase.IsFirstVisitUserUseCase
 import forutune.meeron.domain.usecase.login.LoginUseCase
-import forutune.meeron.domain.usecase.login.LogoutUseCase
 import forutune.meeron.domain.usecase.workspace.GetUserWorkspacesUseCase
 import forutune.meeron.domain.usecase.workspace.SetCurrentWorkspaceInfoUseCase
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -37,7 +36,6 @@ fun User.toLoginUser(): LoginUser {
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val logoutUseCase: LogoutUseCase,
     private val getUserWorkspaces: GetUserWorkspacesUseCase,
     private val isFirstVisitUser: IsFirstVisitUserUseCase,
     private val setCurrentWorkspaceInfo: SetCurrentWorkspaceInfoUseCase,
@@ -57,7 +55,6 @@ class LoginViewModel @Inject constructor(
     }
 
     init {
-        Timber.tag("🔥zero:login").d("$entryPointType")
         viewModelScope.launch(loginContext) {
             runCatching {
                 loginUseCase(getMe = { UserApiClient.rx.me().await().toLoginUser() })
@@ -110,12 +107,6 @@ class LoginViewModel @Inject constructor(
 
             }
             _loginSuccess.emit(event)
-        }
-    }
-
-    fun logout() {
-        viewModelScope.launch(loginContext) {
-            logoutUseCase(kakaoLogout = { UserApiClient.rx.unlink().await() })
         }
     }
 

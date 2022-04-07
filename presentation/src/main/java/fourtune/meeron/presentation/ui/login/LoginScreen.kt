@@ -46,7 +46,6 @@ fun LoginScreen(
             .fillMaxSize()
             .padding(horizontal = 23.dp, vertical = 90.dp),
     ) {
-        Text(text = "로그아웃(test)", modifier = Modifier.clickable { viewModel.logout() })
         Image(
             modifier = Modifier.align(Alignment.Center),
             painter = painterResource(id = R.drawable.ic_meeron_symbol),

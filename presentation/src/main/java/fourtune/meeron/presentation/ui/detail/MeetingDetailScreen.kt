@@ -1,5 +1,6 @@
 package fourtune.meeron.presentation.ui.detail
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,13 +9,11 @@ import androidx.compose.material.Divider
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -30,6 +29,7 @@ import forutune.meeron.domain.model.*
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.common.DetailItem
 import fourtune.meeron.presentation.ui.common.StateItem
+import fourtune.meeron.presentation.ui.common.dialog.SingleTextDialog
 import fourtune.meeron.presentation.ui.common.topbar.DetailTopBar
 
 @Composable
@@ -41,10 +41,29 @@ fun MeetingDetailScreen(
     onBack: () -> Unit,
     owner: LifecycleOwner = LocalLifecycleOwner.current
 ) {
+    val context = LocalContext.current
+    var openDeleteDialog by remember {
+        mutableStateOf(false)
+    }
+
     LaunchedEffect(key1 = true) {
         owner.whenResumed {
             viewModel.updateAgendaInfo()
         }
+    }
+
+    if (openDeleteDialog) {
+        SingleTextDialog(
+            buttonText = "삭제하기",
+            text = "해당 회의를 정말 삭제하시겠습니까?",
+            onDismissRequest = { openDeleteDialog = it },
+            onClick = {
+                viewModel.deleteMeeting {
+                    Toast.makeText(context, "해당 회의가 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                    onBack()
+                }
+            }
+        )
     }
 
     val uiState by viewModel.uiState.collectAsState()
@@ -54,7 +73,9 @@ fun MeetingDetailScreen(
                 workspaceName = uiState.workspaceInfo.workSpaceName,
                 meeting = uiState.meeting,
                 ownerNames = uiState.ownerNames,
-                onBack = onBack
+                onBack = onBack,
+                isAdmin = uiState.isAdmin,
+                onDelete = { openDeleteDialog = true }
             )
         },
         content = {
@@ -74,9 +95,11 @@ fun MeetingDetailTopBar(
     workspaceName: String = "",
     meeting: Meeting,
     ownerNames: String = "",
-    onBack: () -> Unit = {}
+    isAdmin: Boolean,
+    onBack: () -> Unit = {},
+    onDelete: () -> Unit = {}
 ) {
-    DetailTopBar(title = "회의", onBack) {
+    DetailTopBar(title = "회의", onBack, onDelete, isAdmin) {
         Spacer(modifier = Modifier.padding(5.dp))
         Column(modifier = Modifier.padding(horizontal = 20.dp)) {
             Row(
@@ -252,7 +275,8 @@ private fun Preview1() {
             agenda = listOf(
                 Agenda(order = 1, name = "agenda1", issues = emptyList(), fileInfos = listOf(FileInfo("", "")))
             ),
-        )
+        ),
+        isAdmin = true
     )
 }
 

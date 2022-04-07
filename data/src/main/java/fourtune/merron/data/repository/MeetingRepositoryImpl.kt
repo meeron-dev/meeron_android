@@ -159,4 +159,8 @@ class MeetingRepositoryImpl @Inject constructor(
     override suspend fun getAgendaInfo(meetingId: Long): AgendaInfo {
         return meetingApi.getAgendaInfo(meetingId)
     }
+
+    override suspend fun deleteMeeting(meetingId: Long, workspaceUserId: Long) {
+        meetingApi.deleteMeeting(meetingId, workspaceUserId)
+    }
 }

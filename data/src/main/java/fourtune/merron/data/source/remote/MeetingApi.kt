@@ -91,4 +91,11 @@ interface MeetingApi {
 
     @GET("api/meetings/{meetingId}/agendas/count")
     suspend fun getAgendaInfo(@Path("meetingId") meetingId: Long): AgendaInfo
+
+    @POST("/api/meetings/{meetingId}/delete")
+    suspend fun deleteMeeting(
+        @Path("meetingId") meetingId: Long,
+        @Body attendeeWorkspaceUserId: Long
+    ): Response<Unit>
+
 }

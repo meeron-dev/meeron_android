@@ -90,7 +90,7 @@ fun AgendaDetailTopBar(
     }
 
 
-    DetailTopBar("아젠다", onBack) {
+    DetailTopBar("아젠다", onBack,) {
         Spacer(modifier = Modifier.padding(10.dp))
         LazyRow(modifier = Modifier.padding(20.dp), horizontalArrangement = Arrangement.spacedBy(40.dp)) {
             itemsIndexed(agendaOrder) { index, order ->

@@ -18,10 +18,12 @@ class CreateMeetingUseCase @Inject constructor(
             meeting.copy(ownerIds = meeting.ownerIds - getMyWorkSpaceUser().workspaceUserId)
         )
         meetingRepository.addParticipants(meetingId, meeting)
-        val agendaIds = meetingRepository.addAgenda(meetingId, meeting)
-        agendaIds.forEachIndexed { index, agendaId ->
-            meeting.agenda[index].fileInfos.forEach { fileInfo ->
-                meetingRepository.addFiles(agendaId, fileInfo)
+        if (meeting.agenda.all { it.name.isNotEmpty() }) {
+            val agendaIds = meetingRepository.addAgenda(meetingId, meeting)
+            agendaIds.forEachIndexed { index, agendaId ->
+                meeting.agenda[index].fileInfos.forEach { fileInfo ->
+                    meetingRepository.addFiles(agendaId, fileInfo)
+                }
             }
         }
     }

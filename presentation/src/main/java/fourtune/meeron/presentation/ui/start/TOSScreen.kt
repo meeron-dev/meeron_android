@@ -107,7 +107,7 @@ private fun TOSOptions(
             context.startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse(Const.PrivacyPolicy)
+                    Uri.parse(Const.PersonalInformationCollectionAndUsageAgreement)
                 )
             )
         }

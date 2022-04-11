@@ -72,7 +72,7 @@ fun OnBoardingScreen(viewModel: OnBoardingViewModel = hiltViewModel(), goToHome:
                 OnBoard.Second.ordinal -> {
                     OnBoardingScreen(
                         title = buildAnnotatedString {
-                            append("출근 전")
+                            append("출근 전 ")
                             withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                                 append("1분이면 충분해요")
                             }

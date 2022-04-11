@@ -21,15 +21,25 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    signingConfigs {
+        create("release") {
+            keyAlias = "release"
+            keyPassword = "meeron"
+            storeFile = file("/Users/zero/Meeron/keystore.jks")
+            storePassword = "meeron"
+        }
+    }
 
     buildTypes {
         debug {
             buildConfigField("String", "APP_KEY", "\"${App.appKey}\"")
             isDebuggable = true
+            signingConfig = signingConfigs.getByName("debug")
         }
         release {
             buildConfigField("String", "APP_KEY", "\"${App.appKey}\"")
             isDebuggable = false
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 

@@ -22,10 +22,16 @@ android {
         jvmTarget = "1.8"
     }
     signingConfigs {
+        getByName("debug"){
+            keyAlias = "debug"
+            keyPassword = "meeron"
+            storeFile = file("key/keystore")
+            storePassword = "meeron"
+        }
         create("release") {
             keyAlias = "release"
             keyPassword = "meeron"
-            storeFile = file("/Users/zero/Meeron/keystore.jks")
+            storeFile = file("key/keystore.jks")
             storePassword = "meeron"
         }
     }

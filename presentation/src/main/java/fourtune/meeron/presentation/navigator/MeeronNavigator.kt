@@ -12,7 +12,9 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import forutune.meeron.domain.Const
+import forutune.meeron.domain.model.CalendarType
 import forutune.meeron.domain.model.EntryPointType
+import forutune.meeron.domain.model.Team
 import fourtune.meeron.presentation.navigator.ext.encodeJson
 import fourtune.meeron.presentation.navigator.type.*
 import fourtune.meeron.presentation.ui.DynamicLinkEntryScreen
@@ -271,7 +273,9 @@ fun MeeronNavigator(startDestination: String) {
                 homeEvent = { homeEvent ->
                     when (homeEvent) {
                         is HomeEvent.GoToMeetingDetail -> navController.navigate(Navigate.Detail.Meeting.route(homeEvent.meeting.encodeJson()))
-                        HomeEvent.OpenCalendar -> navController.navigate(Navigate.Calendar.route())
+                        HomeEvent.OpenCalendar -> navController.navigate(
+                            Navigate.Calendar.route(CalendarType.WORKSPACE, Team.Empty.encodeJson())
+                        )
                         HomeEvent.AddMeeting -> navController.navigate(Navigate.CreateMeeting.Date.route())
                     }
                 },
@@ -288,7 +292,12 @@ fun MeeronNavigator(startDestination: String) {
                                 teamEvent.teamState.team.encodeJson()
                             )
                         )
-                        TeamEvent.OpenCalendar -> navController.navigate(Navigate.Calendar.route())
+                        is TeamEvent.OpenCalendar -> navController.navigate(
+                            Navigate.Calendar.route(
+                                CalendarType.TEAM,
+                                teamEvent.team.encodeJson()
+                            )
+                        )
                         TeamEvent.GoToAddTeamMemeber -> navController.navigate(Navigate.Team.Add.route())
                     }
                 },
@@ -479,9 +488,18 @@ fun MeeronNavigator(startDestination: String) {
         }
 
         composable(
-            route = Navigate.Calendar.route(),
+            route = Navigate.Calendar.destination(Const.CalendarType, Const.Team),
             enterTransition = { slideInVertically(initialOffsetY = { it }) },
             exitTransition = { slideOutVertically(targetOffsetY = { it }) },
+            arguments = listOf(
+                navArgument(Const.CalendarType) {
+                    type = NavType.EnumType(CalendarType::class.java)
+                },
+                navArgument(Const.Team) {
+                    defaultValue = Team.Empty
+                    type = TeamType(context)
+                }
+            )
         ) {
             CalendarScreen(
                 onBack = { navController.navigateUp() },
@@ -530,7 +548,14 @@ fun MeeronNavigator(startDestination: String) {
                     )
                 },
                 onPrevious = { navController.navigateUp() },
-                onLoad = { navController.navigate(Navigate.Calendar.route()) },
+                onLoad = {
+                    navController.navigate(
+                        Navigate.Calendar.route(
+                            CalendarType.WORKSPACE,
+                            Team.Empty.encodeJson()
+                        ),
+                    )
+                },
                 onAction = {
                     navController.popBackStack(Navigate.Main.route(), inclusive = false)
                 }

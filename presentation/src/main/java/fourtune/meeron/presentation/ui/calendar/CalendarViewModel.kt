@@ -5,15 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import forutune.meeron.domain.Const
-import forutune.meeron.domain.model.CalendarType
-import forutune.meeron.domain.model.Date
-import forutune.meeron.domain.model.Meeting
-import forutune.meeron.domain.model.WorkSpaceInfo
+import forutune.meeron.domain.model.*
 import forutune.meeron.domain.usecase.me.GetMyWorkSpaceUserUseCase
 import forutune.meeron.domain.usecase.meeting.date.GetDateMeetingCountUseCase
 import forutune.meeron.domain.usecase.meeting.date.GetDateMeetingUseCase
 import forutune.meeron.domain.usecase.time.DateFormat
 import forutune.meeron.domain.usecase.time.GetCurrentDayUseCase
+import forutune.meeron.domain.usecase.workspace.GetCurrentWorkspaceInfoUseCase
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,6 +22,7 @@ class CalendarViewModel @Inject constructor(
     private val getDateMeetingCountUseCase: GetDateMeetingCountUseCase,
     private val getCurrentDayUseCase: GetCurrentDayUseCase,
     private val getDateMeetingUseCase: GetDateMeetingUseCase,
+    private val currentWorkspaceInfo: GetCurrentWorkspaceInfoUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val calendarType: CalendarType = savedStateHandle[Const.CalendarType] ?: CalendarType.WORKSPACE_USER
@@ -49,7 +48,12 @@ class CalendarViewModel @Inject constructor(
                         currentDay
                     ),
                     myWorkSpaceId = getMyWorkSpaceUserUseCase().workspaceId,
-                    selectedMeetings = getDateMeetingUseCase(calendarType, date = currentDay)
+                    selectedMeetings = getDateMeetingUseCase(calendarType, date = currentDay),
+                    title = when (calendarType) {
+                        CalendarType.WORKSPACE -> currentWorkspaceInfo().workSpaceName
+                        CalendarType.TEAM -> savedStateHandle.get<Team>(Const.Team)?.name.orEmpty()
+                        CalendarType.WORKSPACE_USER -> "나의 캘린더"
+                    }
                 )
             }
 
@@ -94,7 +98,8 @@ class CalendarViewModel @Inject constructor(
         val selectedMeetings: List<Pair<Meeting, WorkSpaceInfo?>> = emptyList(),
         val days: List<Int> = emptyList(),
         val selectedDay: Date = Date(),
-        val myWorkSpaceId: Long = -1
+        val myWorkSpaceId: Long = -1,
+        val title: String = ""
     )
 
     sealed interface Event {

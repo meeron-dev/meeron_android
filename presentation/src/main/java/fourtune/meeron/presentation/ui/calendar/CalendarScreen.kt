@@ -50,6 +50,7 @@ fun CalendarScreen(
     showAll: (Date) -> Unit = {},
     goToMeetingDetail: (Meeting) -> Unit = {}
 ) {
+    val uiState by viewModel.uiState.collectAsState()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -63,7 +64,7 @@ fun CalendarScreen(
                 },
                 title = {
                     Text(
-                        text = "나의 캘린더",
+                        text = uiState.title,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = colorResource(id = R.color.black)
@@ -72,8 +73,6 @@ fun CalendarScreen(
             )
         }
     ) {
-        val uiState by viewModel.uiState.collectAsState()
-
         CalendarScreen(
             uiState = uiState,
             topBarEvent = viewModel.topBarEvent,

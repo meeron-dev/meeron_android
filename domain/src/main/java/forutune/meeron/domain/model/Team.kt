@@ -12,5 +12,9 @@ data class Teams(
 data class Team(
     @SerialName("teamId") val id: Long = -1,
     @SerialName("teamName") val name: String = "None"
-) : Serializable
+) : Serializable {
+    companion object {
+        val Empty = Team()
+    }
+}
 

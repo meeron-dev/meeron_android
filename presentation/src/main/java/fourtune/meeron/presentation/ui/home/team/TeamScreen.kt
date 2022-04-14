@@ -46,7 +46,7 @@ enum class TeamItems(
 
 sealed interface TeamEvent {
     class AdministerTeam(val teamState: TeamViewModel.TeamState.Normal) : TeamEvent
-    object OpenCalendar : TeamEvent
+    class OpenCalendar(val team: Team) : TeamEvent
     class GoToDetail(val workspaceUser: WorkspaceUser, val teamState: TeamViewModel.TeamState) : TeamEvent
     object GoToAddTeamMemeber : TeamEvent
 }
@@ -85,7 +85,7 @@ private fun TeamScreen(uiState: TeamViewModel.UiState, event: (TeamEvent) -> Uni
             )
             if (selectedTeam is TeamViewModel.TeamState.Normal) {
                 Row {
-                    IconButton(onClick = { event(TeamEvent.OpenCalendar) }) {
+                    IconButton(onClick = { event(TeamEvent.OpenCalendar(selectedTeam.team)) }) {
                         Image(painter = painterResource(id = R.drawable.ic_calendar), contentDescription = null)
                     }
                     if (uiState.isAdmin) {

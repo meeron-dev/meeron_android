@@ -26,6 +26,7 @@ import fourtune.meeron.presentation.ui.createmeeting.participants.CreateMeetingP
 import fourtune.meeron.presentation.ui.createmeeting.time.CreateMeetingTimeScreen
 import fourtune.meeron.presentation.ui.createworkspace.*
 import fourtune.meeron.presentation.ui.detail.*
+import fourtune.meeron.presentation.ui.home.HomeEvent
 import fourtune.meeron.presentation.ui.home.MainScreen
 import fourtune.meeron.presentation.ui.home.my.EditAccountScreen
 import fourtune.meeron.presentation.ui.home.my.EditWorkspaceScreen
@@ -267,10 +268,14 @@ fun MeeronNavigator(startDestination: String) {
 
         composable(route = Navigate.Main.route()) {
             MainScreen(
-                openCalendar = { navController.navigate(Navigate.Calendar.route()) },
-                addMeeting = { navController.navigate(Navigate.CreateMeeting.Date.route()) },
                 goToAddTeamMember = { navController.navigate(Navigate.Team.Add.route()) },
-                goToMeetingDetail = { navController.navigate(Navigate.Detail.Meeting.route(it.encodeJson())) },
+                homeEvent = { homeEvent ->
+                    when (homeEvent) {
+                        is HomeEvent.GoToMeetingDetail -> navController.navigate(Navigate.Detail.Meeting.route(homeEvent.meeting.encodeJson()))
+                        HomeEvent.OpenCalendar -> navController.navigate(Navigate.Calendar.route())
+                        HomeEvent.AddMeeting -> navController.navigate(Navigate.CreateMeeting.Date.route())
+                    }
+                },
                 teamEvent = { teamEvent ->
                     when (teamEvent) {
                         is TeamEvent.AdministerTeam -> navController.navigate(

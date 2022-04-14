@@ -37,13 +37,17 @@ import fourtune.meeron.presentation.ui.common.StateItem
 import fourtune.meeron.presentation.ui.common.topbar.CenterTextTopAppBar
 import fourtune.meeron.presentation.ui.theme.MeeronTheme
 
+sealed interface HomeEvent {
+    object OpenCalendar : HomeEvent
+    class GoToMeetingDetail(val meeting: Meeting) : HomeEvent
+    object AddMeeting : HomeEvent
+}
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
     bottomBarSize: Dp = 90.dp,
-    openCalendar: () -> Unit,
-    onClickMeeting: (meeting: Meeting) -> Unit
+    event: (HomeEvent) -> Unit = {}
 ) {
     val currentDay by homeViewModel.currentDay().collectAsState()
     val uiState by homeViewModel.uiState.collectAsState()
@@ -54,8 +58,7 @@ fun HomeScreen(
         pagerState = pagerState,
         currentDay = currentDay,
         uiState = uiState,
-        openCalendar = openCalendar,
-        onClickMeeting = onClickMeeting
+        event = event,
     )
 }
 
@@ -66,8 +69,7 @@ private fun HomeScreen(
     pagerState: PagerState = rememberPagerState(0),
     currentDay: CalendarDay = CalendarDay.today(),
     uiState: HomeViewModel.UiState,
-    openCalendar: () -> Unit = {},
-    onClickMeeting: (meeting: Meeting) -> Unit = {}
+    event: (HomeEvent) -> Unit = {}
 ) {
     Column(
         Modifier
@@ -77,7 +79,7 @@ private fun HomeScreen(
         CalendarTitle(
             modifier = Modifier.padding(vertical = 28.dp, horizontal = 4.dp),
             date = currentDay,
-            openCalendar = openCalendar
+            openCalendar = { event(HomeEvent.OpenCalendar) }
         )
         Text(
             modifier = Modifier.padding(horizontal = 20.dp),
@@ -113,7 +115,7 @@ private fun HomeScreen(
                 repeat(uiState.todayMeeting.size) {
                     PagerItem(
                         meeting = uiState.todayMeeting[pager],
-                        onClick = { onClickMeeting(uiState.todayMeeting[pager]) }
+                        onClick = { event(HomeEvent.GoToMeetingDetail(uiState.todayMeeting[pager])) }
                     )
                 }
             }
@@ -195,13 +197,13 @@ private fun PagerItem(meeting: Meeting, onClick: () -> Unit) {
 @Composable
 fun HomeTopBar(
     uiState: HomeViewModel.UiState,
-    addMeeting: () -> Unit
+    homeEvent: (HomeEvent) -> Unit = {}
 ) {
 //    val scope = rememberCoroutineScope()
     CenterTextTopAppBar(
         actionIcon = painterResource(id = R.drawable.ic_plus),
-        onAction = addMeeting,
-        text = {TitleText(Modifier.fillMaxWidth(), uiState.workspaceName)}
+        onAction = { homeEvent(HomeEvent.AddMeeting) },
+        text = { TitleText(Modifier.fillMaxWidth(), uiState.workspaceName) }
 //        navigationIcon = painterResource(id = R.drawable.ic_home_menu),
 //        onNavigation = {
 //            if (scaffoldState.drawerState.isOpen) {

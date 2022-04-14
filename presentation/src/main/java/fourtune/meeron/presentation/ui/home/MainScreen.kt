@@ -25,7 +25,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.whenStarted
 import com.google.accompanist.pager.ExperimentalPagerApi
-import forutune.meeron.domain.model.Meeting
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.home.my.MyMeeronEvent
 import fourtune.meeron.presentation.ui.home.my.MyMeeronScreen
@@ -47,10 +46,8 @@ fun MainScreen(
     owner: LifecycleOwner = LocalLifecycleOwner.current,
     homeViewModel: HomeViewModel = hiltViewModel(),
     teamViewModel: TeamViewModel = hiltViewModel(),
-    openCalendar: () -> Unit = {},
-    addMeeting: () -> Unit = {},
     goToAddTeamMember: () -> Unit = {},
-    goToMeetingDetail: (meeting: Meeting) -> Unit = {},
+    homeEvent: (HomeEvent) -> Unit = {},
     teamEvent: (TeamEvent) -> Unit = {},
     myMeeronEvent: (MyMeeronEvent) -> Unit = {}
 ) {
@@ -75,7 +72,7 @@ fun MainScreen(
         topBar = {
 
             when (content) {
-                BottomNavi.Home -> HomeTopBar(homeUiState, addMeeting)
+                BottomNavi.Home -> HomeTopBar(homeUiState, homeEvent)
                 BottomNavi.My -> {; }
                 BottomNavi.Team -> TeamTopBar(
                     isAdmin=teamUiState.isAdmin,
@@ -106,8 +103,7 @@ fun MainScreen(
             BottomNavi.Home -> HomeScreen(
                 homeViewModel = homeViewModel,
                 bottomBarSize = bottomBarSize,
-                openCalendar = openCalendar,
-                onClickMeeting = goToMeetingDetail
+                event = homeEvent
             )
             BottomNavi.My -> {
                 MyMeeronScreen(

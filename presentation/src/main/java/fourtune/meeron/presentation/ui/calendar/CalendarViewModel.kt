@@ -97,7 +97,7 @@ class CalendarViewModel @Inject constructor(
     data class UiState(
         val selectedMeetings: List<Pair<Meeting, WorkSpaceInfo?>> = emptyList(),
         val days: List<Int> = emptyList(),
-        val selectedDay: Date = Date(),
+        val selectedDay: Date = Date.EMPTY,
         val myWorkSpaceId: Long = -1,
         val title: String = ""
     )

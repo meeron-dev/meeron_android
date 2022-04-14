@@ -15,4 +15,8 @@ data class Date(
     fun displayString(): String {
         return "${year}년 ${month}월 ${hourOfDay}일"
     }
+
+    companion object {
+        val EMPTY = Date()
+    }
 }

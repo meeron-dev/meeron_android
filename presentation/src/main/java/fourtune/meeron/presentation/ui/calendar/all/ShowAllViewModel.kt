@@ -53,7 +53,7 @@ class ShowAllViewModel @Inject constructor(
     ): Date {
         val currentDay = getCurrentDayUseCase(DateFormat.YYYYMMDD).date
         val hasSelectedYear = yearCounts.firstOrNull { it.year == selectedDate.year }
-        return if (hasSelectedYear != null) currentDay.copy(year = hasSelectedYear.year) else currentDay
+        return if (hasSelectedYear != null) selectedDate else currentDay
     }
 
 

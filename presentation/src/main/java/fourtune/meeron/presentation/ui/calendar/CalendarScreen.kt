@@ -9,7 +9,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -202,13 +206,16 @@ private fun Calendar(
 ) {
 
     val scope = rememberCoroutineScope()
-    val decorators = remember {
+    val decorators = rememberSaveable {
         mutableListOf<DayViewDecorator>()
     }
     AndroidView(factory = { context ->
         val selectionDecor by lazy { SelectionDecorator(context) }
 
         MaterialCalendarView(context).apply {
+            if (selectedDay != Date.EMPTY) {
+                currentDate = CalendarDay.from(selectedDay.year, selectedDay.month, selectedDay.hourOfDay)
+            }
             scope.launch {
                 topBarEvent.collectLatest {
                     when (it) {

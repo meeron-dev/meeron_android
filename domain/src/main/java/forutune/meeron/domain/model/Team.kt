@@ -11,5 +11,6 @@ data class Teams(
 @kotlinx.serialization.Serializable
 data class Team(
     @SerialName("teamId") val id: Long = -1,
-    @SerialName("teamName") val name: String = ""
+    @SerialName("teamName") val name: String = "None"
 ) : Serializable
+

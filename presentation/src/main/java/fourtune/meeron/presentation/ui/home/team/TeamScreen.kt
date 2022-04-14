@@ -44,30 +44,26 @@ enum class TeamItems(
     None(R.drawable.ic_team_none),
 }
 
+sealed interface TeamEvent {
+    class AdministerTeam(val teamState: TeamViewModel.TeamState.Normal) : TeamEvent
+    object OpenCalendar : TeamEvent
+    class GoToDetail(val workspaceUser: WorkspaceUser, val teamState: TeamViewModel.TeamState) : TeamEvent
+}
+
 @Composable
 fun TeamScreen(
     viewModel: TeamViewModel = hiltViewModel(),
-    administerTeam: () -> Unit = {},
-    openCalendar: () -> Unit = {}
+    teamEvent: (TeamEvent) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     TeamScreen(
         uiState = uiState,
-        event = { event ->
-            when (event) {
-                TeamViewModel.Event.AdministerTeam -> {
-                    administerTeam()
-                }
-                TeamViewModel.Event.OpenCalendar -> openCalendar()
-            }
-        }
+        event = teamEvent
     )
-
-
 }
 
 @Composable
-private fun TeamScreen(uiState: TeamViewModel.UiState, event: (TeamViewModel.Event) -> Unit = {}) {
+private fun TeamScreen(uiState: TeamViewModel.UiState, event: (TeamEvent) -> Unit = {}) {
     val selectedTeam = uiState.selectedTeam
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.padding(7.dp))
@@ -81,19 +77,19 @@ private fun TeamScreen(uiState: TeamViewModel.UiState, event: (TeamViewModel.Eve
             Text(
                 text = when (selectedTeam) {
                     is TeamViewModel.TeamState.Normal -> selectedTeam.team.name
-                    is TeamViewModel.TeamState.None -> selectedTeam.name
+                    is TeamViewModel.TeamState.None -> selectedTeam.team.name
                 },
                 fontSize = 21.sp,
                 color = colorResource(id = R.color.black)
             )
             if (selectedTeam is TeamViewModel.TeamState.Normal) {
                 Row {
-                    IconButton(onClick = { event(TeamViewModel.Event.OpenCalendar) }) {
+                    IconButton(onClick = { event(TeamEvent.OpenCalendar) }) {
                         Image(painter = painterResource(id = R.drawable.ic_calendar), contentDescription = null)
                     }
                     if (uiState.isAdmin) {
                         Spacer(modifier = Modifier.padding(4.dp))
-                        IconButton(onClick = { event(TeamViewModel.Event.AdministerTeam) }) {
+                        IconButton(onClick = { event(TeamEvent.AdministerTeam(selectedTeam)) }) {
                             Image(
                                 painter = painterResource(id = R.drawable.ic_setting),
                                 contentDescription = null
@@ -122,6 +118,7 @@ private fun TeamScreen(uiState: TeamViewModel.UiState, event: (TeamViewModel.Eve
                 LazyVerticalGrid(columns = GridCells.Fixed(4)) {
                     items(uiState.teamMembers) { workspaceUser: WorkspaceUser ->
                         UserItem(
+                            modifier = Modifier.clickable { event(TeamEvent.GoToDetail(workspaceUser, selectedTeam)) },
                             user = workspaceUser,
                             selected = false,
                             admin = workspaceUser.workspaceAdmin

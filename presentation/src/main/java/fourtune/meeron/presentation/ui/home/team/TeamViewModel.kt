@@ -25,7 +25,7 @@ class TeamViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
 
-    private val _event = MutableSharedFlow<Event>()
+    private val _event = MutableSharedFlow<TeamEvent>()
     val event = _event.asSharedFlow()
 
     private var initJob: Job? = null
@@ -35,7 +35,7 @@ class TeamViewModel @Inject constructor(
             runCatching {
                 val teams = getWorkSpaceTeamUseCase()
                 val teamMembers = if (teams.isEmpty()) emptyList() else getTeamMember(teams.first().id)
-                val selectedTeam = teams.firstOrNull()?.let(TeamState::Normal) ?: TeamState.None()
+                val selectedTeam = teams.firstOrNull()?.let(TeamState::Normal) ?: TeamState.None
                 Timber.tag("🔥zero:init").w("$selectedTeam")
                 _uiState.update {
                     it.copy(
@@ -88,7 +88,7 @@ class TeamViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    selectedTeam = TeamState.None(),
+                    selectedTeam = TeamState.None,
                     teamMembers = getNotJoinedTeamWorkspaceUser()
                 )
             }
@@ -96,22 +96,16 @@ class TeamViewModel @Inject constructor(
         }
     }
 
-
-    sealed interface Event {
-        object AdministerTeam : Event
-        object OpenCalendar : Event
-    }
-
     data class UiState(
         val teams: List<Team> = emptyList(),
         val teamMembers: List<WorkspaceUser> = emptyList(),
-        val selectedTeam: TeamState = TeamState.None(),
+        val selectedTeam: TeamState = TeamState.None,
         val isAdmin: Boolean = false,
         val showNone: Boolean = false
     )
 
-    sealed interface TeamState {
-        class Normal(val team: Team) : TeamState
-        class None(val name: String = "NONE") : TeamState
+    sealed class TeamState(val team: Team) {
+        class Normal(team: Team) : TeamState(team)
+        object None : TeamState(Team())
     }
 }

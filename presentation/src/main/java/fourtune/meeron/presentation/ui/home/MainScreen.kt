@@ -29,6 +29,7 @@ import forutune.meeron.domain.model.Meeting
 import fourtune.meeron.presentation.R
 import fourtune.meeron.presentation.ui.home.my.MyMeeronEvent
 import fourtune.meeron.presentation.ui.home.my.MyMeeronScreen
+import fourtune.meeron.presentation.ui.home.team.TeamEvent
 import fourtune.meeron.presentation.ui.home.team.TeamScreen
 import fourtune.meeron.presentation.ui.home.team.TeamTopBar
 import fourtune.meeron.presentation.ui.home.team.TeamViewModel
@@ -49,8 +50,8 @@ fun MainScreen(
     openCalendar: () -> Unit = {},
     addMeeting: () -> Unit = {},
     goToAddTeamMember: () -> Unit = {},
-    administerTeam: (team: TeamViewModel.TeamState.Normal) -> Unit = {},
     goToMeetingDetail: (meeting: Meeting) -> Unit = {},
+    teamEvent: (TeamEvent) -> Unit = {},
     myMeeronEvent: (MyMeeronEvent) -> Unit = {}
 ) {
 
@@ -116,13 +117,7 @@ fun MainScreen(
             }
             BottomNavi.Team -> TeamScreen(
                 viewModel = teamViewModel,
-                administerTeam = {
-                    val selectedTeam = teamViewModel.uiState.value.selectedTeam
-                    if (selectedTeam is TeamViewModel.TeamState.Normal) {
-                        administerTeam(selectedTeam)
-                    }
-                },
-                openCalendar = openCalendar
+                teamEvent = teamEvent
             )
         }
 

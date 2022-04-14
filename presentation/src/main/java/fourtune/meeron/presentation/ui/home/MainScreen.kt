@@ -80,6 +80,7 @@ fun MainScreen(
                     isAdmin=teamUiState.isAdmin,
                     teams = teamUiState.teams,
                     selectedTeam = teamUiState.selectedTeam,
+                    showNone = teamUiState.showNone,
                     onClickTeam = { teamViewModel.changeTeam(it) },
                     onClickNone = { teamViewModel.getNotJoinedTeamMembers() },
                     onClickCreate = goToAddTeamMember

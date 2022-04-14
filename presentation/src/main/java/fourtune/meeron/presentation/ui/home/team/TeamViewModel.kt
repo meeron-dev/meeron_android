@@ -42,7 +42,8 @@ class TeamViewModel @Inject constructor(
                         teams = teams,
                         teamMembers = teamMembers,
                         selectedTeam = selectedTeam,
-                        isAdmin = getMyWorkSpaceUser().workspaceAdmin
+                        isAdmin = getMyWorkSpaceUser().workspaceAdmin,
+                        showNone = getNotJoinedTeamWorkspaceUser().isNotEmpty()
                     )
                 }
             }.onFailure { Timber.tag("🔥zero:teamViewModel").e("$it") }
@@ -66,19 +67,17 @@ class TeamViewModel @Inject constructor(
             runCatching {
                 val teams = getWorkSpaceTeamUseCase()
                 val selectedTeam = uiState.value.selectedTeam
+                val notJoinedTeamWorkspaceUser = getNotJoinedTeamWorkspaceUser()
                 _uiState.update {
                     it.copy(
                         teams = teams,
                         teamMembers = when {
                             teams.isEmpty() -> emptyList()
-                            selectedTeam is TeamState.Normal -> {
-                                getTeamMember(selectedTeam.team.id)
-                            }
-                            selectedTeam is TeamState.None -> {
-                                getNotJoinedTeamWorkspaceUser()
-                            }
+                            selectedTeam is TeamState.Normal -> getTeamMember(selectedTeam.team.id)
+                            selectedTeam is TeamState.None -> notJoinedTeamWorkspaceUser
                             else -> emptyList()
                         },
+                        showNone = notJoinedTeamWorkspaceUser.isNotEmpty(),
                     )
                 }
             }.onFailure { Timber.tag("🔥zero:teamViewModel").e("$it") }
@@ -107,7 +106,8 @@ class TeamViewModel @Inject constructor(
         val teams: List<Team> = emptyList(),
         val teamMembers: List<WorkspaceUser> = emptyList(),
         val selectedTeam: TeamState = TeamState.None(),
-        val isAdmin: Boolean = false
+        val isAdmin: Boolean = false,
+        val showNone: Boolean = false
     )
 
     sealed interface TeamState {

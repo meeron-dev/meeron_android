@@ -138,6 +138,7 @@ fun TeamTopBar(
     isAdmin: Boolean,
     teams: List<Team>,
     selectedTeam: TeamViewModel.TeamState,
+    showNone: Boolean,
     onClickTeam: (team: Team) -> Unit = {},
     onClickNone: () -> Unit = {},
     onClickCreate: () -> Unit = {}
@@ -180,14 +181,16 @@ fun TeamTopBar(
                 }
             }
             item {
-                TeamCircleItem(
-                    drawable = TeamItems.None.drawable,
-                    teamName = "NONE",
-                    fontSize = 12.sp,
-                    isSelected = selectedTeam is TeamViewModel.TeamState.None,
-                    fontColor = colorResource(id = if (selectedTeam is TeamViewModel.TeamState.None) R.color.primary else R.color.gray),
-                    onClick = onClickNone
-                )
+                if (showNone) {
+                    TeamCircleItem(
+                        drawable = TeamItems.None.drawable,
+                        teamName = "NONE",
+                        fontSize = 12.sp,
+                        isSelected = selectedTeam is TeamViewModel.TeamState.None,
+                        fontColor = colorResource(id = if (selectedTeam is TeamViewModel.TeamState.None) R.color.primary else R.color.gray),
+                        onClick = onClickNone
+                    )
+                }
             }
         }
     }
@@ -243,6 +246,7 @@ private fun Preview3() {
     TeamTopBar(
         isAdmin = true,
         teams = listOf(Team(id = 1, name = "team1"), Team(id = 2, name = "team2")),
-        selectedTeam = TeamViewModel.TeamState.Normal(Team(name = "team1"))
+        selectedTeam = TeamViewModel.TeamState.Normal(Team(name = "team1")),
+        showNone = true
     )
 }

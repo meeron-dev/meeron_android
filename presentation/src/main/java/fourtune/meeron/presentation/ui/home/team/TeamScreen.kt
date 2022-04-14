@@ -48,6 +48,7 @@ sealed interface TeamEvent {
     class AdministerTeam(val teamState: TeamViewModel.TeamState.Normal) : TeamEvent
     object OpenCalendar : TeamEvent
     class GoToDetail(val workspaceUser: WorkspaceUser, val teamState: TeamViewModel.TeamState) : TeamEvent
+    object GoToAddTeamMemeber : TeamEvent
 }
 
 @Composable

@@ -46,7 +46,6 @@ fun MainScreen(
     owner: LifecycleOwner = LocalLifecycleOwner.current,
     homeViewModel: HomeViewModel = hiltViewModel(),
     teamViewModel: TeamViewModel = hiltViewModel(),
-    goToAddTeamMember: () -> Unit = {},
     homeEvent: (HomeEvent) -> Unit = {},
     teamEvent: (TeamEvent) -> Unit = {},
     myMeeronEvent: (MyMeeronEvent) -> Unit = {}
@@ -70,18 +69,17 @@ fun MainScreen(
     Scaffold(
 //        scaffoldState = scaffoldState,
         topBar = {
-
             when (content) {
                 BottomNavi.Home -> HomeTopBar(homeUiState, homeEvent)
                 BottomNavi.My -> {; }
                 BottomNavi.Team -> TeamTopBar(
-                    isAdmin=teamUiState.isAdmin,
+                    isAdmin = teamUiState.isAdmin,
                     teams = teamUiState.teams,
                     selectedTeam = teamUiState.selectedTeam,
                     showNone = teamUiState.showNone,
                     onClickTeam = { teamViewModel.changeTeam(it) },
                     onClickNone = { teamViewModel.getNotJoinedTeamMembers() },
-                    onClickCreate = goToAddTeamMember
+                    onClickCreate = { teamEvent(TeamEvent.GoToAddTeamMemeber) }
                 )
             }
 

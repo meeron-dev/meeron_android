@@ -268,7 +268,6 @@ fun MeeronNavigator(startDestination: String) {
 
         composable(route = Navigate.Main.route()) {
             MainScreen(
-                goToAddTeamMember = { navController.navigate(Navigate.Team.Add.route()) },
                 homeEvent = { homeEvent ->
                     when (homeEvent) {
                         is HomeEvent.GoToMeetingDetail -> navController.navigate(Navigate.Detail.Meeting.route(homeEvent.meeting.encodeJson()))
@@ -290,6 +289,7 @@ fun MeeronNavigator(startDestination: String) {
                             )
                         )
                         TeamEvent.OpenCalendar -> navController.navigate(Navigate.Calendar.route())
+                        TeamEvent.GoToAddTeamMemeber -> navController.navigate(Navigate.Team.Add.route())
                     }
                 },
                 myMeeronEvent = { event ->

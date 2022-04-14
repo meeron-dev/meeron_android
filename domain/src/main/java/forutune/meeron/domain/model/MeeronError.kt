@@ -2,6 +2,7 @@ package forutune.meeron.domain.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.io.IOException
 
 @Serializable
 data class MeeronError(
@@ -10,7 +11,7 @@ data class MeeronError(
     @SerialName("message") val errorMessage: String,
     @SerialName("code") val code: Int,
     @SerialName("errors") val errors: List<Errors> = emptyList()
-) : Exception("$errorMessage / $status / $errors") {
+) : IOException("$errorMessage / $status / $errors") {
     override fun toString(): String {
         return "$errorMessage / $status / $errors"
     }

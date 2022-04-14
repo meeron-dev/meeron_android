@@ -166,7 +166,7 @@ private fun PagerItem(meeting: Meeting, onClick: () -> Unit) {
             ) {
                 Column {
                     Text(
-                        text = stringResource(R.string.meeting_plan),
+                        text = meeting.purpose,
                         fontSize = 12.sp,
                         color = colorResource(id = R.color.gray)
                     )

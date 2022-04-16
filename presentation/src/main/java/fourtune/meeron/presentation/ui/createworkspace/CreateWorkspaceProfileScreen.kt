@@ -26,6 +26,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import forutune.meeron.domain.model.EntryPointType
 import forutune.meeron.domain.model.WorkSpace
 import fourtune.meeron.presentation.R
+import fourtune.meeron.presentation.ui.common.MeeronProgressIndicator
 import fourtune.meeron.presentation.ui.common.MeeronSingleButtonBackGround
 import fourtune.meeron.presentation.ui.common.ProfileImage
 import fourtune.meeron.presentation.ui.common.action.ContentFactory
@@ -70,6 +71,7 @@ fun CreateWorkspaceProfileScreen(
                     }
                 }
             ) {
+                MeeronProgressIndicator(showLoading = uiState.loading)
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(40.dp),

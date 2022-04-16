@@ -18,7 +18,7 @@ import coil.compose.rememberImagePainter
 import fourtune.meeron.presentation.R
 
 @Composable
-fun ProfileImage(modifier: Modifier=Modifier,image: String, onClick: () -> Unit = {}) {
+fun ProfileImage(modifier: Modifier = Modifier, image: String, onClick: () -> Unit = {}) {
     Box(
         modifier = modifier
             .fillMaxWidth()

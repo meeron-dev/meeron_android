@@ -103,7 +103,8 @@ class CreateWorkspaceProfileViewModel @Inject constructor(
 
     fun createWorkspaceUser(goToHome: () -> Unit) {
         viewModelScope.launch {
-            kotlin.runCatching {
+            runCatching {
+                _uiState.update { it.copy(loading = true) }
                 val workspaceId = accountRepository.getDynamicLink()
                 createWorkspaceUser.invoke(uiState.value.workSpace.copy(workspaceId))
             }
@@ -116,12 +117,14 @@ class CreateWorkspaceProfileViewModel @Inject constructor(
                     }
                 }
                 .onSuccess { goToHome() }
+            _uiState.update { it.copy(loading = false) }
         }
     }
 
     fun changeWorkspaceUser(onBack: () -> Unit) {
         viewModelScope.launch {
             runCatching {
+                _uiState.update { it.copy(loading = true) }
                 changeWorkspaceUser.invoke(uiState.value.workSpace)
             }.onSuccess {
                 onBack()
@@ -132,6 +135,7 @@ class CreateWorkspaceProfileViewModel @Inject constructor(
                     _toast.emit("${it.message} ?: $it")
                 }
             }
+            _uiState.update { it.copy(loading = false) }
         }
     }
 
@@ -139,7 +143,8 @@ class CreateWorkspaceProfileViewModel @Inject constructor(
         val isVerify: Boolean = false,
         val workSpace: WorkSpace = WorkSpace(),
         val fileName: String = "",
-        val isDuplicateNickname: Boolean = false
+        val isDuplicateNickname: Boolean = false,
+        val loading: Boolean = false
     )
 
     enum class Info(

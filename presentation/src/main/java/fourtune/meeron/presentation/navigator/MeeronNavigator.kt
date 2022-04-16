@@ -89,7 +89,7 @@ sealed interface Navigate {
         object Administer : Team
         object Add : Team
         object TeamMemberPicker : Team
-        object TemCreateComplete : Team
+        object TeamCreateComplete : Team
     }
 
     sealed interface Detail : Navigate {
@@ -416,12 +416,12 @@ fun MeeronNavigator(startDestination: String) {
             TeamMemberPickerScreen(
                 onBack = { navController.navigateUp() },
                 goToMain = { navController.popBackStack(Navigate.Main.route(), false) },
-                goToTeamCreateComplete = { navController.navigate(Navigate.Team.TemCreateComplete.route(it)) }
+                goToTeamCreateComplete = { navController.navigate(Navigate.Team.TeamCreateComplete.route(it)) }
             )
         }
 
         composable(
-            route = Navigate.Team.TemCreateComplete.destination(Const.TeamId),
+            route = Navigate.Team.TeamCreateComplete.destination(Const.TeamId),
             arguments = listOf(navArgument(Const.TeamId) { type = NavType.LongType })
         ) {
             TeamCreateCompleteScreen {

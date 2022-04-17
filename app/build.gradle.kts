@@ -63,4 +63,6 @@ dependencies {
     implementation(Dep.Kotlin.coroutineCore)
     implementation(Dep.Kakao.login_rx)
     implementation(Dep.Square.timber)
+
+    implementation(Dep.AWS.s3)
 }

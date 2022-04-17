@@ -107,5 +107,11 @@ object Dep {
         const val login_rx = "com.kakao.sdk:v2-user-rx:2.8.6"
     }
 
+    object AWS {
+        const val mobileClient = "com.amazonaws:aws-android-sdk-mobile-client:2.13.5"
+        const val cognito = "com.amazonaws:aws-android-sdk-cognito:2.13.5"
+        const val s3 = "com.amazonaws:aws-android-sdk-s3:2.13.5"
+    }
+
     const val inject = "javax.inject:javax.inject:1"
 }

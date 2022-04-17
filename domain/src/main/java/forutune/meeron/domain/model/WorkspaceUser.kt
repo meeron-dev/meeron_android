@@ -18,4 +18,8 @@ data class WorkspaceUser(
     @SerialName("email") val email: String = "",
     @SerialName("phone") val phone: String = "",
     @SerialName("workspaceAdmin") val workspaceAdmin: Boolean = false
-) : java.io.Serializable
+) : java.io.Serializable {
+    companion object {
+        val EMPTY = WorkspaceUser()
+    }
+}

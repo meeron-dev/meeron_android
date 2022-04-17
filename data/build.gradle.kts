@@ -38,6 +38,10 @@ dependencies {
 
     implementation(Dep.Room.room)
     implementation(Dep.Room.roomKtx)
+    
+    implementation(Dep.AWS.cognito)
+    implementation(Dep.AWS.mobileClient)
+    implementation(Dep.AWS.s3)
 
     kapt(Dep.Room.roomCompiler)
 

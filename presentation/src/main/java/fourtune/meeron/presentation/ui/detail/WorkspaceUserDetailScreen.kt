@@ -49,7 +49,7 @@ private fun WorkspaceUserDetailScreen(
 @Composable
 private fun WorkspaceUserDetailContent(uiState: WorkspaceUserDetailViewModel.UiState) {
     Column(modifier = Modifier.padding(vertical = 30.dp)) {
-        ProfileImage(image = uiState.workspaceUser.profileImageUrl)
+        ProfileImage(image = uiState.image)
         Spacer(modifier = Modifier.padding(10.dp))
         Text(
             text = uiState.userName,

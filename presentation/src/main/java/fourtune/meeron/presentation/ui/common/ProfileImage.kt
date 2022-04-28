@@ -15,10 +15,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
+import coil.request.CachePolicy
 import fourtune.meeron.presentation.R
 
 @Composable
-fun ProfileImage(modifier: Modifier = Modifier, image: String, onClick: () -> Unit = {}) {
+fun ProfileImage(modifier: Modifier = Modifier, image: Any?, onClick: () -> Unit = {}) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -34,6 +35,8 @@ fun ProfileImage(modifier: Modifier = Modifier, image: String, onClick: () -> Un
         ) {
             Image(
                 painter = rememberImagePainter(data = image, builder = {
+                    diskCachePolicy(CachePolicy.ENABLED)
+                    memoryCachePolicy(CachePolicy.ENABLED)
                     placeholder(R.drawable.ic_profile_non)
                     error(R.drawable.ic_profile_non)
                 }),

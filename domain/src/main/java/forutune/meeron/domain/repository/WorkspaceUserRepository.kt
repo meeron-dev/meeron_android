@@ -2,6 +2,7 @@ package forutune.meeron.domain.repository
 
 import forutune.meeron.domain.model.WorkSpace
 import forutune.meeron.domain.model.WorkspaceUser
+import java.io.File
 
 interface WorkspaceUserRepository {
     suspend fun getMyWorkspaceUsers(userId: Long): List<WorkspaceUser>
@@ -19,4 +20,6 @@ interface WorkspaceUserRepository {
 
     suspend fun getNotJoinedTeamWorkspaceUser(workspaceId: Long): List<WorkspaceUser>
     suspend fun changeWorkspaceUser(workspaceUserId: Long, workspace: WorkSpace)
+
+    suspend fun getUserProfile(workspaceUserId: Long, onLoadComplete: (File) -> Unit)
 }

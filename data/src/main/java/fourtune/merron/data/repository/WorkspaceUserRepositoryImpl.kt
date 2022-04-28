@@ -1,10 +1,16 @@
 package fourtune.merron.data.repository
 
+import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility
+import dagger.hilt.android.qualifiers.ApplicationContext
 import forutune.meeron.domain.model.WorkSpace
 import forutune.meeron.domain.model.WorkspaceUser
+import forutune.meeron.domain.provider.FileProvider
 import forutune.meeron.domain.repository.WorkspaceUserRepository
 import fourtune.merron.data.model.dto.request.WorkSpaceRequest
 import fourtune.merron.data.source.local.preference.DataStoreKeys
@@ -22,9 +28,11 @@ import java.io.File
 import javax.inject.Inject
 
 class WorkspaceUserRepositoryImpl @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val workspaceUserApi: WorkspaceUserApi,
     private val dataStore: DataStore<Preferences>,
-    private val fileProvider: forutune.meeron.domain.provider.FileProvider
+    private val fileProvider: FileProvider,
+    private val transferUtility: TransferUtility
 ) : WorkspaceUserRepository {
 
     override suspend fun getMyWorkspaceUsers(userId: Long): List<WorkspaceUser> {
@@ -37,6 +45,35 @@ class WorkspaceUserRepositoryImpl @Inject constructor(
 
     override suspend fun getWorkspaceUsers(teamId: Long): List<WorkspaceUser> {
         return workspaceUserApi.getTeamUser(teamId).workspaceUsers
+    }
+
+    override suspend fun getUserProfile(workspaceUserId: Long, onLoadComplete: (File) -> Unit) {
+        val workspaceUser = getWorkspaceUser(workspaceUserId)
+        val key = workspaceUser.profileImageUrl.split("/").last()
+        val file = File(context.filesDir, key)
+        if (file.isDirectory) {
+            onLoadComplete(file)
+        } else {
+            transferUtility
+                .download("files/$key", file, object : TransferListener {
+                    override fun onStateChanged(id: Int, state: TransferState?) {
+                        Timber.tag("🔥zero:onStateChanged").w("$state / $file")
+                        when (state) {
+                            TransferState.IN_PROGRESS -> ""
+                            TransferState.COMPLETED -> onLoadComplete(file)
+                        }
+                    }
+
+                    override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) {
+                        Timber.tag("🔥zero:onProgress").d("$bytesCurrent")
+                    }
+
+                    override fun onError(id: Int, ex: Exception?) {
+                        Timber.tag("🔥zero:onError").e("$ex")
+                    }
+                })
+        }
+
     }
 
     override suspend fun getWorkspaceUser(workspaceUserId: Long): WorkspaceUser {

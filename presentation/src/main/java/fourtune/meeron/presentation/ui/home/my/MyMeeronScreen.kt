@@ -62,13 +62,13 @@ private fun MyMeeronScreen(
             .padding(top = 40.dp, bottom = bottomBarSize)
             .fillMaxWidth()
     ) {
-        ProfileItem(uiState.myName)
+        ProfileItem(uiState.myName, uiState.profileImage)
         ActionItems(event)
     }
 }
 
 @Composable
-private fun ProfileItem(name: String) {
+private fun ProfileItem(name: String, image: Any?) {
     Column(modifier = Modifier.padding(horizontal = 20.dp)) {
         Text(text = "안녕하세요", fontSize = 21.sp, color = colorResource(id = R.color.black))
         Spacer(modifier = Modifier.padding(8.dp))
@@ -89,7 +89,7 @@ private fun ProfileItem(name: String) {
             fontWeight = FontWeight.Medium
         )
         Spacer(modifier = Modifier.padding(25.dp))
-        ProfileImage(modifier = Modifier.align(Alignment.CenterHorizontally), image = "")
+        ProfileImage(modifier = Modifier.align(Alignment.CenterHorizontally), image = image)
         Spacer(modifier = Modifier.padding(20.dp))
     }
 }

@@ -2,7 +2,6 @@ package forutune.meeron.domain.usecase.login
 
 import forutune.meeron.domain.di.IoDispatcher
 import forutune.meeron.domain.model.LoginUser
-import forutune.meeron.domain.model.Token
 import forutune.meeron.domain.model.User
 import forutune.meeron.domain.repository.LoginRepository
 import forutune.meeron.domain.repository.TokenRepository
@@ -25,26 +24,22 @@ class LoginUseCase @Inject constructor(
 
         kotlin.runCatching {
             val token = loginRepository.login(me)
-            updateToken(me, token)
+            tokenRepository.saveToken(token)
+            runCatching { userRepository.getUser(me.email) }
+                .onSuccess { user ->
+                    userRepository.setUser(
+                        User(
+                            userId = user.userId,
+                            loginEmail = me.email,
+                            name = me.nickname,
+                            profileImageUrl = me.profileImageUrl,
+                        ), token
+                    )
+                }
         }.onFailure {
             tokenRepository.clearToken()
         }
 
-    }
-
-    private suspend fun updateToken(me: LoginUser, token: Token) {
-        tokenRepository.saveToken(token)
-        runCatching { userRepository.getUser(me.email) }
-            .onSuccess { user ->
-                userRepository.setUser(
-                    User(
-                        userId = user.userId,
-                        loginEmail = me.email,
-                        name = me.nickname,
-                        profileImageUrl = me.profileImageUrl,
-                    ), token
-                )
-            }
     }
 
 
@@ -55,7 +50,11 @@ class LoginUseCase @Inject constructor(
         getMe: suspend () -> LoginUser
     ) = withContext(dispatcher) {
         if (isKakaoLoginAvailable()) {
-            kakaoLogin()
+            runCatching {
+                kakaoLogin()
+            }.onFailure {
+                kakaoLoginWithAccount()
+            }
         } else {
             kakaoLoginWithAccount()
         }
